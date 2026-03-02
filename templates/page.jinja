@@ -1,0 +1,704 @@
+{% extends "layout.jinja" %}
+
+{% block header %}
+{% include 'header.jinja' %}
+{% endblock %}
+
+{% block main_content %}
+{% if page.slug == 'bundle' %}
+<!-- Banner Section -->
+<div class="bundel-fluid">
+    <div class="container-fluid">
+        <div class="banner_titels">
+            <div class="titels">
+                <h1>{{ settings.bundle_main_titel }}</h1>
+                {% if settings.bundle_sub_titel_one or settings.bundle_sub_titel_tow or settings.bundle_sub_titel_three
+                %}
+                <ul>
+                    {% if settings.bundle_sub_titel_one %}
+                    <li>{{ settings.bundle_sub_titel_one }}</li>
+                    {% endif %}
+                    {% if settings.bundle_sub_titel_tow %}
+                    <li>{{ settings.bundle_sub_titel_tow }}</li>
+                    {% endif %}
+                    {% if settings.bundle_sub_titel_three %}
+                    <li>{{ settings.bundle_sub_titel_three }}</li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="banners_section">
+                {% for item in safeget(settings ,"bundle_banner_list" , []) %}
+                <a href="{{ item.url_img }}" class="banner_div">
+                    <img src="{{ item.banner_img }}"
+                        alt="{{ item.banner_title | default('صمّم مجموعتك الخاصة من الأجهزة الرياضية في السعودية') }}">
+                    {% if item.banner_title %}
+                    <p class="banner_title">{{ item.banner_title }}</p>
+                    {% endif %}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Sections -->
+<div class="container-fluid" style="margin: 32px 0; display: flex; flex-direction: column; gap: 16px;">
+    <div class="products_side only-products">
+        <div class="products-slr">
+            <!-- Category Section 1 -->
+            {% if settings.bundle_category %}
+            <div class="products_titels">
+                {% if settings.bundle_main_titel0 %}
+                <h1>{{ settings.bundle_main_titel0 }}</h1>
+                {% endif %}
+                {% if settings.bundle_sub_titel0 %}
+                <p>{{ settings.bundle_sub_titel0 }}</p>
+                {% endif %}
+            </div>
+            <div class="cart-product category-block" data-cat-id="{{ settings.bundle_category.id }}">
+                <section class="containered">
+                    <div class="category-products prod" style="position: relative;">
+                        <div class="loading-spinner text-center mt-3">
+                            <span>{{ _("loading") }}</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            {% endif %}
+
+            <!-- Category Section 2 -->
+            {% if settings.bundle_category1 %}
+            <div class="products_titels">
+                {% if settings.bundle_main_titel1 %}
+                <h1>{{ settings.bundle_main_titel1 }}</h1>
+                {% endif %}
+                {% if settings.bundle_sub_titel1 %}
+                <p>{{ settings.bundle_sub_titel1 }}</p>
+                {% endif %}
+            </div>
+            <div class="cart-product category-block" data-cat-id="{{ settings.bundle_category1.id }}">
+                <section class="containered">
+                    <div class="category-products prod" style="position: relative;">
+                        <div class="loading-spinner text-center mt-3">
+                            <span>{{ _("loading") }}</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            {% endif %}
+
+            <!-- Category Section 3 -->
+            {% if settings.bundle_category2 %}
+            <div class="products_titels">
+                {% if settings.bundle_main_titel2 %}
+                <h1>{{ settings.bundle_main_titel2 }}</h1>
+                {% endif %}
+                {% if settings.bundle_sub_titel2 %}
+                <p>{{ settings.bundle_sub_titel2 }}</p>
+                {% endif %}
+            </div>
+            <div class="cart-product category-block" data-cat-id="{{ settings.bundle_category2.id }}">
+                <section class="containered">
+                    <div class="category-products prod" style="position: relative;">
+                        <div class="loading-spinner text-center mt-3">
+                            <span>{{ _("loading") }}</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Slides Section -->
+    {% if settings.bundle_slides %}
+    <div class="slider-wrapper">
+        {% for slide in settings.bundle_slides %}
+        <div class="slide-item_content">
+            {% if slide.image %}
+            <img class="slide-media_img" src="{{ slide.image }}" alt="slider image" loading="lazy">
+            {% endif %}
+            <div class="slide-content">
+                {% if slide.title %}
+                <h1 class="slide-title">{{ slide.title }}</h1>
+                {% endif %}
+                {% if slide.subtitle %}
+                <p class="slide-subtitle">{{ slide.subtitle }}</p>
+                {% endif %}
+                {% if slide.button_text %}
+                <a href="{{ slide.button_url }}" class="slide-btn">
+                    {{ slide.button_text }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- JavaScript for Bundle Page -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Helper function to generate rating HTML
+        function getRatingHtml(ratingData) {
+            if (!ratingData) return '';
+            var rating = ratingData.average;
+            var count = ratingData.total_count;
+            if (!rating && !count) return '';
+
+            var ratingRounded = (Math.ceil(rating * 2) / 2);
+            var starsHtml = '';
+
+            // Generate star icons based on rating
+            for (var n = 1; n <= 5; n++) {
+                if (n <= ratingRounded) {
+                    starsHtml += '<span class="icon-star1"></span>';
+                } else if (n <= ratingRounded + 0.5) {
+                    starsHtml += '<span class="icon-half-star"></span>';
+                } else {
+                    starsHtml += '<span class="icon-star1 deactive"></span>';
+                }
+            }
+
+            var countHtml = count > 0 ? '<span class="product-card-rating-count">(' + count + ')</span>' : '';
+            return '<div class="product-card-rating-wrapper" style="height: 18px">' +
+                '<div class="d-inline-flex product-card-rating" data-rating="' + rating + '">' +
+                starsHtml +
+                '</div>' +
+                countHtml +
+                '</div>';
+        }
+
+        // Function to load category products
+        function loadCategoryProducts(block) {
+            const container = block.querySelector('.category-products');
+            const loader = block.querySelector('.loading-spinner');
+            const categoryId = block.getAttribute('data-cat-id');
+
+            if (!categoryId) return;
+
+            // Use the new API endpoint
+            fetch('/api/v1/products?categories=' + categoryId + '&per_page=6&page=1')
+                .then(response => response.json())
+                .then(data => {
+                    loader.style.display = 'none';
+
+                    if (data.results && data.results.length > 0) {
+                        const products = data.results.slice(0, 6);
+
+                        if (!products.length) {
+                            container.innerHTML = '<p class="text-muted">' + ("No products found") + '</p>';
+                            return;
+                        }
+
+                        // Asset URLs
+                        const uBellUrl = "{{ 'u_bell.svg' | asset_url }}";
+                        const spinnerUrl = "{{ 'spinner.gif' | asset_url }}";
+                        const productDefaultImg = "{{ 'product-img.svg' | asset_url }}";
+
+                        products.forEach(product => {
+                            // Product information
+                            const productName = product.name.ar || product.name;
+                            const productLink = '/products/' + product.slug;
+
+                            // Product images
+                            const mainImage = (product.main_image && product.main_image.image && product.main_image.image.large)
+                                ? product.main_image.image.large
+                                : productDefaultImg;
+                            const secondImage = (product.images && product.images.length >= 2)
+                                ? product.images[1].image.large
+                                : null;
+
+                            // Price display
+                            let priceHtml = '';
+                            if (product.formatted_sale_price) {
+                                priceHtml = '<div class="section-product-price">' +
+                                    '<div class="product-price theme-title-primary">' +
+                                    '<span>' + product.formatted_sale_price + '</span>' +
+                                    '</div>' +
+                                    '<div style="color: #494949">' +
+                                    '<span class="product-prev-price">' + product.formatted_price + '</span>' +
+                                    '</div>' +
+                                    '</div>';
+                            } else {
+                                priceHtml = '<div class="product-price section-product-price theme-title-primary">' +
+                                    '<span>' + product.formatted_price + '</span>' +
+                                    '</div>';
+                            }
+
+                            // Determine button type
+                            let buttonHtml = '';
+                            const isOutOfStock = !product.is_infinite && product.quantity <= 0;
+                            const hasOptions = product.has_options || product.has_fields || product.product_class === 'dynamic_bundle';
+
+                            if (isOutOfStock) {
+                                buttonHtml = '<button type="button" class="btn btn-primary btn-product-card-out-of-stock" onclick="window.location.href=\'' + productLink + '\';">' +
+                                    '<img src="' + uBellUrl + '" alt="" class="d-inline" />' +
+                                    '<span>' + ("Notify me when available") + '</span>' +
+                                    '</button>';
+                            } else if (hasOptions) {
+                                buttonHtml = '<button type="button" class="btn btn-primary btn-product-card-select-variant cart_btn" onclick="window.location.href=\'' + productLink + '\';">' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">' +
+                                    '<path d="M2.43848 0.25C3.70035 0.250013 4.8004 1.10881 5.10645 2.33301L5.10938 2.34668L7.6084 14.2471L14.2637 14.2471C15.3092 14.247 16.0783 14.0819 16.6611 13.8115C17.2354 13.545 17.6668 13.1584 18.0156 12.6494C18.7472 11.5816 19.1031 10.0154 19.5254 7.91797C19.6489 7.30441 19.7254 6.91631 19.7451 6.63086C19.7544 6.49631 19.7477 6.41894 19.7393 6.37598C19.7335 6.34659 19.7276 6.33685 19.7256 6.33398C19.7192 6.33045 19.699 6.31942 19.6543 6.30762C19.5334 6.27575 19.3372 6.25646 18.9863 6.25C18.5722 6.24238 18.2424 5.90041 18.25 5.48633C18.2576 5.07223 18.5996 4.74245 19.0137 4.75C19.3703 4.75657 19.7261 4.77538 20.0371 4.85742C20.3777 4.94729 20.6995 5.12229 20.9385 5.45117C21.2328 5.85625 21.271 6.31402 21.2422 6.7334C21.215 7.12856 21.1172 7.61419 21.0059 8.16699L20.9961 8.21387C20.5906 10.228 20.1913 12.1274 19.2529 13.4971C18.7668 14.2066 18.1344 14.7814 17.293 15.1719C16.46 15.5584 15.4614 15.747 14.2637 15.7471H7.9375C7.9185 15.7485 7.89925 15.75 7.87988 15.75L7.46875 15.75C6.64616 15.75 5.92133 16.3778 5.77637 17.25L16.5 17.25C17.7426 17.25 18.75 18.2574 18.75 19.5C18.75 20.7426 17.7426 21.75 16.5 21.75C15.2574 21.75 14.25 20.7426 14.25 19.5C14.25 19.2367 14.2977 18.9848 14.3809 18.75H11.6191C11.7023 18.9848 11.75 19.2367 11.75 19.5C11.75 20.7426 10.7426 21.75 9.5 21.75C8.25736 21.75 7.25 20.7426 7.25 19.5C7.25 19.2367 7.29775 18.9848 7.38086 18.75H5.41113C4.74128 18.7498 4.25 18.193 4.25 17.5713C4.25005 16.2433 5.01444 15.0715 6.1377 14.5449L3.64844 2.68457C3.50511 2.13463 3.00784 1.75001 2.43848 1.75L1.5 1.75C1.08579 1.75 0.75 1.41421 0.75 1C0.75 0.585786 1.08579 0.25 1.5 0.25L2.43848 0.25ZM9.5 18.75C9.08579 18.75 8.75 19.0858 8.75 19.5C8.75 19.9142 9.08579 20.25 9.5 20.25C9.91421 20.25 10.25 19.9142 10.25 19.5C10.25 19.0858 9.91421 18.75 9.5 18.75ZM16.5 18.75C16.0858 18.75 15.75 19.0858 15.75 19.5C15.75 19.9142 16.0858 20.25 16.5 20.25C16.9142 20.25 17.25 19.9142 17.25 19.5C17.25 19.0858 16.9142 18.75 16.5 18.75ZM12 0.75C12.4142 0.75 12.75 1.08579 12.75 1.5V4.75H16C16.4142 4.75 16.75 5.08579 16.75 5.5C16.75 5.91421 16.4142 6.25 16 6.25H12.75L12.75 9.5C12.75 9.91421 12.4142 10.25 12 10.25C11.5858 10.25 11.25 9.91421 11.25 9.5L11.25 6.25L8 6.25C7.58579 6.25 7.25 5.91421 7.25 5.5C7.25 5.08579 7.58579 4.75 8 4.75L11.25 4.75V1.5C11.25 1.08579 11.5858 0.75 12 0.75Z" fill="#FAFAFA"></path>' +
+                                    '</svg>' +
+                                    '<p>' + ("أضف إلى السلة") + '</p>' +
+                                    '</button>';
+                            } else {
+                                buttonHtml = '<button type="button" class="btn btn-primary product-card-add-to-cart cart_btn" ' +
+                                    'onclick="event.preventDefault(); event.stopPropagation(); productCartAddToCart(this,\'' + product.id + '\')">' +
+                                    '<img style="display: inline" class="add-to-cart-progress d-none" ' +
+                                    'src="' + spinnerUrl + '" width="20" height="20" />' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">' +
+                                    '<path d="M2.43848 0.25C3.70035 0.250013 4.8004 1.10881 5.10645 2.33301L5.10938 2.34668L7.6084 14.2471L14.2637 14.2471C15.3092 14.247 16.0783 14.0819 16.6611 13.8115C17.2354 13.545 17.6668 13.1584 18.0156 12.6494C18.7472 11.5816 19.1031 10.0154 19.5254 7.91797C19.6489 7.30441 19.7254 6.91631 19.7451 6.63086C19.7544 6.49631 19.7477 6.41894 19.7393 6.37598C19.7335 6.34659 19.7276 6.33685 19.7256 6.33398C19.7192 6.33045 19.699 6.31942 19.6543 6.30762C19.5334 6.27575 19.3372 6.25646 18.9863 6.25C18.5722 6.24238 18.2424 5.90041 18.25 5.48633C18.2576 5.07223 18.5996 4.74245 19.0137 4.75C19.3703 4.75657 19.7261 4.77538 20.0371 4.85742C20.3777 4.94729 20.6995 5.12229 20.9385 5.45117C21.2328 5.85625 21.271 6.31402 21.2422 6.7334C21.215 7.12856 21.1172 7.61419 21.0059 8.16699L20.9961 8.21387C20.5906 10.228 20.1913 12.1274 19.2529 13.4971C18.7668 14.2066 18.1344 14.7814 17.293 15.1719C16.46 15.5584 15.4614 15.747 14.2637 15.7471H7.9375C7.9185 15.7485 7.89925 15.75 7.87988 15.75L7.46875 15.75C6.64616 15.75 5.92133 16.3778 5.77637 17.25L16.5 17.25C17.7426 17.25 18.75 18.2574 18.75 19.5C18.75 20.7426 17.7426 21.75 16.5 21.75C15.2574 21.75 14.25 20.7426 14.25 19.5C14.25 19.2367 14.2977 18.9848 14.3809 18.75H11.6191C11.7023 18.9848 11.75 19.2367 11.75 19.5C11.75 20.7426 10.7426 21.75 9.5 21.75C8.25736 21.75 7.25 20.7426 7.25 19.5C7.25 19.2367 7.29775 18.9848 7.38086 18.75H5.41113C4.74128 18.7498 4.25 18.193 4.25 17.5713C4.25005 16.2433 5.01444 15.0715 6.1377 14.5449L3.64844 2.68457C3.50511 2.13463 3.00784 1.75001 2.43848 1.75L1.5 1.75C1.08579 1.75 0.75 1.41421 0.75 1C0.75 0.585786 1.08579 0.25 1.5 0.25L2.43848 0.25ZM9.5 18.75C9.08579 18.75 8.75 19.0858 8.75 19.5C8.75 19.9142 9.08579 20.25 9.5 20.25C9.91421 20.25 10.25 19.9142 10.25 19.5C10.25 19.0858 9.91421 18.75 9.5 18.75ZM16.5 18.75C16.0858 18.75 15.75 19.0858 15.75 19.5C15.75 19.9142 16.0858 20.25 16.5 20.25C16.9142 20.25 17.25 19.9142 17.25 19.5C17.25 19.0858 16.9142 18.75 16.5 18.75ZM12 0.75C12.4142 0.75 12.75 1.08579 12.75 1.5V4.75H16C16.4142 4.75 16.75 5.08579 16.75 5.5C16.75 5.91421 16.4142 6.25 16 6.25H12.75L12.75 9.5C12.75 9.91421 12.4142 10.25 12 10.25C11.5858 10.25 11.25 9.91421 11.25 9.5L11.25 6.25L8 6.25C7.58579 6.25 7.25 5.91421 7.25 5.5C7.25 5.08579 7.58579 4.75 8 4.75L11.25 4.75V1.5C11.25 1.08579 11.5858 0.75 12 0.75Z" fill="#FAFAFA"></path>' +
+                                    '</svg>' +
+                                    '<p>' + ("أضف إلى السلة") + '</p>' +
+                                    '</button>';
+                            }
+
+                            // Product badge
+                            let badgeHtml = '';
+                            if (product.badge) {
+                                const badgeText = product.badge.body.ar || product.badge.body.en || '';
+                                badgeHtml = '<span class="badge-name badge-name-product-card" style="color: #fff; padding: 4px 8px; border-radius: 20px; right: 16px">' +
+                                    '<span>' + badgeText + '</span>' +
+                                    '</span>';
+                            }
+
+                            // Category HTML
+                            let categoryHtml = '';
+                            if (product.categories && product.categories.length > 0) {
+                                categoryHtml = '<div class="categorey-title">' +
+                                    '<span><a href="' + product.categories[0].url + '">' + product.categories[0].name + '</a></span>' +
+                                    '</div>';
+                            }
+
+                            // Stock message
+                            let stockMessage = '';
+                            if (isOutOfStock) {
+                                stockMessage = '<small style="font-size: 1.1rem; white-space: break-spaces">' +
+                                    'This product is out of stock' +
+                                    '</small>';
+                            }
+
+                            // Escape product name
+                            const escapedProductName = productName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+                            // Generate HTML for product (matching your template structure)
+                            const html = `
+                                        <div class="prod-col">
+                                            <div class="product-item position-relative ${isOutOfStock ? 'product-item-out-of-stock' : ''}">
+                                                <div class="d-flex flex-column justify-content-start" style="height: 100%;">
+                                                    <div class="box-1-1">
+                                                        <div class="content">
+                                                            <div class="d-flex justify-content-center" style="width: 100%; height: 100%; position: relative;">
+                                                                ${badgeHtml}
+                                                                <div class="product-gallery">
+                                                                    <img loading="lazy" class="product-image" src="${mainImage}" alt="${escapedProductName}">
+                                                                    ${secondImage ? `<img loading="lazy" class="product-image d-none" src="${secondImage}" alt="${escapedProductName}" data-index="1">` : ''}
+                                                                    ${isOutOfStock ? '<small style="font-size: 1.1rem; white-space: break-spaces">This product is out of stock</small>' : ''}
+                                                                </div>
+                                                                <span class="product-card-bundle-offer" data-bundle-offer-product-id="${product.id}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="product_content">
+                                                        <div class="product-title" style="margin-top: 15px">
+                                                            ${categoryHtml}
+                                                            <a href="${productLink}" class="title">${productName}</a>
+                                                        </div>
+                                                        
+                                                        <div class="product-crd-spec">
+                                                            ${priceHtml}
+                                                            <div class="product-card-btns" style="text-align: center; {% if product_obj.is_infinite == false and product_obj.quantity <= 0 %}margin-top: 10px; width: 100%; {% endif %}">
+                                                                ${buttonHtml}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`;
+
+                            container.insertAdjacentHTML('beforeend', html);
+                        });
+
+                        // Initialize slider
+                        setTimeout(() => {
+                            initProductSlider(container);
+                            initProductHoverEffects();
+                        }, 500);
+                    } else {
+                        container.innerHTML = '<p class="text-muted">' + ("No products found") + '</p>';
+                    }
+                })
+                .catch(err => {
+                    console.error('API Error:', err);
+                    loader.style.display = 'none';
+                    container.innerHTML = '<p class="text-danger">' + ("Error loading products") + '</p>';
+                });
+        }
+
+        // Initialize product slider
+        function initProductSlider(container) {
+            const arrowNextClass = (window.appDirection === 'ltr') ? 'fa-solid fa-angle-right' : 'fa-solid fa-angle-left';
+            const arrowPrevClass = (window.appDirection === 'ltr') ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right';
+
+            if (typeof $ !== 'undefined' && $.fn.slick) {
+                $(container).slick({
+                    slidesToShow: 6,
+                    slidesToScroll: 2,
+                    infinite: false,
+                    autoplay: false,
+                    arrows: false,
+                    dots: false,
+                    rtl: !(window.appDirection === 'ltr'),
+                    nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
+                    prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>',
+                    responsive: [
+                        { breakpoint: 1600, settings: { slidesToShow: 5 } },
+                        { breakpoint: 1400, settings: { slidesToShow: 4.5 } },
+                        { breakpoint: 1200, settings: { slidesToShow: 3.5 } },
+                        { breakpoint: 992, settings: { slidesToShow: 2.8 } },
+                        { breakpoint: 768, settings: { slidesToShow: 2.3 } },
+                        { breakpoint: 576, settings: { slidesToShow: 2 } },
+                        { breakpoint: 350, settings: { slidesToShow: 1.5 } }
+                    ]
+                });
+            }
+        }
+
+        // Initialize product hover effects (for image switching)
+        function initProductHoverEffects() {
+            document.querySelectorAll('.product-item').forEach(function (productCard) {
+                var images = productCard.querySelectorAll('.product-image');
+                var dots = productCard.querySelectorAll('.dot');
+                var interval;
+                var isHovering = false;
+
+                if (images.length > 1) {
+                    productCard.addEventListener('mouseenter', function () {
+                        isHovering = true;
+                        var currentIndex = 0;
+
+                        interval = setInterval(function () {
+                            if (!isHovering) {
+                                clearInterval(interval);
+                                return;
+                            }
+
+                            images.forEach(function (img) {
+                                img.classList.add('d-none');
+                            });
+
+                            currentIndex = (currentIndex + 1) % images.length;
+                            images[currentIndex].classList.remove('d-none');
+                        }, 1500);
+                    });
+
+                    productCard.addEventListener('mouseleave', function () {
+                        isHovering = false;
+                        clearInterval(interval);
+
+                        images.forEach(function (img) {
+                            img.classList.add('d-none');
+                        });
+                        images[0].classList.remove('d-none');
+                    });
+                }
+            });
+        }
+
+        // Load all category products
+        document.querySelectorAll('.category-block').forEach(block => loadCategoryProducts(block));
+    });
+</script>
+
+<!-- Additional Scripts for Sliders -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Banner slider
+        const arrowNextClass = (window.appDirection === 'ltr') ? 'icon-keyboard_arrow_right' : 'icon-keyboard_arrow_left';
+        const arrowPrevClass = (window.appDirection === 'ltr') ? 'icon-keyboard_arrow_left' : 'icon-keyboard_arrow_right';
+        const screenWidth = window.screen.width;
+        const editingMode = {% if store.editing_mode %} true {% else %} false {% endif %};
+    const autoPlayEnabled = {% if settings.bundle_auto %}true{% else %} false{% endif %};
+    const infiniteEnabled = {% if settings.bundle_infinite %}true{% else %} false{% endif %};
+
+    if (screenWidth >= 0 || editingMode) {
+        if (typeof $ !== 'undefined' && $.fn.slick) {
+            $('.banners_section').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                infinite: infiniteEnabled,
+                autoplay: autoPlayEnabled,
+                arrows: true,
+                dots: false,
+                rtl: !(window.appDirection === 'ltr'),
+                nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
+                prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>'
+            });
+        }
+    }
+
+    // Slides slider
+    if (typeof $ !== 'undefined' && $.fn.slick) {
+        $(".slider-wrapper").slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: true,
+            autoplay: false,
+            arrows: true,
+            dots: false,
+            rtl: !(window.appDirection === 'ltr'),
+            nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
+            prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>'
+        });
+    }
+            });
+</script>
+
+{% elif page.slug == 'Gallery' %}
+<section class="breadcrumb-section">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <div class="container-fluid d-flex flex-wrap gap-3">
+                <li class="breadcrumb-item pageed" aria-current="page">
+                    <a href="/">{{ _('Home') }}</a>
+                </li>
+                <li>/</li>
+                <li class="breadcrumb-item active " aria-current="page">{{ _("Gallery") }}</li>
+            </div>
+        </ol>
+    </nav>
+</section>
+
+<!-- Gallery Page Content -->
+<div class="container-fluid">
+    <div class="photo-Gallery">
+        <div class="topic-gallery">
+            <h1>{{ settings.specialpage_title }}</h1>
+            <p>{{ settings.specialpage_subtitle }}</p>
+        </div>
+        <div class="specialpage">
+            <div class="form-bton">
+                <div class="upcoming">
+                    <h2>{{ settings.specialpage_topic }}</h2>
+                    <div class="forem-sevise">
+                        <a href="{{ settings.specialpage_url1 }}" class="product-link">
+                            {{ settings.specialpage_title1 }}
+                        </a>
+                        <a href="{{ settings.specialpage_url11 }}" class="product-link">
+                            {{ settings.specialpage_title11 }}
+                        </a>
+                    </div>
+                </div>
+                <div class="explain">
+                    <p>{{ settings.specialpage_expalin }}</p>
+                </div>
+            </div>
+            <div class="video-container">
+                <video width="100%" height="auto" loop playsinline muted autoplay {% if settings.specialpage_controls1
+                    %} controls {% endif %} {% if settings.specialpage_autoplay1 %} autoplay muted {% endif %}>
+                    <source src="{{ settings.specialpage_video1 }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        {% if settings.specialpage_galler %}
+        <div class="all-gallers">
+            <div class="gallers">
+                {% for key in settings.specialpage_galler %}
+                <a href="{{ key.url }}" class="specialpage_galler" aria-label="button">
+                    <div class="specialpage-card-slider" data-image1="{{ key.image1 if key.image1 else '' }}"
+                        data-image2="{{ key.image2 if key.image2 else '' }}"
+                        data-image3="{{ key.image3 if key.image3 else '' }}"
+                        data-image4="{{ key.image4 if key.image4 else '' }}">
+                        {% if key.image1 %}
+                        <div class="specialpage-slide" data-image-url="{{ key.image1 }}">
+                            <img src="{{ key.image1 }}" alt="image 1">
+                        </div>
+                        {% endif %}
+                        {% if key.image2 %}
+                        <div class="specialpage-slide" data-image-url="{{ key.image2 }}">
+                            <img src="{{ key.image2 }}" alt="image 2">
+                        </div>
+                        {% endif %}
+                        {% if key.image3 %}
+                        <div class="specialpage-slide" data-image-url="{{ key.image3 }}">
+                            <img src="{{ key.image3 }}" alt="image 3">
+                        </div>
+                        {% endif %}
+                        {% if key.image4 %}
+                        <div class="specialpage-slide" data-image-url="{{ key.image4 }}">
+                            <img src="{{ key.image4 }}" alt="image 4">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <h2>{{ key.title }}</h2>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Gallery Modal -->
+        <div class="modal fade" id="product-images-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <a type="button" class="close_btn" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                        <div id="product-images-modal-slider" class="modal-slick"></div>
+                        <div id="product-images-modal-progress" class="modal-progress">
+                            <div class="fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gallery JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const arrowNextClass = (window.appDirection === 'ltr') ? 'icon-keyboard_arrow_right' : 'icon-keyboard_arrow_left';
+        const arrowPrevClass = (window.appDirection === 'ltr') ? 'icon-keyboard_arrow_left' : 'icon-keyboard_arrow_right';
+
+        // Initialize card sliders
+        function initCardSliders() {
+            document.querySelectorAll('.specialpage-card-slider').forEach(function (el) {
+                if (typeof $ !== 'undefined' && $.fn.slick) {
+                    $(el).slick({
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        autoplay: false,
+                        arrows: false,
+                        dots: false,
+                        rtl: !(window.appDirection === 'ltr')
+                    });
+
+                    // Prevent default click on anchor
+                    $(el).closest('a.specialpage_galler').on('click', function (e) {
+                        e.preventDefault();
+                    });
+
+                    // Handle slide click to open modal
+                    $(el).on('click', '.specialpage-slide', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const startIndex = $(this).index();
+                        const images = [];
+
+                        // Collect all available images
+                        ['image1', 'image2', 'image3', 'image4'].forEach(function (key) {
+                            const value = el.getAttribute('data-' + key);
+                            if (value && value.trim() !== '') {
+                                images.push(value);
+                            }
+                        });
+
+                        if (images.length) {
+                            openBlogImagesModal(images, startIndex);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Open image modal
+        function openBlogImagesModal(images, startIndex) {
+            const $modal = $('#product-images-modal');
+            const $slider = $('#product-images-modal-slider');
+            const $progressFill = $('#product-images-modal-progress .fill');
+
+            // Clean up existing slider
+            if ($slider.hasClass('slick-initialized')) {
+                $slider.slick('unslick');
+            }
+
+            $slider.html('');
+            $progressFill.css('width', '0%');
+
+            // Add images to slider
+            images.forEach(function (src) {
+                $slider.append('<div><img src="' + src + '" alt="image"></div>');
+            });
+
+            // Update progress bar
+            function updateProgress(idx, total) {
+                const pct = total > 0 ? Math.round(((idx + 1) / total) * 100) : 0;
+                $progressFill.css('width', pct + '%');
+            }
+
+            // Initialize modal slider
+            function initSlider() {
+                if (typeof $ !== 'undefined' && $.fn.slick) {
+                    $slider.slick({
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        autoplay: false,
+                        arrows: true,
+                        dots: false,
+                        rtl: !(window.appDirection === 'ltr'),
+                        initialSlide: startIndex,
+                        nextArrow: '<button class="slick-next modal-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
+                        prevArrow: '<button class="slick-prev modal-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>',
+                        onInit: function (slick) {
+                            updateProgress(slick.currentSlide, slick.slideCount);
+                        },
+                        afterChange: function (event, slick, currentSlide) {
+                            updateProgress(currentSlide, slick.slideCount);
+                        }
+                    });
+                }
+            }
+
+            // Modal event handlers
+            $modal.off('shown.bs.modal').on('shown.bs.modal', function () {
+                setTimeout(initSlider, 10);
+            });
+
+            $modal.off('hidden.bs.modal').on('hidden.bs.modal', function () {
+                if ($slider.hasClass('slick-initialized')) {
+                    $slider.slick('unslick');
+                }
+                $slider.html('');
+                $progressFill.css('width', '0%');
+            });
+
+            $modal.modal('show');
+        }
+
+        // Initialize on load
+        initCardSliders();
+    });
+</script>
+
+{% else %}
+<!-- Default Page Content -->
+<section class="blog mt-5 mb-5">
+    <div class="container">
+        <div class="blog-title mt-5 mb-5">
+            <h1>{{ page.title }}</h1>
+        </div>
+        <div class="blog-text mt-3 mb-5">
+            {{ page.content | safe }}
+        </div>
+        {% set entity = page %}
+        {% include 'vitrin:shared/metafields.jinja' %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+{% include 'footer.jinja' %}
+{% endblock %}

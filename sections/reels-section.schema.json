@@ -1,0 +1,89 @@
+{
+  "section_id": "uuid",
+  "template": "sections/reels-section.jinja",
+  "icon": "fal fa-user",
+  "name": {
+    "ar": "الريلز",
+    "en": "Reels"
+  },
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان الرئيسي",
+        "en": "Main Title"
+      }
+    },
+    {
+      "id": "color1",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان",
+        "en": "Title Color"
+      }
+    },
+    {
+      "id": "infinite",
+      "type": "checkbox",
+      "label": {
+        "ar": "تحكم في اللوب",
+        "en": "Loop control"
+      }
+    },
+    {
+      "id": "auto",
+      "type": "checkbox",
+      "label": {
+        "ar": "تحكم في التشغيل التلقائي",
+        "en": "AutoPlay control"
+      }
+    },
+    {
+      "id": "viedos",
+      "type": "list",
+      "label": {
+        "ar": "الفيديوهات",
+        "en": "Videos"
+      },
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان الفيديو",
+            "en": "Video Title"
+          }
+        },
+        {
+          "id": "video",
+          "type": "video",
+          "label": {
+            "ar": "الفيديو",
+            "en": "Video"
+          },
+          "info": {
+            "ar": "mp4 أقصى حجم 10MB",
+            "en": "MP4 max 10MB"
+          }
+        },
+        {
+          "id": "poster",
+          "type": "image",
+          "label": {
+            "ar": "الصورة المصغرة",
+            "en": "Poster Image"
+          }
+        },
+        {
+          "id": "autoplay",
+          "type": "checkbox",
+          "label": {
+            "ar": "تشغيل تلقائي",
+            "en": "Autoplay"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+<div id="sidenav-overlay" onclick="closeSlidingMenu()"></div>
+<nav class="slide-menu menu-header-theme-bg-primary menu-header-theme-bg-primary-brightness-100" id="sliding-menu">
+    <ul class="theme-text-for-primary-bg menu-header-theme-bg-primary-brightness-100 menu-header-theme-text-for-primary-bg">
+        <li>
+           <div class="meni-logo">
+			{% if settings.header_logo %}
+				{% set logoUrl = settings.header_logo %}
+			{% else %}
+				{% set logoUrl = store.logo %}
+			{% endif %}
+                <img class="image-logo" src="{{ image_url(logoUrl,{ h: 175, q: 100 }) }}" alt="{{ store.name }}" style="width: auto; max-height: 100%">
+			</div>
+        </li>
+        
+        {% for menu in store.settings.menus.main_menu.items %}
+            {% if menu.url %}
+            <li class="slide-menu-ul-li {% if menu.slug == 'all_categories' %} all-categories {% endif %}" onclick="scrollToSubMenu(this)">
+                <a href="{{ menu.url | localized_url if menu.resource_type != 'url' else menu.url }}" title="{{ menu.label }}" class="menu-link">
+                    <span class="px-1 clickable-span">{{ menu.label }}</span>
+                </a>
+                {% if menu.items | length > 0 %}
+                    <ul>
+                        {% for menu_sub in menu.items %}
+                            <li class="slide-menu-ul-li">
+                                <a href="{{ menu_sub.url | localized_url if menu_sub.resource_type != 'url' else menu_sub.url }}">{{ menu_sub.label }}</a>
+                                {% if menu_sub.items | length > 0 %}
+                                    <ul>
+                                        {% for menu_sub_sub in menu_sub.items %}
+                                            <li class="slide-menu-ul-li">
+                                                <a href="{{ menu_sub_sub.url | localized_url if menu_sub_sub.resource_type != 'url' else menu_sub_sub.url }}">
+                                                    {{ menu_sub_sub.label }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        <li class="slide-menu-ul-li">
+            <a href="/shipping-and-payment"><span>{{ _("Payment and delivery options") }}</span></a>
+        </li>
+        
+        <li class="slide-menu-ul-li">
+            {% set multiple_languages = store.languages | length > 1 %}
+            {% set header_options = safeget(settings, "header_options", []) %}
+            
+            {% if ('hide_country' not in header_options) or (multiple_languages and 'hide_language' not in header_options) %}
+            <div class="language-currency d-flex" onclick="zidOpenRegionSettingDialog()">
+                {% if session.lang == 'en' %}
+                    {% set change_to_lang = 'ar' %}
+                    {% set change_to_lang_name = 'العربية' %}
+                {% else %}
+                    {% set change_to_lang = 'en' %}
+                    {% set change_to_lang_name = 'English' %}
+                {% endif %}
+
+                {% if 'hide_country' not in header_options %}
+                    <div class="currency-button-area d-flex">
+                        {% if session.shipping_destination %}
+                            <button class="c-btn currency-btn">
+                                {{ session.shipping_destination.country.name }} - {{ session.shipping_destination.name }}
+                            </button>
+                        {% else %}
+                            <button class="c-btn currency-btn">{{ session.country.names[session.lang] }}</button>
+                            {% if session.country and session.country.code %}
+                                <img src="https://flagsapi.com/{{ session.country.code }}/flat/32.png" alt="{{ session.country.name }}" style="width:30px">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if multiple_languages and 'hide_language' not in header_options %}
+                    <div class="language-button-area d-flex">
+                        <button type="submit" class="c-btn language-btn d-flex align-items-center">
+                            <span class="px-2">{{ change_to_lang_name }}</span>
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </li>
+
+        <li class="slide_language_div center">
+            <div class="social-icons d-flex flex-wrap justify-content-center">
+                {% if store.settings.contact.facebook %}
+                <a href="https://www.facebook.com/{{ store.settings.contact.facebook }}" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.18182 10.3333C5.20406 10.3333 5 10.5252 5 11.4444V13.1111C5 14.0304 5.20406 14.2222 6.18182 14.2222H8.54545V20.8889C8.54545 21.8081 8.74951 22 9.72727 22H12.0909C13.0687 22 13.2727 21.8081 13.2727 20.8889V14.2222H15.9267C16.6683 14.2222 16.8594 14.0867 17.0631 13.4164L17.5696 11.7497C17.9185 10.6014 17.7035 10.3333 16.4332 10.3333H13.2727V7.55556C13.2727 6.94191 13.8018 6.44444 14.4545 6.44444H17.8182C18.7959 6.44444 19 6.25259 19 5.33333V3.11111C19 2.19185 18.7959 2 17.8182 2H14.4545C11.191 2 8.54545 4.48731 8.54545 7.55556V10.3333H6.18182Z" />
+                    </svg>
+                </a>
+                {% endif %}
+
+                {% if store.settings.contact.instagram %}
+                <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                        <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" />
+                        <path d="M16.5 12C16.5 14.4853 14.4853 16.5 12 16.5C9.51472 16.5 7.5 14.4853 7.5 12C7.5 9.51472 9.51472 7.5 12 7.5C14.4853 7.5 16.5 9.51472 16.5 12Z" />
+                        <path d="M17.5078 6.5L17.4988 6.5" />
+                    </svg>
+                </a>
+                {% endif %}
+
+                {% if store.settings.contact.tiktok %}
+                <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                        <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" />
+                        <path d="M10.5359 11.0075C9.71585 10.8916 7.84666 11.0834 6.93011 12.7782C6.01355 14.4729 6.9373 16.2368 7.51374 16.9069C8.08298 17.5338 9.89226 18.721 11.8114 17.5619C12.2871 17.2746 12.8797 17.0603 13.552 14.8153L13.4738 5.98145C13.3441 6.95419 14.4186 9.23575 17.478 9.5057" />
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+</nav>

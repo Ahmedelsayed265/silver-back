@@ -1,0 +1,115 @@
+{
+  "section_id": "uuid",
+  "template": "sections/testimonials.jinja",
+  "icon": "fal fa-user",
+  "name": {
+    "ar": "أراء العملاء",
+    "en": "Testimonials"
+  },
+  "display": true,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    {
+      "id": "color1",
+      "type": "color",
+      "label": {
+        "ar": " لون العنوان ",
+        "en": " color title"
+      }
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": {
+        "ar": "العنوان الفرعي",
+        "en": "Subtitle"
+      }
+    },
+    {
+      "id": "color2",
+      "type": "color",
+      "label": {
+        "ar": " لون العنوان الفرعي ",
+        "en": "subtitle color"
+      }
+    },
+    {
+      "id": "infinite",
+      "type": "checkbox",
+      "label": {
+        "ar": " ",
+        "en": " "
+      },
+      "option": {
+        "ar": "تحكم ف اللوب ",
+        "en": "Control loop"
+      },
+      "noLabel": true
+    },
+    {
+      "id": "auto",
+      "type": "checkbox",
+      "label": {
+        "ar": " ",
+        "en": " "
+      },
+      "option": {
+        "ar": "تحكم ف الاوتو بلاي ",
+        "en": "Control AutoPlay"
+      },
+      "noLabel": true
+    },
+    {
+      "id": "testimonials",
+      "type": "list",
+      "noLabel": true,
+      "maxItems": 12,
+      "info": {
+        "ar": "أضف رأي العميل",
+        "en": "Add testimonial"
+      },
+      "settings_label": {
+        "ar": "رأي العميل",
+        "en": "Testimonial"
+      },
+      "settings": [
+        {
+          "id": "name",
+          "type": "text",
+          "label": {
+            "ar": "الإسم",
+            "en": "Name"
+          }
+        },
+        {
+          "id": "text",
+          "type": "textarea",
+          "label": {
+            "ar": "النص",
+            "en": "Text"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hide_dots",
+      "type": "checkbox",
+      "label": {
+        "ar": " ",
+        "en": " "
+      },
+      "option": {
+        "ar": "إخفاء النقاط",
+        "en": "Hide dots"
+      },
+      "noLabel": true
+    }
+  ]
+}

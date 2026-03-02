@@ -1,0 +1,1307 @@
+{
+  "name": {
+    "ar": "إعدادات التخطيط",
+    "en": "Layout Settings"
+  },
+  "groups": [
+    {
+      "id": "colors",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "الالوان",
+        "en": "Colors"
+      },
+      "settings": [
+        {
+          "id": "header",
+          "type": "fieldset",
+          "label": {
+            "ar": "رأس الصفحة",
+            "en": "Header"
+          },
+          "icon": "font_awesome",
+          "expandable": true,
+          "settings": [
+            {
+              "id": "loged",
+              "type": "image",
+              "label": {
+                "ar": "شعار التحميل",
+                "en": "Logo load"
+              }
+            },
+            {
+              "id": "background_color",
+              "type": "color",
+              "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+              }
+            },
+            {
+              "id": "text_color",
+              "type": "color",
+              "label": {
+                "ar": "لون النص",
+                "en": "Text color"
+              }
+            },
+            {
+              "id": "menu_background_color",
+              "type": "color",
+              "label": {
+                "ar": "لون خلفية القائمة الرئيسية (اختياري)",
+                "en": "Menu background color"
+              }
+            },
+            {
+              "id": "menu_text_color",
+              "type": "color",
+              "label": {
+                "ar": "لون نص القائمة الرئيسية (اختياري)",
+                "en": "Menu text color"
+              }
+            }
+          ]
+        },
+        {
+          "id": "footer",
+          "type": "fieldset",
+          "label": {
+            "ar": "أسفل الصفحة",
+            "en": "Footer"
+          },
+          "icon": "font_awesome",
+          "expandable": true,
+          "settings": [
+            {
+              "id": "background_color",
+              "type": "color",
+              "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+              }
+            },
+            {
+              "id": "text_color",
+              "type": "color",
+              "label": {
+                "ar": "لون النص",
+                "en": "Text color"
+              }
+            }
+          ]
+        },
+        {
+          "id": "background",
+          "type": "fieldset",
+          "label": {
+            "ar": "الخلفية",
+            "en": "Background"
+          },
+          "icon": "font_awesome",
+          "expandable": true,
+          "settings": [
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Image"
+              },
+              "info": {
+                "ar": "ارفع صورة بحجم 150 * 150",
+                "en": "Upload an image of size 150 * 150"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fonts",
+      "icon": "fa fa-font",
+      "name": {
+        "ar": "الخطوط",
+        "en": "Fonts"
+      },
+      "settings": [
+        {
+          "id": "name",
+          "type": "select",
+          "label": {
+            "ar": "اسم الخط",
+            "en": "Font name"
+          },
+          "default": "Changa",
+          "options": [
+            {
+              "value": "Changa",
+              "label": {
+                "ar": "Changa",
+                "en": "Changa"
+              }
+            },
+            {
+              "value": "Cairo",
+              "label": {
+                "ar": "Cairo",
+                "en": "Cairo"
+              }
+            },
+            {
+              "value": "Amiri",
+              "label": {
+                "ar": "Amiri",
+                "en": "Amiri"
+              }
+            },
+            {
+              "value": "Mada",
+              "label": {
+                "ar": "Mada",
+                "en": "Mada"
+              }
+            },
+            {
+              "value": "Tajawal",
+              "label": {
+                "ar": "Tajawal",
+                "en": "Tajawal"
+              }
+            },
+            {
+              "value": "Almarai",
+              "label": {
+                "ar": "Almarai",
+                "en": "Almarai"
+              }
+            },
+            {
+              "value": "El Messiri",
+              "label": {
+                "ar": "El Messiri",
+                "en": "El Messiri"
+              }
+            },
+            {
+              "value": "Lalezar",
+              "label": {
+                "ar": "Lalezar",
+                "en": "Lalezar"
+              }
+            },
+            {
+              "value": "Scheherazade",
+              "label": {
+                "ar": "Scheherazade",
+                "en": "Scheherazade"
+              }
+            },
+            {
+              "value": "Lemonada",
+              "label": {
+                "ar": "Lemonada",
+                "en": "Lemonada"
+              }
+            },
+            {
+              "value": "Markazi Text",
+              "label": {
+                "ar": "Markazi",
+                "en": "Markazi"
+              }
+            },
+            {
+              "value": "Lateef",
+              "label": {
+                "ar": "Lateef",
+                "en": "Lateef"
+              }
+            },
+            {
+              "value": "Reem Kufi",
+              "label": {
+                "ar": "Reem Kufi",
+                "en": "Reem Kufi"
+              }
+            },
+            {
+              "value": "Noto Kufi Arabic",
+              "label": {
+                "ar": "Noto Kufi Arabic",
+                "en": "Noto Kufi Arabic"
+              }
+            },
+            {
+              "value": "IBM Plex Sans Arabic",
+              "label": {
+                "ar": "IBM Arabic",
+                "en": "IBM Arabic"
+              }
+            },
+            {
+              "value": "Harmattan",
+              "label": {
+                "ar": "Harmattan",
+                "en": "Harmattan"
+              }
+            },
+            {
+              "value": "Mirza",
+              "label": {
+                "ar": "Mirza",
+                "en": "Mirza"
+              }
+            },
+            {
+              "value": "Rakkas",
+              "label": {
+                "ar": "Rakkas",
+                "en": "Rakkas"
+              }
+            },
+            {
+              "value": "Katibeh",
+              "label": {
+                "ar": "Katibeh",
+                "en": "Katibeh"
+              }
+            },
+            {
+              "value": "Scheherazade New",
+              "label": {
+                "ar": "Scheherazade New",
+                "en": "Scheherazade New"
+              }
+            },
+            {
+              "value": "Aref Ruqaa",
+              "label": {
+                "ar": "Aref Ruqaa",
+                "en": "Aref Ruqaa"
+              }
+            },
+            {
+              "value": "Qahiri",
+              "label": {
+                "ar": "Qahiri",
+                "en": "Qahiri"
+              }
+            },
+            {
+              "value": "Jomhuria",
+              "label": {
+                "ar": "Jomhuria",
+                "en": "Jomhuria"
+              }
+            },
+            {
+              "value": "Kufam",
+              "label": {
+                "ar": "Kufam",
+                "en": "Kufam"
+              }
+            },
+            {
+              "value": "Vibes",
+              "label": {
+                "ar": "Vibes",
+                "en": "Vibes"
+              }
+            },
+            {
+              "value": "Noto Naskh Arabic",
+              "label": {
+                "ar": "Noto Naskh",
+                "en": "Noto Naskh"
+              }
+            },
+            {
+              "value": "Noto Sans Arabic",
+              "label": {
+                "ar": "Noto Sans",
+                "en": "Noto Sans"
+              }
+            },
+            {
+              "value": "Noto Nastaliq Urdu",
+              "label": {
+                "ar": "Noto Nastaliq Urdu",
+                "en": "Noto Nastaliq Urdu"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "detail",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "تفاصيل المنتج",
+        "en": "Product Details"
+      },
+      "settings": [
+        {
+          "id": "details",
+          "type": "list",
+          "label": {
+            "ar": "التفاصيل",
+            "en": "Details"
+          },
+          "settings": [
+            {
+              "id": "iamges",
+              "type": "image",
+              "label": {
+                "ar": "بنر تفاصيل المنتج",
+                "en": "Product details banner"
+              }
+            },
+            {
+              "id": "product",
+              "type": "product",
+              "label": {
+                "ar": "اختر المنتج لعرض منتجاته",
+                "en": "Select product to display its products"
+              }
+            },
+            {
+              "id": "topic",
+              "type": "text",
+              "label": {
+                "ar": "عنوان التصنيف",
+                "en": "Category title"
+              }
+            },
+            {
+              "id": "category",
+              "type": "category_products",
+              "label": {
+                "ar": "اختر تصنيف لعرض منتجاته",
+                "en": "Select category to display its products"
+              }
+            },
+            {
+              "id": "title_details",
+              "type": "text",
+              "label": {
+                "ar": "نص التفاصيل",
+                "en": "Details text"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "categy",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "أسئلة التصنيفات",
+        "en": "Category Questions"
+      },
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main title"
+          }
+        },
+        {
+          "id": "color",
+          "type": "color",
+          "label": {
+            "ar": "لون العنوان",
+            "en": "Title color"
+          }
+        },
+        {
+          "id": "collection",
+          "type": "list",
+          "label": {
+            "ar": "أسئلة التصنيف",
+            "en": "Category questions"
+          },
+          "settings": [
+            {
+              "id": "category",
+              "type": "category",
+              "label": {
+                "ar": "اختر التصنيف",
+                "en": "Select category"
+              }
+            }
+            ,
+            {
+              "id": "the_question",
+              "type": "text",
+              "label": {
+                "ar": "السؤال",
+                "en": "Question"
+              }
+            },
+            {
+              "id": "color1",
+              "type": "color",
+              "label": {
+                "ar": "لون السؤال",
+                "en": "Question color"
+              }
+            },
+            {
+              "id": "question_answer",
+              "type": "text",
+              "label": {
+                "ar": "الإجابة",
+                "en": "Answer"
+              }
+            },
+            {
+              "id": "color2",
+              "type": "color",
+              "label": {
+                "ar": "لون الإجابة",
+                "en": "Answer color"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Popup",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "إعدادات البوب أب",
+        "en": "Pop-up Settings"
+      },
+      "settings": [
+        {
+          "id": "enable",
+          "type": "checkbox",
+          "label": {
+            "ar": "تفعيل البوب أب",
+            "en": "Enable pop-up"
+          }
+        },
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صورة البوب أب",
+            "en": "Pop-up image"
+          }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان البوب أب",
+            "en": "Pop-up title"
+          }
+        },
+        {
+          "id": "end_date",
+          "type": "text",
+          "label": {
+            "ar": "عداد البوب أب",
+            "en": "Pop-up counter"
+          }
+        },
+        {
+          "id": "btoned",
+          "type": "text",
+          "label": {
+            "ar": "نص زر البوب أب",
+            "en": "Pop-up button text"
+          }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "رابط البوب أب",
+            "en": "Pop-up URL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bundle",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "صفحة الحزمة",
+        "en": "Bundle Page"
+      },
+      "settings": [
+        {
+          "id": "main_titel",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main Title"
+          }
+        },
+        {
+          "id": "sub_titel_one",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي الأول",
+            "en": "First Subtitle"
+          }
+        },
+        {
+          "id": "sub_titel_tow",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي الثاني",
+            "en": "Second Subtitle"
+          }
+        },
+        {
+          "id": "sub_titel_three",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي الثالث",
+            "en": "Third Subtitle"
+          }
+        },
+        {
+          "id": "infinite",
+          "type": "checkbox",
+          "label": {
+            "ar": "تحكم في اللوب",
+            "en": "Control loop"
+          }
+        },
+        {
+          "id": "auto",
+          "type": "checkbox",
+          "label": {
+            "ar": "تحكم في الأوتو بلاي",
+            "en": "Control AutoPlay"
+          }
+        },
+        {
+          "id": "banner_list",
+          "type": "list",
+          "label": {
+            "ar": "قائمة الصور",
+            "en": "Banner List"
+          },
+          "max_items": 10,
+          "entry_label": {
+            "ar": "صورة",
+            "en": "Image"
+          },
+          "settings": [
+            {
+              "id": "banner_img",
+              "type": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Image"
+              }
+            },
+            {
+              "id": "banner_title",
+              "type": "text",
+              "label": {
+                "ar": "عنوان تحت الصورة",
+                "en": "Title Under Image"
+              }
+            },
+            {
+              "id": "url_img",
+              "type": "url",
+              "label": {
+                "ar": "رابط الصورة",
+                "en": "Image URL"
+              }
+            }
+          ]
+        },
+        {
+          "id": "main_titel0",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main Title"
+          }
+        },
+        {
+          "id": "sub_titel0",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي",
+            "en": "Subtitle"
+          }
+        },
+        {
+          "id": "category",
+          "type": "category_products",
+          "label": {
+            "ar": "اختر منتجات التصنيف",
+            "en": "Select category products"
+          }
+        },
+        {
+          "id": "main_titel1",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main Title"
+          }
+        },
+        {
+          "id": "sub_titel1",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي",
+            "en": "Subtitle"
+          }
+        },
+        {
+          "id": "category1",
+          "type": "category_products",
+          "label": {
+            "ar": "اختر منتجات التصنيف",
+            "en": "Select category products"
+          }
+        },
+        {
+          "id": "main_titel2",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main Title"
+          }
+        },
+        {
+          "id": "sub_titel2",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي",
+            "en": "Subtitle"
+          }
+        },
+        {
+          "id": "category2",
+          "type": "category_products",
+          "label": {
+            "ar": "اختر منتجات التصنيف",
+            "en": "Select category products"
+          }
+        },
+        {
+          "id": "slides",
+          "type": "list",
+          "label": {
+            "ar": "عنصر سلايدر",
+            "en": "Slide Item"
+          },
+          "max_items": 5,
+          "settings_label": {
+            "ar": "عنصر سلايدر",
+            "en": "Slide Item"
+          },
+          "settings": [
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "صورة السلايدر",
+                "en": "Slide Image"
+              }
+            },
+            {
+              "id": "title",
+              "type": "text",
+              "label": {
+                "ar": "العنوان الرئيسي",
+                "en": "Main Title"
+              }
+            },
+            {
+              "id": "subtitle",
+              "type": "text",
+              "label": {
+                "ar": "النص الفرعي",
+                "en": "Subtitle"
+              }
+            },
+            {
+              "id": "button_text",
+              "type": "text",
+              "label": {
+                "ar": "نص الزر",
+                "en": "Button Text"
+              }
+            },
+            {
+              "id": "button_url",
+              "type": "url",
+              "label": {
+                "ar": "رابط الزر",
+                "en": "Button URL"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "categories",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "جميع التصنيفات",
+        "en": "All Categories"
+      },
+      "settings": [
+        {
+          "id": "iamged",
+          "type": "image",
+          "label": {
+            "ar": "بنر تفاصيل المنتج",
+            "en": "Product details banner"
+          }
+        }
+      ]
+    },
+    {
+      "id": "carted",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "صفحة السلة",
+        "en": "Cart Page"
+      },
+      "settings": [
+        {
+          "id": "category",
+          "type": "category_products",
+          "label": {
+            "ar": "اختر تصنيف لعرض منتجاته",
+            "en": "Select category to display its products"
+          }
+        }
+      ]
+    },
+    {
+      "id": "specialpage",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "معرض الأعمال",
+        "en": "Gallery"
+      },
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main title"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي",
+            "en": "Subtitle"
+          }
+        },
+        {
+          "id": "video1",
+          "type": "video",
+          "label": {
+            "ar": "الفيديو",
+            "en": "Video"
+          },
+          "info": {
+            "ar": "MP4 اقصى حجم 10MB",
+            "en": "Max size 10MB, MP4 format"
+          }
+        },
+        {
+          "id": "controls1",
+          "type": "checkbox",
+          "label": {
+            "ar": "عرض أزرار التحكم",
+            "en": "Show controls"
+          }
+        },
+        {
+          "id": "autoplay1",
+          "type": "checkbox",
+          "label": {
+            "ar": "تشغيل الفيديو بشكل مباشر",
+            "en": "Autoplay"
+          }
+        },
+        {
+          "id": "galler",
+          "type": "list",
+          "label": {
+            "ar": "معرض الصور",
+            "en": "Image Gallery"
+          },
+          "settings": [
+            {
+              "id": "title",
+              "type": "text",
+              "label": {
+                "ar": "عنوان الرابط",
+                "en": "Link title"
+              }
+            },
+            {
+              "id": "url",
+              "type": "url",
+              "label": {
+                "ar": "الرابط",
+                "en": "Link"
+              }
+            },
+            {
+              "id": "image1",
+              "type": "image",
+              "label": {
+                "ar": "الصورة الأولى",
+                "en": "First image"
+              }
+            },
+            {
+              "id": "image2",
+              "type": "image",
+              "label": {
+                "ar": "الصورة الثانية",
+                "en": "Second image"
+              }
+            },
+            {
+              "id": "image3",
+              "type": "image",
+              "label": {
+                "ar": "الصورة الثالثة",
+                "en": "Third image"
+              }
+            },
+            {
+              "id": "image4",
+              "type": "image",
+              "label": {
+                "ar": "الصورة الرابعة",
+                "en": "Fourth image"
+              }
+            }
+          ]
+        },
+        {
+          "id": "topic",
+          "type": "text",
+          "label": {
+            "ar": "عنوان تسجيل الفورمة",
+            "en": "Form registration title"
+          }
+        },
+        {
+          "id": "title1",
+          "type": "text",
+          "label": {
+            "ar": "عنوان تسجيل الفورمة",
+            "en": "Form registration title"
+          }
+        },
+        {
+          "id": "url1",
+          "type": "url",
+          "label": {
+            "ar": "رابط تسجيل الفورمة",
+            "en": "Form registration URL"
+          }
+        },
+        {
+          "id": "title11",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الثاني لتسجيل الفورمة",
+            "en": "Second form registration title"
+          }
+        },
+        {
+          "id": "url11",
+          "type": "url",
+          "label": {
+            "ar": "الرابط الثاني لتسجيل الفورمة",
+            "en": "Second form registration URL"
+          }
+        },
+        {
+          "id": "expalin",
+          "type": "text",
+          "label": {
+            "ar": "شرح تسجيل الفورمة",
+            "en": "Form registration explanation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "productDetailsBlog",
+      "icon": "fa-solid fa-images",
+      "name": {
+        "ar": "مدونة تفاصيل المنتج",
+        "en": "Product Details Blog"
+      },
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main title"
+          }
+        },
+        {
+          "id": "color",
+          "type": "color",
+          "label": {
+            "ar": "لون العنوان",
+            "en": "Title color"
+          }
+        },
+        {
+          "id": "infinite",
+          "type": "checkbox",
+          "label": {
+            "ar": "تحكم في اللوب",
+            "en": "Control loop"
+          }
+        },
+        {
+          "id": "auto",
+          "type": "checkbox",
+          "label": {
+            "ar": "تحكم في الأوتو بلاي",
+            "en": "Control AutoPlay"
+          }
+        },
+        {
+          "id": "blogs",
+          "type": "list",
+          "label": {
+            "ar": "مدونة تفاصيل المنتج",
+            "en": "Product Details Blog"
+          },
+          "settings": [
+            {
+              "id": "product",
+              "type": "product",
+              "label": {
+                "ar": "المنتج",
+                "en": "Product"
+              }
+            },
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Image"
+              }
+            },
+            {
+              "id": "name",
+              "type": "text",
+              "label": {
+                "ar": "الاسم",
+                "en": "Name"
+              }
+            },
+            {
+              "id": "color1",
+              "type": "color",
+              "label": {
+                "ar": "لون الاسم",
+                "en": "Name color"
+              }
+            },
+            {
+              "id": "date",
+              "type": "text",
+              "label": {
+                "ar": "التاريخ",
+                "en": "Date"
+              }
+            },
+            {
+              "id": "color2",
+              "type": "color",
+              "label": {
+                "ar": "لون التاريخ",
+                "en": "Date color"
+              }
+            },
+            {
+              "id": "title",
+              "type": "text",
+              "label": {
+                "ar": "العنوان",
+                "en": "Title"
+              }
+            },
+            {
+              "id": "color3",
+              "type": "color",
+              "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+              }
+            },
+            {
+              "id": "desc",
+              "type": "text",
+              "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+              }
+            },
+            {
+              "id": "color4",
+              "type": "color",
+              "label": {
+                "ar": "لون العنوان الفرعي",
+                "en": "Subtitle color"
+              }
+            },
+            {
+              "id": "btn1",
+              "type": "text",
+              "label": {
+                "ar": "نص الزر الأول",
+                "en": "First button text"
+              }
+            },
+            {
+              "id": "btn2",
+              "type": "text",
+              "label": {
+                "ar": "نص الزر الثاني",
+                "en": "Second button text"
+              }
+            },
+            {
+              "id": "href",
+              "type": "url",
+              "label": {
+                "ar": "الرابط",
+                "en": "URL"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "categoryBlog",
+      "icon": "fa-solid fa-images",
+      "name": {
+        "ar": "مدونة القسم",
+        "en": "Category Blog"
+      },
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الرئيسي",
+            "en": "Main title"
+          }
+        },
+        {
+          "id": "color",
+          "type": "color",
+          "label": {
+            "ar": "لون العنوان",
+            "en": "Title color"
+          }
+        },
+        {
+          "id": "infinite",
+          "type": "checkbox",
+          "label": {
+            "ar": "تحكم في اللوب",
+            "en": "Control loop"
+          }
+        },
+        {
+          "id": "auto",
+          "type": "checkbox",
+          "label": {
+            "ar": "تحكم في الأوتو بلاي",
+            "en": "Control AutoPlay"
+          }
+        },
+        {
+          "id": "blogs",
+          "type": "list",
+          "label": {
+            "ar": "مدونة القسم",
+            "en": "Category Blog"
+          },
+          "settings": [
+            {
+              "id": "category",
+              "type": "category",
+              "label": {
+                "ar": "التصنيف",
+                "en": "Category"
+              }
+            },
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Image"
+              }
+            },
+            {
+              "id": "name",
+              "type": "text",
+              "label": {
+                "ar": "الاسم",
+                "en": "Name"
+              }
+            },
+            {
+              "id": "color1",
+              "type": "color",
+              "label": {
+                "ar": "لون الاسم",
+                "en": "Name color"
+              }
+            },
+            {
+              "id": "date",
+              "type": "text",
+              "label": {
+                "ar": "التاريخ",
+                "en": "Date"
+              }
+            },
+            {
+              "id": "color2",
+              "type": "color",
+              "label": {
+                "ar": "لون التاريخ",
+                "en": "Date color"
+              }
+            },
+            {
+              "id": "title",
+              "type": "text",
+              "label": {
+                "ar": "العنوان",
+                "en": "Title"
+              }
+            },
+            {
+              "id": "color3",
+              "type": "color",
+              "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+              }
+            },
+            {
+              "id": "desc",
+              "type": "text",
+              "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+              }
+            },
+            {
+              "id": "color4",
+              "type": "color",
+              "label": {
+                "ar": "لون العنوان الفرعي",
+                "en": "Subtitle color"
+              }
+            },
+            {
+              "id": "btn1",
+              "type": "text",
+              "label": {
+                "ar": "نص الزر الأول",
+                "en": "First button text"
+              }
+            },
+            {
+              "id": "btn2",
+              "type": "text",
+              "label": {
+                "ar": "نص الزر الثاني",
+                "en": "Second button text"
+              }
+            },
+            {
+              "id": "href",
+              "type": "url",
+              "label": {
+                "ar": "الرابط",
+                "en": "URL"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "categories_banner",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "بنرات التصنيفات",
+        "en": "Category Banners"
+      },
+      "settings": [
+        {
+          "id": "banners",
+          "type": "list",
+          "label": {
+            "ar": "البنرات",
+            "en": "Banners"
+          },
+          "max_items": 99,
+          "settings_label": {
+            "ar": "البنرات",
+            "en": "Banners"
+          },
+          "settings": [
+            {
+              "id": "category",
+              "type": "category_products",
+              "label": {
+                "ar": "اختر تصنيف لعرض البانر",
+                "en": "Select category to display its banner"
+              }
+            },
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "البانر",
+                "en": "Banner"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

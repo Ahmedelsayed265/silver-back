@@ -1,0 +1,11 @@
+<section id="{{ sectionId }}" section-id="{{ sectionId }}" class="banner_section my-40">
+    <div class="container-fluid">
+        <div class="banner_container">
+            {% for banner in safeget(settings, "banner_image", []) %}
+            <a class="banner_item" href="{{ banner.url }}">
+                <img src="{{ banner.image }}" alt="banner">
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

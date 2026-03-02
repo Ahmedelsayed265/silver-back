@@ -1,0 +1,35 @@
+<section section-id="{{ sectionId }}" data-lg-scroll-offset="130" data-md-scroll-offset="130" data-sm-scroll-offset="94" class="container-fluid mp">
+	<div class="photos-lappings">
+		<div class="d-flex align-items-center justify-content-between">
+            {% if settings.title %}
+                <h2 class="section-title-custom" {% if settings.color1 %} style="color: {{ settings.color1 }}" {% endif %}>
+                    {{ settings.title }}
+                </h2>
+            {% endif %}
+        </div>
+
+		<div class="main-lapping" aria-label="قائمة صور مائلة ومتراكبة">
+			<div class="gallery-container">
+				{% for key in safeget(settings, "images", []) %}
+					<a href="{{ key.url }}" class="photo-ddec" data-index="{{ loop.index0 }}" aria-label="{{ key.alt | default('صورة') }}">
+						<img class="photo_disc" src="{{ key.image }}" alt="{{ key.alt | default('صورة') }}" loading="lazy" decoding="async">
+					</a>
+				{% endfor %}
+			</div>
+
+			<div class="lapping-content">
+				{% if settings.title %}
+					<h2 class="title-desc">{{ settings.title }}</h2>
+				{% endif %}
+
+				{% if settings.desc %}
+					<p class="title-desc">{{ settings.desc }}</p>
+				{% endif %}
+
+				{% if settings.href and settings.bton %}
+					<a style="background-color:{{settings.btn_back}};color:{{settings.btn_color}};" href="{{ settings.href }}" class="btn-text">{{ settings.bton }}</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</section>

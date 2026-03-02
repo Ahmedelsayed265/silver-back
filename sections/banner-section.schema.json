@@ -1,0 +1,37 @@
+{
+  "section_id": "uuid",
+  "template": "sections/banner-section.jinja",
+  "icon": "fal fa-user",
+  "name": {
+    "ar": "قسم البانرات",
+    "en": "banners section"
+  },
+  "settings": [
+    {
+      "id": "banner_image",
+      "type": "list",
+      "label": {
+        "ar": "الصور",
+        "en": "images"
+      },
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صورة",
+            "en": "image"
+          }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "رابط",
+            "en": "url"
+          }
+        }
+      ]
+    }
+  ]
+}

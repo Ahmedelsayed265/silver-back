@@ -1,0 +1,775 @@
+{% extends "layout.jinja" %}
+
+{% block header %} {% include 'header.jinja' %} {% endblock %}
+
+{% block top_links %}
+<link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}" />
+<link rel="stylesheet" type="text/css" href="{{ ('cart.css?v=' ~ ver) | asset_url }}" />
+
+<style>
+/* =============================================
+   QUANTITY BUTTONS STYLE
+   ============================================= */
+.custom-quantity-wrapper {
+    display: inline-flex !important;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    height: 36px;
+}
+
+.qty-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.qty-btn:hover { background: #f5f5f5; }
+
+.qty-input {
+    width: 40px;
+    height: 34px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.cart-product-quantity-dropdown select {
+    display: none !important;
+}
+
+/* =============================================
+   CART PRODUCT ROW
+   ============================================= */
+.template_for_cart_products_list .cart-product-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px;
+    padding: 14px 0;
+    position: relative;
+}
+
+.template_for_cart_products_list .cart-product-image,
+.template_for_cart_products_list .cart-product-img-wrapper {
+    width: 70px !important;
+    min-width: 70px !important;
+    height: 70px !important;
+    flex-shrink: 0;
+}
+
+.template_for_cart_products_list .cart-product-image img,
+.template_for_cart_products_list .cart-product-img-wrapper img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 6px;
+}
+
+.cart-product-delete a,
+.cart-product-delete button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    color: #666;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.cart-product-delete a:hover,
+.cart-product-delete button:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<section class="breadcrumb-section">
+    <nav aria-label="breadcrumb" class="container-fluid">
+        <ol class="breadcrumb image_breadcrumb">
+            <div class="tetx_breadcrumb">
+                <div style="display: flex;align-items: flex-start;">
+                    <li class="breadcrumb-item pageed" aria-current="page">
+                        <a href="/">{{ _("Home") }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <span>
+                            <a href="/cart">{{ _("Cart") }}</a>
+                        </span>
+                    </li>
+                </div>
+            </div>
+        </ol>
+    </nav>
+</section>
+
+<div class="modal" id="searchCitiesModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="padding: 10px 20px 20px">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="text-center py-3 mb-0 text-color-primary">
+                    {{ _("Enjoy free shipping for the cities") }}
+                </h5>
+                <div class="p-2 d-lg-flex align-items-center bd-highlight search-input lg-search-div flex-grow-1">
+                    <div class="form-group" style="position: relative; margin: 0px">
+                        <span class="icon-search search-input-icon" style="z-index: 1"></span>
+                        <div class="autocomplete" style="position: relative">
+                            <input type="text" data-cat-id="" class="form-control cities-search-input pl-5"
+                                placeholder="{{ _('Search') }}">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p class="cities-result lead">
+                        {% for city in safeget(cart, "free_shipping_rule.shipping_cities_condition", []) %}
+                        {{ city.name }}
+                        {% if not loop.last %} {{ _(",") }} {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" style="width: 120px">
+                        {{ _("Cancel") }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="cart_section">
+    <div class="container-fluid mb-5">
+        <div class="cart-view">
+            <div class="row cart-products-with-totals {% if cart.products_count <= 0 %}d-none{% endif %}">
+
+                <!-- ====== المنتجات ====== -->
+                <div class="col-12 col-lg-8 p-2">
+                    <div class="section-cart-products">
+                        <div class="template_for_cart_products_list">
+                            {% include 'vitrin:cart/products_list.jinja' %}
+                        </div>
+
+                        <!-- Gift Card -->
+                        <div class="cart-gift-card"
+                            data-gift-removed-success="{{ _('Gift card removed successfully') }}"
+                            data-gift-added-success="{{ _('Send Successfully') }}"
+                            style="display: {% if cart.gift_card_details and cart.gift_card_details | length > 0 %}block{% else %}none{% endif %};">
+                            <div class="d-flex align-items-start">
+                                <span class="gift-card-icon-wrapper">
+                                    <span class="icon-gift gift-icon-fallback"></span>
+                                    <img src="{% if cart.gift_card_details and cart.gift_card_details.card_design %}{{ cart.gift_card_details.card_design }}{% endif %}"
+                                        class="gift-card-image {% if not cart.gift_card_details or not cart.gift_card_details.card_design %}d-none{% endif %}"
+                                        alt="Gift card design" />
+                                </span>
+                                <div class="gift-card-content flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="mb-0 gift-title">{{ _('Gift') }}</p>
+                                        <p class="mb-0 gift-price-label">{{ _('Free') }}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-start gift-card-details-row">
+                                        <div class="gift-card-info">
+                                            <p class="mb-0 gift-sender-recipient">
+                                                <span class="sender-label">{{ _("Sender") }}:</span>
+                                                <span class="sender-name">{{ cart.gift_card_details.sender_name if cart.gift_card_details else '' }}</span>;
+                                                <span class="recipient-label">{{ _("Recipient") }}:</span>
+                                                <span class="receiver-name">{{ cart.gift_card_details.receiver_name if cart.gift_card_details else '' }}</span>
+                                            </p>
+                                            <p class="mb-0 message-info"
+                                                style="display: {% if cart.gift_card_details and cart.gift_card_details.gift_message and cart.gift_card_details.gift_message | length > 0 %}block{% else %}none{% endif %};">
+                                                <span class="gift-message">{{ cart.gift_card_details.gift_message if cart.gift_card_details else '' }}</span>
+                                            </p>
+                                            <p class="mb-0 media-link-info"
+                                                style="display: {% if cart.gift_card_details and cart.gift_card_details.media_link and cart.gift_card_details.media_link | length > 0 %}block{% else %}none{% endif %};">
+                                                <span class="gift-media-link">{{ cart.gift_card_details.media_link if cart.gift_card_details else '' }}</span>
+                                            </p>
+                                        </div>
+                                        <div class="gift-card-actions">
+                                            <button type="button" class="btn btn-sm btn-link gift-card-edit-btn"
+                                                onclick="editGiftCard()" title="{{ _('Edit') }}">
+                                                <img src="{{ 'edit-icon.svg' | asset_url }}" alt="Edit" class="gift-card-edit-icon" />
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-link gift-card-delete-btn"
+                                                onclick="deleteGiftCard()" title="{{ _('Delete') }}">
+                                                <span class="icon-trash-alt"></span>
+                                                <img class="delete-gift-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="15" height="15" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ====== الملخص والإجراءات ====== -->
+                <div class="col-12 col-lg-4 p-2">
+                    <div class="action_wrap">
+
+                        <!-- كوبون الخصم -->
+                        <div class="coupon-form">
+                            <form>
+                                <div class="form-group">
+                                    <h4>{{ _("Discount coupon") }}</h4>
+                                    <div class="d-flex">
+                                        <input class="form-control send-coupon" type="text"
+                                            placeholder="{{ _('Enter discount coupon') }}" />
+                                        <button type="button" class="btn btn-primary" onclick="sendCoupon()">
+                                            <img class="send-coupon-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="15" height="15" />
+                                            {{ _("Send") }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% if cart.coupon.code %}
+                            <div class="message-coupon alert alert-primary" role="alert">
+                                <span>{{ cart.coupon.code }}</span>&nbsp;
+                                <a onclick="deleteCoupon()" style="color: inherit; cursor: pointer">
+                                    <span class="icon-trash-alt"></span>
+                                    <img class="delete-coupon-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="15" height="15" />
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- نقاط الولاء -->
+                        <div>{% include "components/cart_loyalty_points_widget.jinja" %}</div>
+
+                        <!-- الإجماليات -->
+                        <div class="cart-totals-div">
+                            {% for cartTotal in cart.totals %}
+                            <div class="cart-product-row-wrapper cart-totals-row-wrapper">
+                                <div class="flex-grow-1">
+                                    {{ cartTotal.title }}
+                                    {% if cartTotal.code == 'total' and store.settings.general.tax_settings.tax_percentage_formatted %}
+                                    &nbsp;<small>{{ _('Includes TAX %(percentage)s') | format(percentage=store.settings.general.tax_settings.tax_percentage_formatted) }}</small>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-shrink-0"
+                                    style="{% if cartTotal.code == 'total' %}font-weight: bold; color: var(--primary-color);{% endif %}">
+                                    {{ cartTotal.value_string }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- وسائل الدفع -->
+                        <div>{% include 'vitrin:cart/payment_widgets.jinja' %}</div>
+
+                        <!-- الشحن المجاني -->
+                        {% if cart.free_shipping_rule and cart.free_shipping_rule.code %}
+                        {% set status = cart.free_shipping_rule.subtotal_condition.status | default('') %}
+                        {% set subtotal_condition = cart.free_shipping_rule.subtotal_condition %}
+                        <div class="cart-discount-rule-wrapper free-shipping-rule-section mt-5 d-block">
+                            <div class="d-flex align-items-center">
+                                <div class="message flex-grow-1 free-shipping-rule-message">
+                                    {% if status == 'min_not_reached' %}
+                                    {{ _("Add products with total of %(total)s to get free shipping") | format(total=subtotal_condition.remaining | default("0")) }}
+                                    {% elif status == 'max_exceed' %}
+                                    {{ _("Free shipping applied for cart total between %(min)s and %(max)s") | format(min=subtotal_condition.min_string | default("0"), max=subtotal_condition.max_string | default("0")) }}
+                                    {% elif status == 'applied' %}
+                                    {{ _("Free shipping applied") }}
+                                    {% endif %}
+                                </div>
+                                <div class="text-muted mr-1 flex-shrink-0 free-shipping-rule-read-more {% if status == 'min_not_reached' %}d-inline-block{% else %}d-none{% endif %}">
+                                    <a data-toggle="modal" data-target="#searchCitiesModal" href="#">
+                                        <small>{{ _("Read More") }}</small>
+                                    </a>
+                                </div>
+                                <div class="discount-progress flex-shrink-0">
+                                    <span class="free-shipping-rule-done {% if status == 'applied' %}d-inline-block{% else %}d-none{% endif %}">
+                                        <span style="font-size: 28px" class="icon-done text-color-primary"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="{% if status == 'min_not_reached' %}d-block{% else %}d-none{% endif %} discount-progress-linear">
+                                <div class="progress-bar free-shipping-rule-progress"
+                                    style="width: {{ subtotal_condition.products_subtotal_percentage_from_min | default(0) }}%">
+                                    {% if status == 'applied' %}
+                                    <span>{{ _("Free Shipping") }}</span>
+                                    {% else %}
+                                    <span>{{ subtotal_condition.products_subtotal_percentage_from_min | default(0) }}%</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- أزرار الإجراءات -->
+                        <div>
+                            <div class="mt-5">
+                                {% if store.settings.general.availability.closed_now %}
+                                <a href="#" class="btn btn-lg btn-block btn-disabled">{{ _("Complete Order") }}</a>
+                                {% else %}
+                                    {% if session.is_guest %}
+                                    <a href="/auth/login?redirect_to=/checkout" class="btn btn-primary btn-lg btn-block"
+                                        onclick="event.preventDefault(); handleLoginAction('/checkout'); return false;">
+                                        {{ _("Complete Order") }}
+                                    </a>
+                                    {% else %}
+                                    <a href="/checkout" class="btn btn-primary btn-lg btn-block">{{ _("Complete Order") }}</a>
+                                    {% endif %}
+                                    <div style="margin-top: 1rem">
+                                        {% include 'vitrin:checkout/apple-pay-quick-checkout.jinja' %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if store.settings.checkout.gift_order_settings.is_gift_order_enabled == '1' %}
+                            <div class="card border-0 mt-3 text-body">
+                                <button class="btn btn-lg btn-block btn-outline-primary gift-card-toggle-btn d-flex align-items-center justify-content-between {% if cart.gift_card_details and cart.gift_card_details | length > 0 %}gift-added{% else %}gift-send{% endif %}"
+                                    onclick="handleGiftCardClick()">
+                                    <span class="icon-gift" style="font-size: 24px;"></span>
+                                    <span class="flex-grow-1 text-left ml-3">{{ _("Make it a gift") }}</span>
+                                    <span class="gift-edit-link {% if cart.gift_card_details and cart.gift_card_details | length > 0 %}d-inline{% else %}d-none{% endif %}">
+                                        {{ _("Edit details") }}
+                                    </span>
+                                </button>
+                            </div>
+                            {% include 'vitrin:cart/gift-card.jinja' %}
+                            {% endif %}
+
+                            <div class="mt-3">
+                                <a href="/" class="btn btn-outline-primary btn-lg btn-block">{{ _("continue shopping") }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- سلة فارغة -->
+            <div class="cart-empty pt-5 pbb-5 {% if cart.products_count > 0 %}d-none{% endif %}">
+                <div class="d-flex flex-column align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="190" height="240" viewBox="0 0 682.667 682.667">
+                        <g>
+                            <defs>
+                                <clipPath id="a" clipPathUnits="userSpaceOnUse">
+                                    <path d="M0 512h512V0H0Z" fill="#b10e00" opacity="1"></path>
+                                </clipPath>
+                            </defs>
+                            <g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 682.667)">
+                                <path d="M0 0h377.709l-60-210h-266c-16.568 0-30-13.432-30-30 0-16.569 13.432-30 30-30h240" transform="translate(114.29 345)" fill="none" stroke="#B10E00" stroke-width="30px"></path>
+                                <path d="M0 0c0 16.569 13.432 30 30 30h31c16.568 0 30-13.431 30-30" transform="translate(15 375)" fill="none" stroke="#B10E00" stroke-width="30px"></path>
+                                <path d="m0 0-60.869 247.197" transform="translate(166 135)" fill="none" stroke="#B10E00" stroke-width="30px"></path>
+                                <path d="M0 0c0-16.569-13.432-30-30-30-16.568 0-30 13.431-30 30 0 16.568 13.432 30 30 30C-13.432 30 0 16.568 0 0Z" transform="translate(256 45)" fill="none" stroke="#B10E00" stroke-width="30px"></path>
+                                <path d="M0 0c0-16.569-13.432-30-30-30-16.568 0-30 13.431-30 30 0 16.568 13.432 30 30 30C-13.432 30 0 16.568 0 0Z" transform="translate(436 45)" fill="none" stroke="#B10E00" stroke-width="30px"></path>
+                                <path d="M0 0v30" transform="translate(301 467)" fill="none" stroke="#B10E00" stroke-width="30px" stroke-linecap="square"></path>
+                                <path d="m0 0-21.213 21.213" transform="translate(216.147 431.853)" fill="none" stroke="#B10E00" stroke-width="30px" stroke-linecap="square"></path>
+                                <path d="m0 0 21.213 21.213" transform="translate(385.853 431.853)" fill="none" stroke="#B10E00" stroke-width="30px" stroke-linecap="square"></path>
+                            </g>
+                        </g>
+                    </svg>
+                    <h2 class="mt-3" style="margin-top: 3rem;">{{ _("Cart is empty") }}</h2>
+                    <div class="mt-3">
+                        <a href="/" class="btn btn-outline-primary btn-lg btn-block">{{ _("continue shopping") }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قد يعجبك أيضاً -->
+<section section-id="cart-products" class="home-products-section section-padding-space">
+    <div class="container-fluid slider-container">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="section-title-custom">{{ _("You may also like") }}</h2>
+            <div class="d-flex align-items-center">
+                <a href="/products" class="all_link">{{ _("Show all") }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 492 492">
+                        <path d="M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z" fill="#000000"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div id="cart-products-slider" class="products-slider s-slider"></div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var categoryId = "{{ settings.carted_category.id | default(settings.carted_category) }}";
+        var spinnerUrl = "{{ 'spinner.gif' | asset_url }}";
+        var productDefaultImg = "{{ 'product-img.svg' | asset_url }}";
+        var uBellUrl = "{{ 'u_bell.svg' | asset_url }}";
+
+        function getRatingHtml(ratingData) {
+            if (!ratingData) return '';
+            var rating = ratingData.average;
+            var count = ratingData.total_count;
+            if (!rating && !count) return '';
+            var ratingRounded = (Math.ceil(rating * 2) / 2);
+            var starsHtml = '';
+            for (var n = 1; n <= 5; n++) {
+                if (n <= ratingRounded) {
+                    starsHtml += '<span class="icon-star1"></span>';
+                } else if (n <= ratingRounded + 0.5) {
+                    starsHtml += '<span class="icon-half-star"></span>';
+                } else {
+                    starsHtml += '<span class="icon-star1 deactive"></span>';
+                }
+            }
+            var countHtml = count > 0 ? '<span class="product-card-rating-count">(' + count + ')</span>' : '';
+            return '<div class="product-card-rating-wrapper" style="height: 18px">' +
+                '<div class="d-inline-flex product-card-rating" data-rating="' + rating + '">' +
+                starsHtml + '</div>' + countHtml + '</div>';
+        }
+
+        if (categoryId) {
+            fetch('/api/v1/products?categories=' + categoryId)
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.results && data.results.length > 0) {
+                        var container = document.querySelector('#cart-products-slider');
+                        var products = data.results;
+
+                        products.forEach(function (product) {
+                            var productName = product.name.ar || product.name;
+                            var productLink = '/products/' + product.slug;
+                            var isOutOfStock = !product.is_infinite && product.quantity <= 0;
+                            var hasOptions = product.has_options || product.has_fields || product.product_class === 'dynamic_bundle';
+
+                            var mainImage = (product.main_image && product.main_image.image && product.main_image.image.large)
+                                ? product.main_image.image.large : productDefaultImg;
+                            var secondImage = (product.images && product.images.length >= 2)
+                                ? product.images[1].image.large : null;
+
+                            var priceHtml = '';
+                            if (product.formatted_sale_price) {
+                                priceHtml = '<div class="section-product-price">' +
+                                    '<div class="product-price theme-title-primary"><span>' + product.formatted_sale_price + '</span></div>' +
+                                    '<div style="color: #494949"><span class="product-prev-price">' + product.formatted_price + '</span></div>' +
+                                    '</div>';
+                            } else {
+                                priceHtml = '<div class="product-price section-product-price theme-title-primary"><span>' + product.formatted_price + '</span></div>';
+                            }
+
+                            var buttonHtml = '';
+                            if (isOutOfStock) {
+                                buttonHtml = '<button type="button" class="btn btn-primary btn-product-card-out-of-stock" onclick="window.location.href=\'' + productLink + '\';">' +
+                                    '<img src="' + uBellUrl + '" alt="" class="d-inline" />' +
+                                    '<span>{{ _("Notify me when available") }}</span></button>';
+                            } else if (hasOptions) {
+                                buttonHtml = '<button type="button" class="btn btn-primary btn-product-card-select-variant cart_btn" onclick="window.location.href=\'' + productLink + '\';">' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2.43848 0.25C3.70035 0.250013 4.8004 1.10881 5.10645 2.33301L5.10938 2.34668L7.6084 14.2471L14.2637 14.2471C15.3092 14.247 16.0783 14.0819 16.6611 13.8115C17.2354 13.545 17.6668 13.1584 18.0156 12.6494C18.7472 11.5816 19.1031 10.0154 19.5254 7.91797C19.6489 7.30441 19.7254 6.91631 19.7451 6.63086C19.7544 6.49631 19.7477 6.41894 19.7393 6.37598C19.7335 6.34659 19.7276 6.33685 19.7256 6.33398C19.7192 6.33045 19.699 6.31942 19.6543 6.30762C19.5334 6.27575 19.3372 6.25646 18.9863 6.25C18.5722 6.24238 18.2424 5.90041 18.25 5.48633C18.2576 5.07223 18.5996 4.74245 19.0137 4.75C19.3703 4.75657 19.7261 4.77538 20.0371 4.85742C20.3777 4.94729 20.6995 5.12229 20.9385 5.45117C21.2328 5.85625 21.271 6.31402 21.2422 6.7334C21.215 7.12856 21.1172 7.61419 21.0059 8.16699L20.9961 8.21387C20.5906 10.228 20.1913 12.1274 19.2529 13.4971C18.7668 14.2066 18.1344 14.7814 17.293 15.1719C16.46 15.5584 15.4614 15.747 14.2637 15.7471H7.9375C7.9185 15.7485 7.89925 15.75 7.87988 15.75L7.46875 15.75C6.64616 15.75 5.92133 16.3778 5.77637 17.25L16.5 17.25C17.7426 17.25 18.75 18.2574 18.75 19.5C18.75 20.7426 17.7426 21.75 16.5 21.75C15.2574 21.75 14.25 20.7426 14.25 19.5C14.25 19.2367 14.2977 18.9848 14.3809 18.75H11.6191C11.7023 18.9848 11.75 19.2367 11.75 19.5C11.75 20.7426 10.7426 21.75 9.5 21.75C8.25736 21.75 7.25 20.7426 7.25 19.5C7.25 19.2367 7.29775 18.9848 7.38086 18.75H5.41113C4.74128 18.7498 4.25 18.193 4.25 17.5713C4.25005 16.2433 5.01444 15.0715 6.1377 14.5449L3.64844 2.68457C3.50511 2.13463 3.00784 1.75001 2.43848 1.75L1.5 1.75C1.08579 1.75 0.75 1.41421 0.75 1C0.75 0.585786 1.08579 0.25 1.5 0.25L2.43848 0.25ZM9.5 18.75C9.08579 18.75 8.75 19.0858 8.75 19.5C8.75 19.9142 9.08579 20.25 9.5 20.25C9.91421 20.25 10.25 19.9142 10.25 19.5C10.25 19.0858 9.91421 18.75 9.5 18.75ZM16.5 18.75C16.0858 18.75 15.75 19.0858 15.75 19.5C15.75 19.9142 16.0858 20.25 16.5 20.25C16.9142 20.25 17.25 19.9142 17.25 19.5C17.25 19.0858 16.9142 18.75 16.5 18.75ZM12 0.75C12.4142 0.75 12.75 1.08579 12.75 1.5V4.75H16C16.4142 4.75 16.75 5.08579 16.75 5.5C16.75 5.91421 16.4142 6.25 16 6.25H12.75L12.75 9.5C12.75 9.91421 12.4142 10.25 12 10.25C11.5858 10.25 11.25 9.91421 11.25 9.5L11.25 6.25L8 6.25C7.58579 6.25 7.25 5.91421 7.25 5.5C7.25 5.08579 7.58579 4.75 8 4.75L11.25 4.75V1.5C11.25 1.08579 11.5858 0.75 12 0.75Z" fill="#FAFAFA"></path></svg>' +
+                                    '<p>{{ _("add to cart") }}</p></button>';
+                            } else {
+                                buttonHtml = '<button type="button" class="btn btn-primary product-card-add-to-cart cart_btn" ' +
+                                    'onclick="event.preventDefault(); event.stopPropagation(); productCartAddToCart(this,\'' + product.id + '\')">' +
+                                    '<img style="display: inline" class="add-to-cart-progress d-none" src="' + spinnerUrl + '" width="20" height="20" />' +
+                                    '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2.43848 0.25C3.70035 0.250013 4.8004 1.10881 5.10645 2.33301L5.10938 2.34668L7.6084 14.2471L14.2637 14.2471C15.3092 14.247 16.0783 14.0819 16.6611 13.8115C17.2354 13.545 17.6668 13.1584 18.0156 12.6494C18.7472 11.5816 19.1031 10.0154 19.5254 7.91797C19.6489 7.30441 19.7254 6.91631 19.7451 6.63086C19.7544 6.49631 19.7477 6.41894 19.7393 6.37598C19.7335 6.34659 19.7276 6.33685 19.7256 6.33398C19.7192 6.33045 19.699 6.31942 19.6543 6.30762C19.5334 6.27575 19.3372 6.25646 18.9863 6.25C18.5722 6.24238 18.2424 5.90041 18.25 5.48633C18.2576 5.07223 18.5996 4.74245 19.0137 4.75C19.3703 4.75657 19.7261 4.77538 20.0371 4.85742C20.3777 4.94729 20.6995 5.12229 20.9385 5.45117C21.2328 5.85625 21.271 6.31402 21.2422 6.7334C21.215 7.12856 21.1172 7.61419 21.0059 8.16699L20.9961 8.21387C20.5906 10.228 20.1913 12.1274 19.2529 13.4971C18.7668 14.2066 18.1344 14.7814 17.293 15.1719C16.46 15.5584 15.4614 15.747 14.2637 15.7471H7.9375C7.9185 15.7485 7.89925 15.75 7.87988 15.75L7.46875 15.75C6.64616 15.75 5.92133 16.3778 5.77637 17.25L16.5 17.25C17.7426 17.25 18.75 18.2574 18.75 19.5C18.75 20.7426 17.7426 21.75 16.5 21.75C15.2574 21.75 14.25 20.7426 14.25 19.5C14.25 19.2367 14.2977 18.9848 14.3809 18.75H11.6191C11.7023 18.9848 11.75 19.2367 11.75 19.5C11.75 20.7426 10.7426 21.75 9.5 21.75C8.25736 21.75 7.25 20.7426 7.25 19.5C7.25 19.2367 7.29775 18.9848 7.38086 18.75H5.41113C4.74128 18.7498 4.25 18.193 4.25 17.5713C4.25005 16.2433 5.01444 15.0715 6.1377 14.5449L3.64844 2.68457C3.50511 2.13463 3.00784 1.75001 2.43848 1.75L1.5 1.75C1.08579 1.75 0.75 1.41421 0.75 1C0.75 0.585786 1.08579 0.25 1.5 0.25L2.43848 0.25ZM9.5 18.75C9.08579 18.75 8.75 19.0858 8.75 19.5C8.75 19.9142 9.08579 20.25 9.5 20.25C9.91421 20.25 10.25 19.9142 10.25 19.5C10.25 19.0858 9.91421 18.75 9.5 18.75ZM16.5 18.75C16.0858 18.75 15.75 19.0858 15.75 19.5C15.75 19.9142 16.0858 20.25 16.5 20.25C16.9142 20.25 17.25 19.9142 17.25 19.5C17.25 19.0858 16.9142 18.75 16.5 18.75ZM12 0.75C12.4142 0.75 12.75 1.08579 12.75 1.5V4.75H16C16.4142 4.75 16.75 5.08579 16.75 5.5C16.75 5.91421 16.4142 6.25 16 6.25H12.75L12.75 9.5C12.75 9.91421 12.4142 10.25 12 10.25C11.5858 10.25 11.25 9.91421 11.25 9.5L11.25 6.25L8 6.25C7.58579 6.25 7.25 5.91421 7.25 5.5C7.25 5.08579 7.58579 4.75 8 4.75L11.25 4.75V1.5C11.25 1.08579 11.5858 0.75 12 0.75Z" fill="#FAFAFA"></path></svg>' +
+                                    '<p>{{ _("add to cart") }}</p></button>';
+                            }
+
+                            var badgeHtml = '';
+                            if (product.badge) {
+                                var badgeText = product.badge.body.ar || product.badge.body.en || '';
+                                badgeHtml = '<span class="badge-name badge-name-product-card" style="color: #fff; padding: 4px 8px; border-radius: 20px; right: 16px">' +
+                                    '<span>' + badgeText + '</span></span>';
+                            }
+
+                            var categoryHtml = '';
+                            if (product.categories && product.categories.length > 0) {
+                                categoryHtml = '<div class="categorey-title"><span><a href="' + product.categories[0].url + '">' + product.categories[0].name + '</a></span></div>';
+                            }
+
+                            var escapedProductName = productName.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+                            var html = '<div class="prod-col">' +
+                                '<div class="product-item position-relative ' + (isOutOfStock ? 'product-item-out-of-stock' : '') + '">' +
+                                '<div class="d-flex flex-column justify-content-start" style="height: 100%;">' +
+                                '<div class="box-1-1"><div class="content">' +
+                                '<div class="d-flex justify-content-center" style="width: 100%; height: 100%; position: relative;">' +
+                                badgeHtml +
+                                '<div class="product-gallery">' +
+                                '<img loading="lazy" class="product-image" src="' + mainImage + '" alt="' + escapedProductName + '">' +
+                                (secondImage ? '<img loading="lazy" class="product-image d-none" src="' + secondImage + '" alt="' + escapedProductName + '" data-index="1">' : '') +
+                                (isOutOfStock ? '<small style="font-size: 1.1rem; white-space: break-spaces">{{ _("Out of Stock") }}</small>' : '') +
+                                '</div>' +
+                                '<span class="product-card-bundle-offer" data-bundle-offer-product-id="' + product.id + '"></span>' +
+                                '</div></div></div>' +
+                                '<div class="product_content">' +
+                                '<div class="product-title" style="margin-top: 15px">' + categoryHtml +
+                                '<a href="' + productLink + '" class="title">' + productName + '</a></div>' +
+                                getRatingHtml(product.rating) +
+                                '<div class="product-crd-spec">' + priceHtml + '<div class="product-card-btns" style="text-align: center; {% if product_obj.is_infinite == false and product_obj.quantity <= 0 %}margin-top: 10px; width: 100%; {% endif %}">' + buttonHtml + '</div>' + '</div>' +
+                                '</div></div></div></div>';
+
+                            container.insertAdjacentHTML('beforeend', html);
+                        });
+
+                        setTimeout(function () {
+                            if (typeof $ !== 'undefined' && $.fn.slick) {
+                                $(container).slick({
+                                    slidesToShow: 6,
+                                    slidesToScroll: 2,
+                                    infinite: false,
+                                    autoplay: false,
+                                    arrows: false,
+                                    dots: false,
+                                    rtl: !(window.appDirection === 'ltr'),
+                                    responsive: [
+                                        { breakpoint: 1600, settings: { slidesToShow: 5,   slidesToScroll: 2 } },
+                                        { breakpoint: 1400, settings: { slidesToShow: 4.5, slidesToScroll: 1 } },
+                                        { breakpoint: 1200, settings: { slidesToShow: 3.5, slidesToScroll: 1 } },
+                                        { breakpoint: 992,  settings: { slidesToShow: 2.8, slidesToScroll: 1 } },
+                                        { breakpoint: 768,  settings: { slidesToShow: 2.5, slidesToScroll: 1 } },
+                                        { breakpoint: 576,  settings: { slidesToShow: 2,   slidesToScroll: 1 } },
+                                        { breakpoint: 450,  settings: { slidesToShow: 1.8, slidesToScroll: 1 } },
+                                        { breakpoint: 350,  settings: { slidesToShow: 1.5, slidesToScroll: 1 } }
+                                    ]
+                                });
+                            }
+
+                            document.querySelectorAll('#cart-products-slider .product-item').forEach(function (productCard) {
+                                var images = productCard.querySelectorAll('.product-image');
+                                var interval, isHovering = false;
+                                if (images.length > 1) {
+                                    productCard.addEventListener('mouseenter', function () {
+                                        isHovering = true;
+                                        var currentIndex = 0;
+                                        interval = setInterval(function () {
+                                            if (!isHovering) { clearInterval(interval); return; }
+                                            images.forEach(function (img) { img.classList.add('d-none'); });
+                                            currentIndex = (currentIndex + 1) % images.length;
+                                            images[currentIndex].classList.remove('d-none');
+                                        }, 1500);
+                                    });
+                                    productCard.addEventListener('mouseleave', function () {
+                                        isHovering = false;
+                                        clearInterval(interval);
+                                        images.forEach(function (img) { img.classList.add('d-none'); });
+                                        images[0].classList.remove('d-none');
+                                    });
+                                }
+                            });
+                        }, 500);
+
+                    } else {
+                        var section = document.querySelector('[section-id="cart-products"]');
+                        if (section) section.style.display = 'none';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error fetching cart products:', error);
+                    var section = document.querySelector('[section-id="cart-products"]');
+                    if (section) section.style.display = 'none';
+                });
+        }
+    });
+</script>
+{% endblock %}
+
+{% block footer_scripts %}
+<script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
+<script type="text/javascript" src="{{ ('gift-card.js?=v' ~ ver) | asset_url }}" defer></script>
+
+<script>
+    // =============================================
+    // QUANTITY BUTTONS — + / - بدل الـ select
+    // =============================================
+    function initCustomQuantityButtons() {
+        document.querySelectorAll('.cart-product-quantity-dropdown select').forEach(function (selectEl) {
+            if (selectEl.dataset.enhanced === 'true') return;
+            selectEl.dataset.enhanced = 'true';
+
+            var currentValue = parseInt(selectEl.value) || 1;
+
+            // إخفاء الـ select الأصلي
+            selectEl.style.display = 'none';
+
+            // بناء الـ wrapper
+            var wrapper = document.createElement('div');
+            wrapper.classList.add('custom-quantity-wrapper');
+            wrapper.innerHTML =
+                '<button type="button" class="qty-btn decrease">−</button>' +
+                '<input type="number" min="1" max="100" value="' + currentValue + '" class="qty-input" />' +
+                '<button type="button" class="qty-btn increase">+</button>';
+
+            selectEl.parentNode.insertBefore(wrapper, selectEl.nextSibling);
+
+            var input  = wrapper.querySelector('.qty-input');
+            var incBtn = wrapper.querySelector('.increase');
+            var decBtn = wrapper.querySelector('.decrease');
+
+            function updateQuantity(newVal) {
+                if (isNaN(newVal) || newVal < 1) newVal = 1;
+                if (newVal > 100) newVal = 100;
+                input.value    = newVal;
+                selectEl.value = newVal;
+                selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            incBtn.addEventListener('click', function () {
+                updateQuantity(parseInt(input.value) + 1);
+            });
+            decBtn.addEventListener('click', function () {
+                updateQuantity(parseInt(input.value) - 1);
+            });
+            input.addEventListener('change', function () {
+                updateQuantity(parseInt(input.value) || 1);
+            });
+        });
+    }
+
+    // تشغيل عند أول تحميل
+    document.addEventListener('DOMContentLoaded', function () {
+        addDeleteProgressImage();
+        initCustomQuantityButtons();
+    });
+
+    // مراقبة أي تغيير في قائمة المنتجات
+    document.addEventListener('DOMContentLoaded', function () {
+        var cartListEl = document.querySelector('.template_for_cart_products_list');
+        if (cartListEl) {
+            var qtyObserver = new MutationObserver(function () {
+                initCustomQuantityButtons();
+            });
+            qtyObserver.observe(cartListEl, { childList: true, subtree: true });
+        }
+    });
+
+    function addDeleteProgressImage() {
+        $('.cart-product-delete a .prefix', document).addClass('d-none');
+        $('.cart-product-delete a .prefix', document).html(
+            '<img class="delete-product-progress" src="{{ "spinner.gif" | asset_url }}" width="15" height="15"/>'
+        );
+    }
+
+    $(document).on('click', '.cart-product-delete a', function (event) {
+        $('.icon-delete', event.currentTarget).addClass('d-none');
+        $('.prefix', event.currentTarget).removeClass('d-none');
+    });
+
+    $(".cities-search-input").on('keyup', function (e) {
+        var searchVal = e.target.value;
+        var mappedCities = cartObj.free_shipping_rule.shipping_cities_condition.map(function(city) { return city.name; });
+        var filteredCities = mappedCities.slice(0, 50).join(' ، ');
+        if (searchVal.length > 2) {
+            filteredCities = mappedCities.filter(function(name) {
+                return name.trim().toLowerCase().includes(searchVal.trim().toLowerCase());
+            }).join(' ، ');
+        }
+        $(".cities-result").html(filteredCities.length ? filteredCities : '{{ _("No Result Found") }}');
+    });
+
+    function sendCoupon() {
+        if (!$('.send-coupon-progress').hasClass('d-none')) return;
+        $('.send-coupon-progress').removeClass('d-none');
+        zid.cart.applyCoupon({ coupon_code: $('.send-coupon').val() }, { showErrorNotification: true })
+            .then(function (response) {
+                toastr.success('{{ _("Send Successfully") }}', null);
+                window.location.reload();
+                $('.send-coupon-progress').addClass('d-none');
+            }).catch(function (err) {
+                $('.send-coupon-progress').addClass('d-none');
+            });
+    }
+
+    function deleteCoupon() {
+        if (!$('.delete-coupon-progress').hasClass('d-none')) return;
+        $('.delete-coupon-progress').removeClass('d-none');
+        zid.cart.removeCoupons({ showErrorNotification: true }).then(function (response) {
+            $('.delete-coupon-progress').addClass('d-none');
+            window.location.reload();
+        });
+    }
+
+    function cartProductsHtmlChanged(html, cart) {
+        if (cart.products_count <= 0) {
+            $('.cart-products-with-totals').addClass('d-none');
+            $('.cart-empty').removeClass('d-none');
+            return;
+        } else {
+            $('.cart-products-with-totals').removeClass('d-none');
+            $('.cart-empty').addClass('d-none');
+        }
+
+        $('.template_for_cart_products_list').html(html);
+
+        if (cart && cart.totals) {
+            var strCartTotals = '';
+            for (var i = 0; i < cart.totals.length; i++) {
+                var cartTotal = cart.totals[i];
+                var totalStyle = cartTotal.code === 'total' ? 'font-weight: bold; color: var(--primary-color)' : '';
+                var vat_included = '';
+                if (cartTotal.code === 'total') {
+                    var is_cart_total_vat_included = {% if store.settings.general.tax_settings.tax_percentage_formatted %}true{% else %}false{% endif %};
+                    var local_sys_lbl_cart_includes_vat = "{{ _('Includes TAX %(percentage)s') | format(percentage=store.settings.general.tax_settings.tax_percentage_formatted) }}";
+                    if (is_cart_total_vat_included) {
+                        vat_included = '&nbsp;<small>' + local_sys_lbl_cart_includes_vat + '</small>';
+                    }
+                }
+                strCartTotals +=
+                    '<div class="cart-product-row-wrapper cart-totals-row-wrapper">' +
+                    '<div class="flex-grow-1">' + cartTotal.title + vat_included + '</div>' +
+                    '<div class="flex-shrink-0" style="' + totalStyle + '">' + cartTotal.value_string + '</div>' +
+                    '</div>';
+            }
+            $('.cart-totals-div').html(strCartTotals);
+        }
+
+        if (cart.free_shipping_rule) {
+            $('.free-shipping-rule-section').removeClass('d-none');
+            $('.free-shipping-rule-message').html(cart.free_shipping_rule.subtotal_condition.status);
+            $('.free-shipping-rule-progress').css('width', cart.free_shipping_rule.subtotal_condition.products_subtotal_percentage_from_min + '%');
+            if (cart.free_shipping_rule.subtotal_condition.status === 'applied') {
+                $('.free-shipping-rule-done').removeClass('d-none');
+                $('.free-shipping-rule-read-more').addClass('d-none');
+                $('.free-shipping-rule-progress').html('{{ _("Free Shipping") }}');
+            } else {
+                $('.free-shipping-rule-done').addClass('d-none');
+                $('.free-shipping-rule-read-more').removeClass('d-none');
+                $('.free-shipping-rule-progress').html(cart.free_shipping_rule.subtotal_condition.products_subtotal_percentage_from_min + '%');
+            }
+        } else {
+            $('.free-shipping-rule-section').addClass('d-none');
+        }
+
+        setCartTotalAndBadge(cart);
+        addDeleteProgressImage();
+
+        // ✅ إعادة تهيئة أزرار الكمية بعد تحديث الـ HTML
+        initCustomQuantityButtons();
+    }
+
+    window.addEventListener('vitrin:gift:submitted', async function () {});
+</script>
+{% endblock %}
+
+{% block footer %} {% include 'footer.jinja' %} {% endblock %}

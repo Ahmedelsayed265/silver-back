@@ -1,0 +1,2043 @@
+{% extends "layout.jinja" %}
+
+{% block header %} {% include 'header.jinja' %} {% endblock %}
+
+{% block top_links %}
+<link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}" />
+<link rel="stylesheet" type="text/css" href="{{ 'ekko-lightbox.css' | asset_url }}" />
+<link rel="stylesheet" type="text/css" href="{{ 'product-details.css' | asset_url }}" />
+{% endblock %}
+
+{% block main_content %}
+<section class="breadcrumb-section">
+    <nav aria-label="breadcrumb" class="container-fluid">
+        <ol class="breadcrumb image_breadcrumb">
+            <div class="tetx_breadcrumb">
+                <div style="display: flex;align-items: flex-start;">
+                    <li class="breadcrumb-item pageed" aria-current="page">
+                        <a href="/" >{{ _("Home") }}</a>
+                    </li>
+                    {% if product.categories and product.categories|count > 0 %}
+                    <li class="breadcrumb-item active">
+                        <span>
+                            {% set firstCategory = product.categories|first %}
+                            <a href="{{ firstCategory.url }}">{{ firstCategory.name }}</a>
+                        </span>
+                    </li>
+                    {% endif %}
+                </div>
+            </div>
+        </ol>
+    </nav>
+</section>
+
+<section class="product products-details-page">
+    <div class="container-fluid pb-5">
+        <section class="products-details mb-5">
+            <div class="rowled">
+                <div class="rowled-images">
+                    <!--GALLERY-->
+                    <div id="wrap">
+                        <div class="row">
+                            <div class="col-12 col-product-image-wrapper">
+                                <div class="topic-mobile">
+                                    <h1 class="title-name">{{ product.name | safe }}</h1>
+                                    {% if product.rating and product.rating.total_count > 0 %}
+                                    <div class="first-rating">
+                                        {% set rating = product.rating.average %}
+                                        {% include 'components/rating-stars.jinja' %}
+                                        <span class="product-card-rating-count">{{ product.rating.total_count
+                                            }}&nbsp;{{ _("product review") }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Carousel -->
+                                <div
+                                    class="product-images-carousel product-images-carousel-init {% if product.selected_product.media|count <= 0 %}d-none{% endif %}">
+                                    <div class="">
+                                        <div id="product-images" class="product-images slide gallery">
+                                            {% if product.sale_price
+                                            and product.purchase_restrictions.sale_price_period_end is defined
+                                            and product.purchase_restrictions.sale_price_period_end %}
+                                            <div class="countdown-card"
+                                                data-start="{{ product.purchase_restrictions.sale_price_period_start }}"
+                                                data-end="{{ product.purchase_restrictions.sale_price_period_end }}">
+                                                <div class="countdown-time">
+                                                    <div>
+                                                        <div class="days count">00</div>
+                                                        <span>يوم</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="hours count">00</div>
+                                                        <span>ساعة</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="minutes count">00</div>
+                                                        <span>دقيقة</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="seconds count">00</div>
+                                                        <span>ثانية</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            <div id="product-images-slick">
+                                                {% for image in product.selected_product.media %}
+                                                <div>
+                                                    <a class="image-link"
+                                                        style="display:block; width: 100%; height: 100%;">
+                                                        <img loading="lazy" src="{{ image.image.full_size }}"
+                                                            width="359" height="359" class="carousel-img"
+                                                            alt="{{ image.alt_text }}">
+                                                        {% if image.provider and image.link %}
+                                                        <img id="main-video-icon" class="play-icon"
+                                                            src="{{ 'video-play.svg' | asset_url }}" alt="play" width="25"
+                                                            onClick="showIframe(this, '{{ image.link }}')" />
+                                                        {% endif %}
+                                                    </a>
+                                                    {% if image.provider and image.link %}
+                                                    <div class="iframe-video pt-1 d-none">
+                                                        <a id="iframe-close-btn" type="button"
+                                                            class="text-white btn btn-none grow"
+                                                            onClick="hideIframe(this)">
+                                                            X
+                                                        </a>
+                                                        <iframe width="100%" height="100%" src="" frameborder="0"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                            allowfullscreen style="max-width: 100%">
+                                                        </iframe>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if request.is_mobile() == true %}
+                                <div
+                                    class="row lg-thumbs d-lg-flex product-images-carousel-thumbs {% if product.selected_product.media|count <= 1 %}d-none-important{% endif %}">
+                                    {% for image in product.selected_product.media %}
+                                    <div class="col-3">
+                                        <div class="box-1-1">
+                                            <div class="content">
+                                                <a class="d-flex align-items-center justify-content-center thumb-image-a"
+                                                    data-index="{{ loop.index0 }}" style="width: 100%; height: 100%;">
+                                                    <img src="{{ image.image.medium }}" data-index="{{ loop.index0 }}">
+                                                    {% if image.provider and image.link %}
+                                                    <img id="video-play-icon" class="play-icon"
+                                                        src="{{ 'video-play.svg' | asset_url }}" alt="play"
+                                                        data-index="{{ loop.index0 }}" />
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <!-- No image -->
+                                <div
+                                    class="box-1-1 product-images-empty {% if product.selected_product.media|count > 0 %}d-none{% endif %}">
+                                    <div class="content">
+                                        <div class="d-flex" style="width: 100%; height: 100%;">
+                                            <img src="{{ 'product-img.svg' | asset_url }}" width="100%" height="auto" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="col-product-info {% if product.selected_product.media|count <= 1 %}col-product-info-single-image{% endif %}">
+                    <section>
+                        {% if product.badge %}
+                        {% include 'vitrin:products/badge.jinja' %}
+                        {% endif %}
+                        <div class="prift-topic">
+                            <h1 class="title-name">{{ product.name | safe }}</h1>
+                            <div class="d-flex">
+                                <div class="price-filx">
+                                    <h2 class="product-formatted-price theme-text-primary">
+                                        {% if product.selected_product.formatted_sale_price %}
+                                        {{ product.selected_product.formatted_sale_price }}
+                                        {% else %}
+                                        {{ product.selected_product.formatted_price }}
+                                        {% endif %}
+                                    </h2>
+                                    <p>
+                                        <del class="product-formatted-price-old">
+                                            {% if product.selected_product.formatted_sale_price %}
+                                            {{ product.selected_product.formatted_price }}
+                                            {% endif %}
+                                        </del>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Button trigger modal -->
+                            <div class="total-options">
+                                {% if product.rating and product.rating.total_count > 0 %}
+                                <div class="first-rating">
+                                    {% set rating = product.rating.average %}
+                                    {% include 'components/rating-stars.jinja' %}
+                                    <span class="product-card-rating-count">{{ product.rating.total_count }}&nbsp;{{
+                                        _("product review") }}</span>
+                                </div>
+                                {% endif %}
+
+                                <div class="wishlists-local">
+                                    {% if store.settings.products.wishlist_enabled %}
+                                    <span class="add-to-wishlist" data-wishlist-id="{{ product.id }}">
+                                        <span zid-visible-customer="true">
+                                            <button zid-visible-wishlist="{{ product.id }}"
+                                                class="icon-heart-mask filled"
+                                                onclick="addToWishlist(this, '{{ product.id }}')"></button>
+                                            <button zid-hidden-wishlist="{{ product.id }}" class="icon-heart-mask"
+                                                onclick="addToWishlist(this, '{{ product.id }}')"></button>
+                                        </span>
+
+                                        <a zid-visible-guest="true" class="icon-heart-mask"
+                                            href="/auth/login?redirect_to={{ session.url.path }}"
+                                            onclick="event.preventDefault(); handleLoginAction('', false); return false;"></a>
+                                        <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20"
+                                            height="20" />
+                                    </span>
+                                    {% endif %}
+                                    <span>{{ _("Wishlist") }}</span>
+                                </div>
+
+                                <button type="button" class="btn btn-primary btn-lg" onclick="shareProduct()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                                        color="currentColor" fill="none" stroke="#141B34" stroke-width="1.5">
+                                        <path
+                                            d="M21 6.5C21 8.15685 19.6569 9.5 18 9.5C16.3431 9.5 15 8.15685 15 6.5C15 4.84315 16.3431 3.5 18 3.5C19.6569 3.5 21 4.84315 21 6.5Z" />
+                                        <path
+                                            d="M9 12C9 13.6569 7.65685 15 6 15C4.34315 15 3 13.6569 3 12C3 10.3431 4.34315 9 6 9C7.65685 9 9 10.3431 9 12Z" />
+                                        <path
+                                            d="M21 17.5C21 19.1569 19.6569 20.5 18 20.5C16.3431 20.5 15 19.1569 15 17.5C15 15.8431 16.3431 14.5 18 14.5C19.6569 14.5 21 15.8431 21 17.5Z" />
+                                        <path d="M8.72852 10.7495L15.2285 7.75M8.72852 13.25L15.2285 16.2495" />
+                                    </svg>
+                                    <h4 class="product-title">{{ _("product share") }}</h4>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column flex-lg-row product-features">
+                            {% if product.sold_products_count %}
+                            <div class="product-count d-flex align-items-center">
+                                <span class="icon-military_tech" style="color: #FFCF57; font-size: 16px"></span>&nbsp;
+                                <span class="lang">{{ _("Sold more than %s times") |
+                                    format(product.sold_products_count) }}</span>
+                            </div>
+                            {% elif product.selected_product.sold_products_count %}
+                            <div class="product-count d-flex align-items-center">
+                                <span class="icon-military_tech" style="color: #FFCF57; font-size: 16px"></span>&nbsp;
+                                <span class="lang">{{ _("Sold more than %s times") |
+                                    format(product.selected_product.sold_products_count) }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if product.low_stock_quantity %}
+                            <div class="low-quantity-section d-inline-block">
+                                <span class="icon-flag_black" style="color: #EC5550; font-size: 16px"></span>&nbsp;
+                                <span class="low-quantity">{{ _("Remaining %s only") |
+                                    format(product.low_stock_quantity) }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if product.bundle_offer %}
+                            <div class="bundle-offer-section">
+                                <span class="icon-gift" style="color: red; font-size: 14px"></span>&nbsp;
+                                <span class="bundle-offer-title">{{ product.bundle_offer.name }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if product.extra_bundle_offers %}
+                            {% for bundle_offer in product.extra_bundle_offers %}
+                            <div class="bundle-offer-section">
+                                <span class="icon-gift" style="color: red; font-size: 14px"></span>&nbsp;
+                                <span class="bundle-offer-title">{{ bundle_offer.name }}</span>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <div class="div-product-sku {% if not product.selected_product.sku %}d-none{% endif %}">
+                        <h4 class="product-title">{{ _("product sku") }} : </h4>
+                        <div class="product-sku">
+                            {{ product.selected_product.sku }}
+                        </div>
+                    </div>
+
+                    <div class="div-product-weight {% if not product.selected_product.weight.value %}d-none{% endif %}">
+                        <h4 class="product-title">{{ _("Weight") }} : </h4>
+                        <div class="product-weight">
+                            {{ product.selected_product.weight.value }}&nbsp;{{ product.selected_product.weight.unit
+                            }}
+                        </div>
+                    </div>
+
+                    <form id="product-form">
+                        <input id="product-id" name="product_id" type="hidden"
+                            value="{{ product.selected_product.id }}">
+
+                        <div class="size-box">
+                            {% include 'vitrin:products/variants_list.jinja' %}
+
+                            <!-- new custom fields update -->
+                            {% if product.has_custom_input_fields %}
+                            {% include 'vitrin:products/custom_input_fields.jinja' %}
+                            {% endif %}
+                        </div>
+
+                        <div class="section-out-of-stock-notify-me {% if not product.selected_product.in_stock %}d-block{% else %}d-none{% endif %}">
+                            <div>
+                                <h4 class="product-title">{{ _("This product is out of stock") }}</h4>
+                                <div class="notify-me-form-wrapper">
+                                    <input type="hidden" class="send-notify-product-id"
+                                        value="{{ product.selected_product.id }}">
+                                    <div class="form-group form-notify-me">
+                                        <h4>{{ _("Notify me when available") }}</h4>
+
+                                        <input class="form-control send-notify-name" value="" type="text"
+                                            placeholder="{{ _('notify me hint name') }}" />
+                                        <input class="form-control send-notify-email" type="email" value=""
+                                            placeholder="{{ _('notify me hint') }}" />
+                                        <div class="d-flex form-notify-me-phone-row">
+                                            <input class="form-control send-notify-country-key" type="number"
+                                                placeholder="966" maxlength="4" />
+                                            <input class="form-control send-notify-phone" type="number" value=""
+                                                placeholder="{{ _('notify me hint mobile') }}" maxlength="10" />
+                                        </div>
+                                        <div class="form-notify-me-submit-button-row">
+                                            <button type="button" class="btn btn-primary btn-send-notify"
+                                                onclick="sendProductNotifyMe()">
+                                                <img class="send-notify-progress d-none"
+                                                    src="{{ 'spinner.gif' | asset_url }}" width="15" height="15" />
+                                                {{ _("Send") }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            {% include 'vitrin:products/loyalty_points_widget.jinja' %}
+                        </div>
+
+                        <div>
+                            {% include 'vitrin:products/payment_widgets.jinja' %}
+                        </div>
+                        <div class="quantity-add-to">
+                            
+                            <div class="product-buttons {% if product.selected_product.out_of_stock %}d-none{% else %}d-flex{% endif %}" style="flex-direction: column; gap: 4px;">
+                                <div class="d-flex align-center" style="gap: 8px;">
+                                    {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
+                                        <div class="price-count">
+                                            {% if product.selected_product.is_infinite or product.selected_product.quantity > 0
+                                            %}
+                                            <div class="select-quantity-div">
+                                                <div class="form-group">
+                                                    <div class="qty-input counter-group">
+                                                        <button class="qty-count qty-count--minus " data-action="minus"
+                                                            type="button">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16"
+                                                                x="0" y="0" viewBox="0 0 121.805 121.804"
+                                                                style="enable-background:new 0 0 512 512" xml:space="preserve"
+                                                                class="">
+                                                                <g>
+                                                                    <path
+                                                                        d="M7.308 68.211h107.188a7.309 7.309 0 0 0 7.309-7.31 7.308 7.308 0 0 0-7.309-7.309H7.308a7.31 7.31 0 0 0 0 14.619z"
+                                                                        fill="#000000" opacity="1" data-original="#000000">
+                                                                    </path>
+                                                                </g>
+                                                            </svg>
+                                                        </button>
+                                                        <input class="product-qty " id="product-quantity" type="number"
+                                                            name="quantity" min="1" max="100" value="1">
+                                                        <button class="qty-count qty-count--add" data-action="add" type="button">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"
+                                                                x="0" y="0" viewBox="0 0 426.667 426.667"
+                                                                style="enable-background:new 0 0 512 512" xml:space="preserve">
+                                                                <g>
+                                                                    <path
+                                                                        d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"
+                                                                        fill="#000000" opacity="1" data-original="#000000">
+                                                                    </path>
+                                                                </g>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+
+                                    <button class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                            height="24" color="currentColor" fill="none" stroke="#FFFFFF"
+                                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path
+                                                d="M8 7H16C17.8856 7 18.8284 7 19.4142 7.58579C20 8.17157 20 9.11438 20 11V15C20 18.2998 20 19.9497 18.9749 20.9749C17.9497 22 16.2998 22 13 22H11C7.70017 22 6.05025 22 5.02513 20.9749C4 19.9497 4 18.2998 4 15V11C4 9.11438 4 8.17157 4.58579 7.58579C5.17157 7 6.11438 7 8 7Z" />
+                                            <path d="M16 9.5C16 5.63401 14.2091 2 12 2C9.79086 2 8 5.63401 8 9.5" />
+                                        </svg>
+                                        <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}"
+                                            width="25" height="25" />
+                                        <span>{{ _("add to cart") }}</span>
+                                    </button>
+
+                                    <!-- Checkout dialog -->
+                               
+                                </div>
+                                
+                                 {% include 'vitrin:checkout/checkout_dialog.jinja' %}
+
+                                <button class="btn btn-buy-now " type="button" onclick="zidProductBuyNow()"
+                                        style="margin-inline-start: 10px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#ffffff" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 3H5C3.89543 3 3 3.89543 3 5C3 6.10457 3.89543 7 5 7H18C18 6.07003 18 5.60504 17.8978 5.22354C17.6204 4.18827 16.8117 3.37962 15.7765 3.10222C15.395 3 14.93 3 14 3Z" />
+                                            <path d="M3 5V15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15V13C21 10.1716 21 8.75736 20.1213 7.87868C19.2426 7 17.8284 7 15 7H7" />
+                                            <path d="M21 12H19C18.535 12 18.3025 12 18.1118 12.0511C17.5941 12.1898 17.1898 12.5941 17.0511 13.1118C17 13.3025 17 13.535 17 14C17 14.465 17 14.6975 17.0511 14.8882C17.1898 15.4059 17.5941 15.8102 18.1118 15.9489C18.3025 16 18.535 16 19 16H21" />
+                                    </svg>
+                                        <img class="buy-now-progress d-none" src="{{ 'spinner.gif' | asset_url }}"
+                                            width="25" height="25" />
+
+                                    <span>{{ _("Buy now") }}</span>
+                                </button>
+
+                                <div>
+                                    {% include 'vitrin:checkout/apple-pay-quick-checkout.jinja' %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if product.description %}
+                    <button class="btn btn-primary btn-collabs" type="button" data-toggle="collapse"
+                        data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
+                        <section id="product-description">
+                            <div class="description-title">
+                                {{ _("product description") }}
+                            </div>
+
+                            <i class="fa-solid fa-plus"></i>
+                            <i class="fa-solid fa-minus"></i>
+                        </section>
+                    </button>
+                    {% endif %}
+
+                    {% if product.description %}
+                    <div class="collapse show" id="collapseExample">
+                        <div class="well">
+                            <section id="product-description" class="mt-5">
+                                <div class="description-paragrah text-justify description-text-clear">
+                                    {{ product.description | safe }}
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <section class="mt-3 margin-inline-start: 8px; color: rgb(85, 85, 85); font-weight: normal;mb-2">
+                        <div class="cart-product">
+                            {% set currentProductId = product.id|trim|striptags %}
+
+                            {% if settings.detail_details %}
+                            {% for item in settings.detail_details %}
+                            {% if item.product and item.product.id %}
+                            {% set itemProductId = item.product.id|trim|striptags %}
+                            {% if currentProductId == itemProductId %}
+                            <section class="product-detail-section mt-5">
+                                <div class="content">
+                                    <div class="section-title">{{ item.topic }}</div>
+                                </div>
+                                {% if item.category %}
+                                <div class="containered mt-4">
+                                    <div class="category-products slick-slider-block"
+                                        data-cat-id="{{ item.category.id }}" id="category-products-{{ loop.index }}"
+                                        style="position: relative;">
+                                        <div class="loading-spinner text-center mt-3">
+                                            <span>{{ _("loading") }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </section>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+
+                            <!-- Script section for category products - FIXED -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    console.log('DOM loaded - starting category products fetch');
+                                    
+                                    const sections = document.querySelectorAll('.category-products');
+                                    console.log('Found category sections:', sections.length);
+
+                                    sections.forEach(container => {
+                                        const loader = container.querySelector('.loading-spinner');
+                                        const categoryId = container.getAttribute('data-cat-id');
+                                        
+                                        console.log('Processing category container:', { categoryId, container });
+                                        
+                                        if (!categoryId) {
+                                            console.warn('No category ID found for container');
+                                            return;
+                                        }
+
+                                        // Show loader
+                                        if (loader) loader.style.display = 'block';
+
+                                        // Fetch products from category
+                                        zid.store.product.fetchAll(categoryId, { per_page: 8 }).then(function (response) {
+                                            console.log('API Response for category', categoryId, ':', response);
+                                            
+                                            if (loader) loader.style.display = 'none';
+
+                                            if (response.status === 'success' && response.data && response.data.products) {
+                                                const products = response.data.products.data || [];
+                                                console.log('Products loaded:', products.length);
+
+                                                if (!products.length) {
+                                                    container.innerHTML = '<p class="text-muted text-center">لا توجد منتجات في هذا التصنيف حالياً.</p>';
+                                                    return;
+                                                }
+
+                                                // Create slider wrapper
+                                                const sliderWrapper = document.createElement('div');
+                                                sliderWrapper.className = 'products-slider related-products-slider';
+                                                container.appendChild(sliderWrapper);
+
+                                                products.forEach(p => {
+                                                    // Get product image
+                                                    const img = (p.images && p.images.length > 0 &&
+                                                        (p.images[0].image?.full_size ||
+                                                            p.images[0].image?.large ||
+                                                            p.images[0].image?.medium ||
+                                                            p.images[0].image?.small ||
+                                                            p.images[0].url))
+                                                        || 'https://xtzny4.zid.store/assets/imgs/placeholder.png';
+
+                                                    const hasDiscount = p.sale_price && p.sale_price < p.price;
+                                                    const formattedPrice = hasDiscount
+                                                        ? `<div class="section-product-price">
+                                                                    <div class="product-price"><span>${p.formatted_sale_price}</span></div>
+                                                                    <div class="product-prev-price"><span>${p.formatted_price}</span></div>
+                                                               </div>`
+                                                        : `<div class="product-price section-product-price theme-title-primary">
+                                                                    <span>${p.formatted_price}</span>
+                                                               </div>`;
+
+                                                    const html = `
+                                                            <div class="prod-col">
+                                                                <div class="protected">
+                                                                    <div class="main_product" style="width: 100%; height: 100%;">
+                                                                        <div class="imaged">
+                                                                            <a href="${p.html_url}">
+                                                                                <img class="image-static" src="${img}" alt="${p.name}" loading="lazy">
+                                                                            </a>
+                                                                            ${!p.is_infinite && p.quantity <= 0 ? `<small>غير متوفر حالياً</small>` : ''}
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <div class="product-content">
+                                                                        ${p.categories && p.categories.length ? `
+                                                                            <div class="categorey-title">
+                                                                                <span><a href="${p.categories[p.categories.length - 1].url}">${p.categories[p.categories.length - 1].name}</a></span>
+                                                                            </div>` : ''
+                                                        }
+                                                                        
+                                                                        <a href="${p.html_url}">
+                                                                            <div class="product-title"><h3>${p.name}</h3></div>
+                                                                        </a>
+                                                                        
+                                                                        <div class="proded">
+                                                                            <div style="text-align:center" class="added">
+                                                                                ${!p.is_infinite && p.quantity <= 0 ? `
+                                                                                    <a class="btn btn-primary btn-product-card-out-of-stock" href="${p.html_url}">
+                                                                                        <span>{{ _('notify me if available') }}</span>
+                                                                                    </a>`
+                                                            : (p.has_options || p.has_fields) ? `
+                                                                                    <a class="btn btn-primary btn-product-card-select-variant" href="${p.html_url}">
+                                                                                        <span>{{ _('add to cart') }}</span>
+                                                                                    </a>`
+                                                                : `
+                                                                                    <a href="javascript:void(0)" class="btn btn-primary product-card-add-to-cart" onclick="productCartAddToCart(this,'${p.id}')">
+                                                                                        <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
+                                                                                        <span>{{ _('add to cart') }}</span>
+                                                                                    </a>`
+                                                        }
+                                                                        </div>
+                                                                        
+                                                                        <div class="product-crd-spec">
+                                                                            ${formattedPrice}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                    sliderWrapper.insertAdjacentHTML('beforeend', html);
+                                                });
+
+                                                // Initialize slider after products added
+                                                setTimeout(() => initProductSlider(sliderWrapper), 100);
+                                            } else {
+                                                container.innerHTML = '<p class="text-danger text-center">تعذر تحميل المنتجات.</p>';
+                                            }
+                                        }).catch(err => {
+                                            console.error('API Error for category', categoryId, ':', err);
+                                            if (loader) loader.style.display = 'none';
+                                            container.innerHTML = '<p class="text-danger text-center">حدث خطأ أثناء تحميل المنتجات.</p>';
+                                        });
+                                    });
+
+                                    function initProductSlider(sliderElement) {
+                                        console.log('Initializing product slider for:', sliderElement);
+                                        
+                                        var screenWidth = window.innerWidth;
+                                        var editingMode = {% if store.editing_mode %} true{% else %} false{% endif %};
+
+                                        // Check if there are elements in the slider
+                                        const slideCount = sliderElement.querySelectorAll('.prod-col').length;
+                                        console.log('Slide count:', slideCount);
+                                        
+                                        if (slideCount <= 1) {
+                                            console.log('Not enough slides for slider');
+                                            return;
+                                        }
+
+                                        if (screenWidth >= 0 || editingMode) {
+                                            // Clean up any previous Slick initialization
+                                            if ($(sliderElement).hasClass('slick-initialized')) {
+                                                $(sliderElement).slick('unslick');
+                                            }
+
+                                            // Setup Slick slider
+                                            try {
+                                                $(sliderElement).slick({
+                                                    slidesToShow: Math.min(4, slideCount),
+                                                    slidesToScroll: 1,
+                                                    infinite: false,
+                                                    autoplay: false,
+                                                    arrows: false,
+                                                    dots: false,
+                                                    rtl: !(window.appDirection === 'ltr'),
+                                                    adaptiveHeight: true,
+                                                    nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="icon-keyboard_arrow_right"></span></button>',
+                                                    prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="icon-keyboard_arrow_left"></span></button>',
+                                                    responsive: [
+                                                        {
+                                                            breakpoint: 1400,
+                                                            settings: {
+                                                                slidesToShow: Math.min(3, slideCount),
+                                                                slidesToScroll: 1
+                                                            }
+                                                        },
+                                                        {
+                                                            breakpoint: 992,
+                                                            settings: {
+                                                                slidesToShow: Math.min(2.5, slideCount),
+                                                                slidesToScroll: 1
+                                                            }
+                                                        },
+                                                        {
+                                                            breakpoint: 768,
+                                                            settings: {
+                                                                slidesToShow: Math.min(2, slideCount),
+                                                                slidesToScroll: 1
+                                                            }
+                                                        },
+                                                        {
+                                                            breakpoint: 576,
+                                                            settings: {
+                                                                slidesToShow: Math.min(1.5, slideCount),
+                                                                slidesToScroll: 1
+                                                            }
+                                                        },
+                                                        {
+                                                            breakpoint: 400,
+                                                            settings: {
+                                                                slidesToShow: 1,
+                                                                slidesToScroll: 1
+                                                            }
+                                                        }
+                                                    ]
+                                                });
+                                                console.log('Slick slider initialized successfully');
+                                            } catch (error) {
+                                                console.error('Error initializing slick slider:', error);
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </section>
+
+                    <div>
+                        <span id="product-view-add-to-cart"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# {% include 'product-bundle-offers.jinja' %} #}
+        {% include 'vitrin:products/grouped-product.jinja' %}
+
+        {% if product.metafields %}
+        <section id="product-description" class="mt-5">
+            <div class="d-flex align-items-center">
+                <div class="description-icon">
+                    <span class="icon-fact_check_black"></span>
+                </div>
+                <div class="description-title">
+                    {{ _("product information") }}
+                </div>
+            </div>
+            <div class="description-paragrah text-justify description-text-clear">
+                {% set entity = product %}
+                {% include 'vitrin:shared/metafields.jinja' %}
+            </div>
+        </section>
+        {% endif %}
+
+        <div>
+            <div class="cart-product">
+                {% set currentProductId = product.id|trim|striptags %}
+
+                {% if settings.detail_details %}
+                {% for item in settings.detail_details %}
+                {% if item.product and item.product.id %}
+                {% set itemProductId = item.product.id|trim|striptags %}
+
+                {% if currentProductId == itemProductId %}
+                <section class="product-detail-section mt-5">
+                    {# عرض البنر #}
+                    {% if item.iamges %}
+                    <div class="product-detail-banner mb-4">
+                        <img class="banars-deatils" src="{{ image_url(item.iamges, width=1400, height=400) }}"
+                            alt="تفاصيل المنتج" style="width:100%;border-radius:12px;object-fit:cover;">
+                    </div>
+                    {% endif %}
+
+                    {# عرض العنوان #}
+                    {% if item.title_details %}
+                    <div class="text-center mb-4">
+                        <h2 class="title_details">{{ item.title_details }}</h2>
+                    </div>
+                    {% endif %}
+                </section>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="tabs-details">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation"><a href="#messages" class="active" aria-controls="messages" role="tab"
+                            data-toggle="tab">
+                            <div class="description-title">
+                                {{ _("Reviews") }}
+                            </div>
+                        </a></li>
+                    <li role="presentation"><a href="#settings" class="" aria-controls="settings" role="tab"
+                            data-toggle="tab">
+                            <div class="description-title">
+                                {{ _("product questions") }}
+                            </div>
+                        </a></li>
+                </ul>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="messages">
+                    {% if store.settings.products.reviews_enabled %}
+                        <section class="review-details">
+                            <div class="rating_review">
+                                <div class="width" style="width: 100%">
+                                    {% if product.rating %}
+                                        <div class="rating-section">
+                                            <div class="rating-details">
+                                                <h4 class="rating-average">{{ product.rating.average }}</h4>
+                                                {% set rating=product.rating.average %}
+                                                {% include 'components/rating-stars.jinja' %}
+                                                <span class="product-card-rating-count">{{ product.rating.total_count }}&nbsp;{{ _("product review") }}</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <a href="/products/{{ product.slug}}/reviews/add" class="btn btn-primary add-review-btn" id="add-review-btn"><span class="icon-add_circle"></span>{{ _("add product review") }} </a>
+                                    <div class="reviews-break-down-div description-paragrah">
+                                        <div class="d-flex align-items-center">
+                                            {% if product.rating %}
+                                                <div class="d-flex flex-column">
+                                                    <div class="row card-rate">
+                                                        <span class="rating_count_5">{{ product.rating['5_ratings'].count }}</span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span> &nbsp; &nbsp;
+                                                        <span>{{ _("reviews rating 5") }}</span>
+                                                    </div>
+                                                    <div class="row card-rate">
+                                                        <span class="rating_count_4">{{ product.rating['4_ratings'].count }}</span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                        <span>{{ _("reviews rating 4") }}</span>
+                                                    </div>
+                                                    <div class="row card-rate">
+                                                        <span class="rating_count_3">{{ product.rating['3_ratings'].count }}</span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1 deactive"></span>
+                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                        <span>{{ _("reviews rating 3") }}</span>
+                                                    </div>
+                                                    <div class="row card-rate">
+                                                        <span class="rating_count_2">{{ product.rating['2_ratings'].count }}</span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1 deactive"></span>
+                                                        <span class="icon-star1 deactive"></span>
+                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                        <span>{{ _("reviews rating 2") }}</span>
+                                                    </div>
+                                                    <div class="row card-rate">
+                                                        <span class="rating_count_1">{{ product.rating['1_ratings'].count }}</span>
+                                                        <span class="icon-star1"></span>
+                                                        <span class="icon-star1 deactive"></span>
+                                                        <span class="icon-star1 deactive"></span>
+                                                        <span class="icon-star1 deactive"></span>
+                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                        <span>{{ _("reviews rating 1") }}</span>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="conent-review">
+                                    <div class="reviews-break-down-empty description-paragrah d-none">
+                                        <div style="border: 1px solid #ccc; margin: 10px 0px; padding: 10px; border-radius: 3px">
+                                            <span>{{ _("product no reviews") }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="comment-section description-paragrah bg-transparent">
+                                        {% set reviews = product.reviews.data %}
+                                        {% include 'components/customer-reviews.jinja' %}
+
+                                        {% if product.reviews.count > product.reviews.page_size %}
+                                            <div class="text-right">
+                                                <a href="/products/{{ product.id }}/reviews" type="button" class="btn all-reviews-btn">
+                                                    {{ _("go all reviews") }}
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    {% endif %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="settings">
+                        <section class="mt-1 review-details">
+                            <div class="question_reviews">
+                                <div class="question_content">
+                                    <div class="" style="width: 100%">
+                                        {% if product.questions %}
+                                            <button type="button" class="btn btn-primary add-review-btn" id="addQuestionButton"><span class="icon-add_circle"></span>{{ _("add product question")}} </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% set questions = product.questions %}
+                                {% include 'components/product-questions.jinja' %}
+                            </div>
+                            {% set product = product %}
+                            {% include 'components/product-question-add.jinja' %}
+                        </section>
+                </div>
+            </div>
+        </div>
+
+        {% if (product.related_products|count) > 0 %}
+        <section class="mt-5">
+            <div class="d-flex align-items-center">
+                <div class="content">
+                    <h2 class="section-title-custom">{{ _("similar products title") }}</h2>
+                </div>
+            </div>
+            <div class="description-paragrah">
+                <div class="">
+                    <div class="products-slider-wrapper" style="position: relative">
+                        <div id="related-products" class="products-slider s-slider d-block">
+                            {% for rProduct in product.related_products %}
+                            <div class="prod-col">
+                                {% set product = rProduct %}
+                                {% set index = loop.index0 %}
+                                {% include 'components/product-card.jinja' %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            // FIXED: Define showRelatedProducts function
+            function showRelatedProducts() {
+                console.log('showRelatedProducts called');
+                console.log('Related products count:', {{ product.related_products|count }});
+                
+                {% if product.related_products|count > 0 %}
+                console.log('Related products data:', {{ product.related_products|tojson|safe }});
+                {% endif %}
+                
+                // Initialize slider for related products
+                var screenWidth = window.innerWidth;
+                var editingMode = {% if store.editing_mode %}true{% else %} false{% endif %};
+                
+                var $relatedSlider = $('#related-products');
+                if ($relatedSlider.length) {
+                    var slideCount = $relatedSlider.find('.prod-col').length;
+                    
+                    if (slideCount > 1 && (screenWidth >= 0 || editingMode)) {
+                        // Clean up any previous initialization
+                        if ($relatedSlider.hasClass('slick-initialized')) {
+                            $relatedSlider.slick('unslick');
+                        }
+                        
+                        // Initialize slider
+                        $relatedSlider.slick({
+                            slidesToShow: Math.min(5, slideCount),
+                            slidesToScroll: 1,
+                            infinite: false,
+                            autoplay: false,
+                            arrows: false,
+                            dots: false,
+                            rtl: !(window.appDirection === 'ltr'),
+                            adaptiveHeight: true,
+                            nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="icon-keyboard_arrow_right"></span></button>',
+                            prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="icon-keyboard_arrow_left"></span></button>',
+                            responsive: [
+                                { breakpoint: 1400, settings: { slidesToShow: Math.min(4, slideCount) } },
+                                { breakpoint: 992, settings: { slidesToShow: Math.min(2.5, slideCount) } },
+                                { breakpoint: 768, settings: { slidesToShow: Math.min(2, slideCount) } },
+                                { breakpoint: 576, settings: { slidesToShow: Math.min(1.5, slideCount) } },
+                                { breakpoint: 400, settings: { slidesToShow: 1 } }
+                            ]
+                        });
+                        
+                        console.log('Related products slider initialized');
+                    }
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                console.log('DOMContentLoaded - calling showRelatedProducts');
+                showRelatedProducts();
+            });
+        </script>
+        {% endif %}
+    </div>
+
+    <section class="container-fluid mb-5">
+        {% set ns = namespace(matched_blogs=0) %}
+        {% if settings.productDetailsBlog_blogs %}
+            {% for blog in settings.productDetailsBlog_blogs %}
+                {% if blog.product is defined and blog.product and blog.product.id == product.id %}
+                    {% set ns.matched_blogs = ns.matched_blogs + 1 %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="d-flex align-items-center mb-4">
+            <div class="content">
+                {% if settings.productDetailsBlog_title and ns.matched_blogs > 0 %}
+                <h1 class="section-title-custom" style="color:{{ settings.productDetailsBlog_color }}">{{
+                    settings.productDetailsBlog_title }}</h1>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="blogs">
+            {% if settings.productDetailsBlog_blogs and ns.matched_blogs > 0 %}
+            {% for blog in settings.productDetailsBlog_blogs %}
+            {% if blog.product is defined and blog.product and blog.product.id == product.id %}
+            <a href="{{ blog.href or '#' }}" class="main-blogs" aria-label="{{ blog.title or 'مدونة' }}" >
+                <div>
+                    {% if blog.image %}
+                    <img class="blog-image" src="{{ blog.image }}" alt="{{ blog.alt or blog.title or 'image' }}"
+                        loading="lazy" decoding="async">
+                    {% endif %}
+                </div>
+
+                <div>
+                    <div class="date-name">
+                        {% if blog.name %}
+                        <span style="color:{{ blog.color1 }}">{{ blog.name }}</span>
+                        {% endif %}
+                        {% if blog.date %}
+                        <span style="color:{{ blog.color2 }}">{{ blog.date }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if blog.title %}
+                    <h2 class="title-blog" style="color:{{ blog.color3 }}">{{ blog.title }}</h2>
+                    {% endif %}
+                    {% if blog.desc %}
+                    <p class="disc-blog" style="color:{{ blog.color4 }}">{{ blog.desc }}</p>
+                    {% endif %}
+
+                    <div class="linked">
+                        {% if blog.btn1 %}
+                        <span>{{ blog.btn1 }}</span>
+                        {% endif %}
+                        {% if blog.btn2 %}
+                        <span>{{ blog.btn2 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Debug info - REMOVE IN PRODUCTION -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log('=== PRODUCT DEBUG INFO ===');
+            
+            // Log product object
+            var productData = {{ product|tojson }};
+            console.log('Product object:', productData);
+            console.log('store Settings object:', store.settings);
+            console.log('Product ID:', productData.id);
+            console.log('Product name:', productData.name);
+            console.log('Selected product:', productData.selected_product);
+            console.log('Variants count:', productData.variants ? productData.variants.length : 0);
+            console.log('Related products count:', productData.related_products ? productData.related_products.length : 0);
+            
+            // Log blogs settings
+            {% if settings.productDetailsBlog_blogs %}
+            var blogsData = {{ settings.productDetailsBlog_blogs|tojson }};
+            console.log('Blogs count:', blogsData ? blogsData.length : 0);
+            console.log('Blogs data:', blogsData);
+            {% else %}
+            console.log('No blogs configured');
+            {% endif %}
+            
+            console.log('=========================');
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var screenWidth = window.screen.width;
+            var autoPlayEnabled = true;
+            var infiniteEnabled = true;
+            var editingMode = {% if store.editing_mode %}true{% else %} false{% endif %};
+
+            // Log blogs container
+            var $blogs = $('.blogs');
+            console.log('Blogs container found:', $blogs.length > 0);
+            
+            if ($blogs.length && (screenWidth >= 0 || editingMode)) {
+                var blogCount = $blogs.find('.main-blogs').length;
+                console.log('Blog items count:', blogCount);
+                
+                if (blogCount > 1) {
+                    // Clean up any previous initialization
+                    if ($blogs.hasClass('slick-initialized')) {
+                        $blogs.slick('unslick');
+                    }
+                    
+                    $blogs.slick({
+                        slidesToShow: Math.min(4, blogCount),
+                        slidesToScroll: 2,
+                        infinite: infiniteEnabled,
+                        autoplay: autoPlayEnabled,
+                        arrows: false,
+                        dots: false,
+                        rtl: !(window.appDirection === 'ltr'),
+                        responsive: [
+                            {
+                                breakpoint: 1200,
+                                settings: {
+                                    slidesToShow: Math.min(2.5, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            },
+                            {
+                                breakpoint: 768,
+                                settings: {
+                                    slidesToShow: Math.min(2, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            },
+                            {
+                                breakpoint: 450,
+                                settings: {
+                                    slidesToShow: Math.min(1.6, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            },
+                            {
+                                breakpoint: 350,
+                                settings: {
+                                    slidesToShow: Math.min(1.3, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            }
+                        ]
+                    });
+                    
+                    console.log('Blogs slider initialized');
+                } else {
+                    console.log('Not enough blog items for slider');
+                }
+            }
+        });
+    </script>
+
+    {% if product.bundle_offer.products.results|count > 5 %}
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable bundle-offer-products-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="bundle-offer-title"></div>
+                    <div class="bundle-offer-title-description"></div>
+                    <div class="bundle-offer-products">
+                        <div class="row bundle-offer-details-products-all">
+                            {% for product in product.bundle_offer.products.results %}
+                            <div class="prod-col prod-col-tb">
+                                {% set product = product %}
+                                {% set index = loop.index0 %}
+                                {% include 'components/product-card.jinja' %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal for product images -->
+    <div class="modal fade" id="product-images-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <button type="button" class="close_btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    
+                    <div id="product-images-modal-slider" class="modal-slick"></div>
+                    <div id="product-images-modal-progress" class="modal-progress">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% include 'footer.jinja' %}
+{% endblock %}
+
+{% block footer_scripts %}
+<script type="text/javascript" src="{{ 'ekko-lightbox.min.js' | asset_url }}" defer></script>
+<script type="text/javascript" src="{{ 'product-details.js' | asset_url }}" defer></script>
+<script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
+
+{{ product_view_scripts|safe }}
+
+<script>
+    var productImages = {{ product.selected_product.media| tojson }};
+    var customerWishlistIds = {{ customer.wishlist| tojson if customer else '[]' }};
+
+    $(window).on('load', function () {
+        if (window.checkout_dialog) {
+            $('.btn-buy-now').removeClass('d-none');
+        }
+    });
+
+    window.zidProductBuyNow = async () => {
+        const buyNowLoading = (isLoading) => {
+            const buttonElement = $('.btn-buy-now');
+            const loaderElement = $('.buy-now-progress');
+
+            buttonElement.prop('disabled', isLoading);
+            loaderElement.toggleClass('d-none', !isLoading);
+        };
+
+        try {
+            buyNowLoading(true);
+            const response = await window.zid.cart.buyNow({ form_id: 'product-form' }, { showErrorNotification: true });
+            buyNowLoading(false);
+        } catch (error) {
+            console.error(error, 'Buy Now failed');
+            buyNowLoading(false);
+        }
+    }
+
+    function productAddToCart() {
+        if (!$('.add-to-cart-progress').hasClass('d-none'))
+            return;
+
+        $('.add-to-cart-progress').removeClass('d-none');
+
+        const bundlePayload = window.bundleCartPayload;
+        const addProductOptions = bundlePayload ?
+            { ...bundlePayload, form_id: 'product-form' } :
+            { form_id: 'product-form' };
+
+        zid.cart.addProduct(addProductOptions, { showErrorNotification: true }).then(function (response) {
+            if (response.status === 'success' || (response.item && response.cart_items_quantity)) {
+
+                if (response.data && response.data.cart)
+                    setCartTotalAndBadge(response.data.cart);
+
+                if (response.cart_items_quantity) {
+                    $('.cart-badge').removeClass('d-none').text(response.cart_items_quantity);
+                }
+
+                $('.added-notification').addClass("show");
+                setTimeout(function () {
+                    $('.added-notification').removeClass("show");
+                }, 5000);
+
+                var image = $('#product-images-slick .slick-slide.slick-active img');
+                var cart = $('.a-shopping-cart');
+
+                if (image.length && cart.length && typeof addToCartAnimation === 'function') {
+                    addToCartAnimation(cart, image);
+                }
+
+            } else {
+                var errorMessage = response && response.message ? response.message : (response.data && response.data.message ? response.data.message : '{{ _("sorry") }}');
+                toastr.error(errorMessage, '{{ _("sorry") }}')
+            }
+            $('.add-to-cart-progress').addClass('d-none');
+        }).catch(function (error) {
+            $('.add-to-cart-progress').addClass('d-none');
+            console.error('Add to cart failed', error);
+        });
+    }
+
+    function productOptionsChanged(selected_product) {
+        if (selected_product) {
+            $('#product-id').val(selected_product.id)
+            $('.send-notify-product-id').val(selected_product.id)
+
+            if (!selected_product.unavailable) {
+                if (selected_product.formatted_sale_price) {
+                    $('.product-formatted-price').html(selected_product.formatted_sale_price)
+                    $('.product-formatted-price-old').html(selected_product.formatted_price)
+                } else {
+                    $('.product-formatted-price').html(selected_product.formatted_price)
+                    $('.product-formatted-price-old').html('')
+                }
+
+                if (selected_product.weight.value) {
+                    $('.div-product-weight').removeClass('d-none');
+                    $('.div-product-weight .product-weight').html(selected_product.weight.value + ' ' + selected_product.weight.unit)
+                } else {
+                    $('.div-product-weight').addClass('d-none')
+                }
+
+                if (selected_product.sku) {
+                    $('.div-product-sku').removeClass('d-none');
+                    $('.div-product-sku .product-sku').html(selected_product.sku)
+                } else {
+                    $('.div-product-sku').addClass('d-none');
+                }
+
+                {% if store.settings.products.low_stock_label_enabled %}
+                var store_low_stock_limit = {{ store.settings.products.low_stock_quantity_threshold }};
+                var low_stock_message = '{{ _("Remaining %s only") }}';
+
+                if (!selected_product.is_infinite && selected_product.quantity < store_low_stock_limit) {
+                    $('.low-quantity-section').removeClass('d-none').addClass('d-inline-block');
+                    $('.low-quantity-section .low-quantity').html(low_stock_message.replace('%s', selected_product.quantity))
+                } else {
+                    $('.low-quantity-section').removeClass('d-inline-block').addClass('d-none');
+                }
+                {% endif %}
+
+                var sold_product_count_message = '{{ _("product sold more than x times") }}';
+                if (selected_product.sold_products_count) {
+                    $('.product-count').removeClass('d-none');
+                    $('.product-count .lang').html(sold_product_count_message.replace('%s', selected_product.sold_products_count))
+                } else {
+                    $('.product-count').addClass('d-none');
+                }
+                
+                var selectQuantity = ''
+
+                if (selected_product.is_infinite)
+                    selected_product.quantity = 100;
+
+                if (selected_product.quantity > 0) {
+                    $('.select-quantity-div').removeClass('d-none')
+                    var quantityMax = (selected_product.quantity > 100) ? 100 : selected_product.quantity;
+                    selectQuantity = '<option value="1"selected>1</option>'
+                    for (var i = 2; i <= quantityMax; i++) {
+                        selectQuantity += '<option value="' + i + '">' + i + '</option>';
+                    }
+                } else {
+                    $('.select-quantity-div').addClass('d-none')
+                }
+
+                $('.select-quantity').html(selectQuantity);
+
+                $('.product-buttons').removeClass('d-none');
+                $('.section-out-of-stock-notify-me').addClass('d-none');
+
+                $('.btn-add-to-cart span').html('{{ _("add to cart") }}');
+
+                updateProductImages(selected_product);
+            } else {
+                if (selected_product.formatted_sale_price) {
+                    $('.product-formatted-price').html(selected_product.formatted_sale_price)
+                    $('.product-formatted-price-old').html(selected_product.formatted_price)
+                } else {
+                    $('.product-formatted-price').html(selected_product.formatted_price)
+                    $('.product-formatted-price-old').html('')
+                }
+                $('.select-quantity-div').addClass('d-none')
+                $('.product-buttons').addClass('d-none');
+                $('.section-out-of-stock-notify-me').removeClass('d-none');
+
+                $('.btn-add-to-cart span').html('{{ _("error item unavailable") }}');
+
+                if (selected_product.sku) {
+                    $('.div-product-sku').removeClass('d-none');
+                    $('.div-product-sku .product-sku').html(selected_product.sku)
+                } else {
+                    $('.div-product-sku').addClass('d-none');
+                }
+                updateProductImages(selected_product);
+            }
+
+        } else {
+            $('.select-quantity-div').addClass('d-none')
+            $('.product-buttons').addClass('d-none');
+            $('.section-out-of-stock-notify-me').removeClass('d-none');
+
+            $('.btn-add-to-cart span').html('{{ _("error item unavailable") }}');
+
+            updateProductImages(selected_product);
+        }
+    }
+
+    function updateProductImages(selected_product) {
+        if (selected_product && selected_product.media && selected_product.media.length > 0) {
+            $('.product-images-carousel').removeClass('d-none');
+            $('.product-images-carousel-thumbs').removeClass('d-none-important');
+            $('.product-images-empty').addClass('d-none');
+
+            if ($('#product-images-slick').hasClass('slick-initialized')) {
+                $('#product-images-slick').slick('unslick');
+            }
+
+            $('.product-images-carousel').addClass('product-images-carousel-init');
+
+            productImages = selected_product.media;
+
+            $('#product-images-slick').html('');
+            $('.product-images-carousel-thumbs').html('');
+
+            for (var z = 0; z < productImages.length; z++) {
+                var prImage = productImages[z];
+                $('#product-images-slick').append('' +
+                    '<div>\n' +
+                    '    <div class="box-1-1">\n' +
+                    '        <div class="content">\n' +
+                    '            <a class="image-link"\n' +
+                    '               style="display:block; width: 100%; height: 100%;">\n' +
+                    '                <img id="carousel-img-' + z + '" loading="lazy" src="' + prImage.image.full_size + '" class="carousel-img" alt="' + selected_product.name + '">\n' +
+                    (prImage.provider && prImage.link ? '<img id="main-video-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play"' +
+                    '   onclick="' + (window.innerWidth < 992 ? 'showIframe' : 'toggleStaticIframe') + '(this, \'' + prImage.link + '\')"/>' : '') +
+                    '            </a>\n' +
+                    '          <div class="iframe-video pt-1 d-none">\n' +
+                    '             <a id="iframe-close-btn" type="button" class="text-white btn btn-none grow"' +
+                    '                onClick="hideIframe(this)">X</a>\n' +
+                    '            <iframe width="100%" height="100%" src="" frameborder="0"' +
+                    '              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
+                    '              allowfullscreen style="max-width: 100%">' +
+                    '            </iframe>\n' +
+                    '          </div>\n' +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '</div>');
+
+                $('.product-images-carousel-thumbs').append('<div class="col-3">\n' +
+                    '    <div class="box-1-1">\n' +
+                    '        <div class="content">\n' +
+                    '            <a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="' + z + '"\n' +
+                    '               style="width: 100%; height: 100%;" >\n' +
+                    '                <img src="' + prImage.image.medium + '" data-index="' + z + '">\n' +
+                    (prImage.provider && prImage.link ? '<img id="video-play-icon" class="play-icon"' +
+                        '                 src="{{ "video-play.svg" | asset_url }}" alt="play"' +
+                        '                 data-index="' + z + '">\n' : '') +
+                    '            </a>\n' +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '</div>');
+            }
+
+            initSlick(productImages);
+
+        } else {
+            $('.product-images-carousel').addClass('d-none');
+            $('.product-images-carousel-thumbs').addClass('d-none-important');
+            $('.product-images-empty').removeClass('d-none');
+        }
+    }
+
+    function sendProductNotifyMe() {
+        if (!$('.send-notify-progress').hasClass('d-none'))
+            return;
+
+        $('.send-notify-progress').removeClass('d-none');
+        let inputVal = $('.send-notify-country-key').val() || '966';
+
+        if (inputVal.startsWith('00')) {
+            inputVal = inputVal.replace(/^00+/, '');
+        }
+
+        const countryCode = '+' + inputVal;
+
+        zid.store.product.setAvailabilityNotificationEmail(
+            $('.send-notify-product-id').val(),
+            $('.send-notify-email').val(),
+            $('.send-notify-name').val(),
+            countryCode + $('.send-notify-phone').val(),
+        ).then(function (response) {
+            if (response.status === 'success') {
+                toastr.success('{{ _("sent successfully") }}', null)
+            } else {
+                if (response && response.data && response.data.message) {
+                    toastr.error(JSON.stringify(response.data.message), '{{ _("sorry") }}')
+                } else {
+                    toastr.error('{{ _("notify me failed") }}', '{{ _("sorry") }}')
+                }
+            }
+            $('.send-notify-progress').addClass('d-none');
+        })
+    }
+
+    $(document).ready(function () {
+        initSlick(productImages);
+        if (customerWishlistIds) {
+            fillWishlistItems(customerWishlistIds.map(id => ({ id })));
+        }
+        
+        // إضافة event listeners للصور لفتح المودال
+        $(document).on('click', '.carousel-img', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if ($(e.target).hasClass('play-icon')) {
+                return; // لا تفتح المودال إذا كان زر فيديو
+            }
+            
+            var src = $(this).attr('src');
+            console.log('Image clicked, src:', src);
+            if (src) {
+                openImagesModalBySrc(src);
+            }
+        });
+        
+        // إضافة event listener للروابط التي تحتوي على الصور
+        $(document).on('click', '.image-link', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if ($(e.target).hasClass('play-icon')) {
+                return; // لا تفتح المودال إذا كان زر فيديو
+            }
+            
+            var img = $(this).find('img.carousel-img');
+            if (img.length) {
+                var src = img.attr('src');
+                console.log('Image link clicked, src:', src);
+                if (src) {
+                    openImagesModalBySrc(src);
+                }
+            }
+        });
+        
+        // إضافة event listener للصور الثابتة (في وضع الكمبيوتر)
+        $(document).on('click', '.static-image-entry', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if ($(e.target).hasClass('play-icon')) {
+                return; // لا تفتح المودال إذا كان زر فيديو
+            }
+            
+            var img = $(this).find('img.carousel-img');
+            if (img.length) {
+                var src = img.attr('src');
+                console.log('Static image clicked, src:', src);
+                if (src) {
+                    openImagesModalBySrc(src);
+                }
+            }
+        });
+        
+        // زر اختبار (اختياري)
+        if (window.location.search.includes('test=modal')) {
+            $('<button id="test-modal" style="position:fixed; top:10px; left:10px; z-index:9999; background:red; color:white; padding:10px;">اختبار المودال</button>')
+                .appendTo('body')
+                .click(function() {
+                    var firstImage = $('.carousel-img').first().attr('src');
+                    if (firstImage) {
+                        openImagesModalBySrc(firstImage);
+                    }
+                });
+        }
+    });
+
+    $(document).on('click', '.thumb-image-a, #video-play-icon', function (event) {
+        var tarr = event.target;
+        var index = $(tarr).attr('data-index') || $(tarr).closest('[data-index]').attr('data-index');
+        
+        if ($('#product-images-slick')) {
+            $('#product-images-slick').slick('slickGoTo', index, true);
+        }
+    });
+
+    var initSlick = function (productImages) {
+        var screenWidth = window.innerWidth;
+        var arrowNextClass =
+            window.appDirection === "ltr"
+                ? "icon-keyboard_arrow_right"
+                : "icon-keyboard_arrow_left";
+        var arrowPrevClass =
+            window.appDirection === "ltr"
+                ? "icon-keyboard_arrow_left"
+                : "icon-keyboard_arrow_right";
+
+        if (screenWidth < 992) {
+            $("#product-images-slick").slick({
+                infinite: false,
+                autoplay: false,
+                arrows: false,
+                dots: productImages.length > 1,
+                rtl: !(window.appDirection === "ltr"),
+                nextArrow:
+                    '<button class="slick-next slick-arrow" aria-label="Next" type="button">' +
+                    '<span class="' + arrowNextClass + '"></span></button>',
+                prevArrow:
+                    '<button class="slick-prev slick-arrow" aria-label="Previous" type="button">' +
+                    '<span class="' + arrowPrevClass + '"></span></button>',
+                customPaging: function (slider, i) {
+                    const item = productImages[i];
+                    const thumb = item?.image?.small || item?.image?.medium || item?.image?.large || "";
+                    return `<img src="${thumb}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;" />`;
+                }
+            });
+        } else {
+            renderStaticMedia(productImages);
+        }
+    };
+
+    function renderStaticMedia(mediaList) {
+        const $container = $("#product-images-slick");
+        $container.html("");
+
+        mediaList.forEach((item, i) => {
+            const isVideo = item.provider && item.link;
+            const html = `
+                <div class="">
+                    <div class="position-relative static-image-entry" data-index="${i}">
+                        <img src="${item.image.full_size}" class="carousel-img" alt="${item.alt_text || ""}">
+                        ${isVideo ? `<img id="main-video-icon" class="play-icon" 
+                                src="{{ "video-play.svg" | asset_url }}" 
+                                alt="play"
+                                width="25"
+                                onclick="toggleStaticIframe(this,'${item.link}')">` : ""}
+                        ${isVideo ? `<div class="iframe-video pt-1 d-none">
+                                <a id="iframe-close-btn" type="button" class="text-white btn btn-none grow" onclick="hideIframe(this)">X</a>
+                                <iframe width="100%" height="400" src="" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                            </div>` : ""}
+                    </div>
+                </div>
+            `;
+            $container.append(html);
+        });
+    }
+
+    function toggleStaticIframe(elm, link) {
+        let iframeWrapper = $(elm).closest(".content").find(".iframe-video");
+        if (!iframeWrapper.length) {
+            iframeWrapper = $(elm).closest(".position-relative").find(".iframe-video");
+        }
+        const iframe = iframeWrapper.find("iframe");
+
+        if (iframeWrapper.hasClass("d-none")) {
+            iframeWrapper.removeClass("d-none");
+            const src = getIframeLink(link);
+            iframe.attr("src", src + "&autoplay=1&mute=1");
+        } else {
+            iframeWrapper.addClass("d-none");
+            iframe.attr("src", "");
+        }
+    }
+
+    // 🔧 الدالة المصلحة لفتح المودال
+    function openImagesModalBySrc(src) {
+        var images = (productImages || []).filter(function (it) {
+            return !(it.provider && it.link);
+        }).map(function (it) {
+            return it.image?.full_size || it.image?.large || it.image?.medium || it.image?.small;
+        });
+
+        if (!images.length) return;
+
+        var startIndex = images.indexOf(src);
+        if (startIndex < 0) startIndex = 0;
+
+        var $slider = $('#product-images-modal-slider');
+        var $modal  = $('#product-images-modal');
+
+        // تنظيف كامل
+        if ($slider.hasClass('slick-initialized')) {
+            try { $slider.slick('unslick'); } catch(e) {}
+            $slider.removeClass('slick-initialized');
+        }
+        $slider.html('');
+        $slider.off('init afterChange');
+
+        // بناء الـ slides
+        for (var i = 0; i < images.length; i++) {
+            $slider.append('<div><img src="' + images[i] + '" alt="صورة المنتج ' + (i+1) + '"/></div>');
+        }
+
+        var isRTL = !(window.appDirection === 'ltr');
+        var arrowNext = isRTL ? 'icon-keyboard_arrow_left' : 'icon-keyboard_arrow_right';
+        var arrowPrev = isRTL ? 'icon-keyboard_arrow_right' : 'icon-keyboard_arrow_left';
+
+        var updateProgress = function(idx, total) {
+            var pct = ((idx + 1) / total) * 100;
+            $('#product-images-modal-progress .fill').css('width', pct + '%');
+            $('#modal-slide-counter').text((idx + 1) + ' / ' + total);
+        };
+
+        // دالة التهيئة مع recursive check
+        var initSlider = function() {
+            if (!$slider.length || !$slider.is(':visible')) {
+                setTimeout(initSlider, 50);
+                return;
+            }
+
+            $slider.off('init afterChange');
+
+            if ($slider.hasClass('slick-initialized')) {
+                try { $slider.slick('unslick'); } catch(e) {}
+                $slider.removeClass('slick-initialized');
+            }
+
+            // إخفاء الـ slider أثناء التهيئة لمنع الـ glitch
+            $slider.css('visibility', 'hidden');
+
+            $slider.on('init', function(e, slick) {
+                updateProgress(slick.currentSlide, slick.slideCount);
+                setTimeout(function() {
+                    if ($slider.hasClass('slick-initialized')) {
+                        try {
+                            if (startIndex !== slick.currentSlide) {
+                                $slider.slick('slickGoTo', startIndex, true);
+                            }
+                            $slider.slick('setPosition');
+                        } catch(e) {}
+                    }
+                    // إظهار الـ slider بعد انتهاء التهيئة والانتقال للصورة الصح
+                    $slider.css('visibility', 'visible');
+                }, 100);
+            });
+
+            $slider.on('afterChange', function(e, slick, currentSlide) {
+                updateProgress(currentSlide, slick.slideCount);
+            });
+
+            try {
+                $slider.slick({
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    infinite: false,
+                    autoplay: false,
+                    arrows: true,
+                    dots: false,
+                    rtl: isRTL,
+                    initialSlide: startIndex,
+                    adaptiveHeight: false,
+                    nextArrow: '<button class="slick-next modal-arrow" type="button"><span class="' + arrowNext + '"></span></button>',
+                    prevArrow: '<button class="slick-prev modal-arrow" type="button"><span class="' + arrowPrev + '"></span></button>'
+                });
+            } catch(e) {
+                console.error('Slick init error:', e);
+                $slider.css('visibility', 'visible'); // fallback
+            }
+        };
+
+        // counter badge
+        $modal.find('#modal-slide-counter').remove();
+        $modal.find('.modal-body').append('<div id="modal-slide-counter"></div>');
+
+        // إعداد events مرة واحدة فقط
+        if (!$modal.data('events-initialized')) {
+            $modal.on('hidden.bs.modal', function() {
+                if ($slider.hasClass('slick-initialized')) {
+                    try { $slider.slick('unslick'); } catch(e) {}
+                    $slider.removeClass('slick-initialized');
+                }
+                $('#product-images-modal-progress .fill').css('width', '0%');
+                $slider.html('');
+                $slider.css('visibility', 'hidden'); // reset للمرة الجاية
+                $slider.off('init afterChange');
+                $modal.find('#modal-slide-counter').remove();
+            });
+
+            // keyboard navigation
+            $(document).on('keydown.productModal', function(e) {
+                if (!$modal.hasClass('show') && !$modal.is(':visible')) return;
+                if (e.key === 'ArrowLeft') {
+                    isRTL ? $slider.slick('slickNext') : $slider.slick('slickPrev');
+                } else if (e.key === 'ArrowRight') {
+                    isRTL ? $slider.slick('slickPrev') : $slider.slick('slickNext');
+                } else if (e.key === 'Escape') {
+                    $modal.modal('hide');
+                }
+            });
+
+            $modal.data('events-initialized', true);
+        }
+
+        // فتح المودال
+        var wasOpen = $modal.hasClass('show') || $modal.hasClass('in');
+        $modal.off('shown.bs.modal.imagesModal');
+
+        if (wasOpen) {
+            setTimeout(initSlider, 200);
+        } else {
+            $modal.on('shown.bs.modal.imagesModal', function() {
+                $modal.attr('aria-hidden', 'false');
+                setTimeout(initSlider, 150);
+            });
+            $modal.modal('show');
+        }
+    }
+
+    const getIframeLink = (videoLink) => {
+        const videoIdMatch = videoLink.match(
+            /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|.*[?&]v=)|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+        );
+        if (videoIdMatch && videoIdMatch[1]) {
+            const videoLinkId = videoIdMatch[1];
+            return `https://www.youtube.com/embed/${videoLinkId}?autoplay=1&enablejsapi=1&mute=1&rel=0`;
+        }
+        return null;
+    };
+
+    const showIframe = (elm, imageVideoSrc) => {
+        if (window.innerWidth >= 992) return;
+        const iframeLink = getIframeLink(imageVideoSrc);
+        const iframeElem = $(elm)
+            .parent(".image-link")
+            .siblings(".iframe-video")
+            .children("iframe");
+        $(elm).parent(".image-link").siblings(".iframe-video").removeClass("d-none");
+        if ($(iframeElem).attr("src") !== iframeLink) {
+            $(iframeElem).attr("src", iframeLink);
+        }
+    };
+
+    const hideIframe = (elm) => {
+        if (window.innerWidth >= 992) return;
+        $(elm).parent(".iframe-video").addClass("d-none");
+        $(elm).siblings("iframe").attr("src", "");
+    };
+
+    $('#product-images-slick').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+        const iframeContainers = slick.$slides[currentSlide].querySelector(".iframe-video");
+        if (iframeContainers) {
+            $(iframeContainers).addClass("d-none");
+            $(iframeContainers).find("iframe").attr("src", "");
+        }
+    });
+
+    $('#product-images-slick').on('afterChange', function (event, slick, currentSlide, nextSlide) {
+        const iframeContainers = slick.$slides[currentSlide].querySelector(".iframe-video");
+        const playIcon = $(iframeContainers).siblings(".image-link").find("#main-video-icon");
+        if (playIcon && playIcon.length) {
+            playIcon.click();
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            const activeSlide = $("#product-images-slick .slick-slide.slick-active .image-link");
+            const playIcon = activeSlide.find("#main-video-icon");
+            if (playIcon && playIcon.length) {
+                playIcon.click();
+            }
+        }, 250);
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select all counter groups
+        const counterGroups = document.querySelectorAll('.counter-group');
+
+        // Loop through each group
+        counterGroups.forEach(group => {
+            const minusButton = group.querySelector('.qty-count--minus');
+            const addButton = group.querySelector('.qty-count--add');
+            const input = group.querySelector('.product-qty');
+
+            // Function to update the input value
+            function updateValue(action) {
+                let currentValue = parseInt(input.value);
+                const min = parseInt(input.min) || 0; // Default min to 0 if not set
+                const max = parseInt(input.max) || Infinity; // Default max to Infinity if not set
+
+                if (action === 'add' && currentValue < max) {
+                    input.value = currentValue + 1;
+                } else if (action === 'minus' && currentValue > min) {
+                    input.value = currentValue - 1;
+                }
+            }
+
+            // Event listeners for the buttons
+            minusButton.addEventListener('click', function () {
+                updateValue('minus');
+            });
+
+            addButton.addEventListener('click', function () {
+                updateValue('add');
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const countdowns = document.querySelectorAll(".countdown-card");
+
+        countdowns.forEach(container => {
+            let start = new Date(container.dataset.start).getTime();
+            const end = new Date(container.dataset.end).getTime();
+            const now = new Date().getTime();
+
+            if (isNaN(start)) {
+                start = now;
+            }
+            if (isNaN(end) || now > end) {
+                return;
+            }
+
+            if (isNaN(start) || isNaN(end) || now < start || now > end) {
+                return;
+            }
+
+            const d = container.querySelector(".days");
+            const h = container.querySelector(".hours");
+            const m = container.querySelector(".minutes");
+            const s = container.querySelector(".seconds");
+
+            function updateCountdown() {
+                const current = new Date().getTime();
+                const diff = end - current;
+
+                if (diff <= 0) {
+                    container.innerHTML = "<div class='expired-offer'>انتهى العرض</div>";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                d.textContent = String(days).padStart(2, "0");
+                h.textContent = String(hours).padStart(2, "0");
+                m.textContent = String(minutes).padStart(2, "0");
+                s.textContent = String(seconds).padStart(2, "0");
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var productData = {{ product| tojson }};
+        console.log('Product variants data:', productData.variants);
+        
+        if (!productData.variants) return;
+
+    document.querySelectorAll("#product-variants-options li").forEach(function (li) {
+        var value = li.getAttribute("value")?.trim();
+        if (!value) return;
+
+        var matched = productData.variants.find(v => {
+            if (!v.attributes) return false;
+            if (Array.isArray(v.attributes)) {
+                return v.attributes.some(attr => attr.value === value);
+            } else {
+                return Object.values(v.attributes).includes(value);
+            }
+        });
+
+        if (matched) {
+            if (matched.images && matched.images.length > 0) {
+                var imgSrc = matched.images[0].image?.medium || matched.images[0].image?.full_size;
+                if (imgSrc) {
+                    var imgEl = document.createElement("img");
+                    imgEl.src = imgSrc;
+                    imgEl.alt = value;
+                    imgEl.loading = "lazy";
+                    imgEl.style.width = "100%";
+                    imgEl.style.height = "100%";
+                    imgEl.style.objectFit = "contain";
+
+                    var span = li.querySelector("span");
+                    if (span) span.style.display = "none";
+
+                    li.prepend(imgEl);
+                    li.style.display = "flex";
+                    li.style.alignItems = "center";
+                    li.style.justifyContent = "center";
+                    li.style.padding = "4px";
+                }
+            }
+
+            if (matched.out_of_stock || matched.quantity === 0) {
+                li.classList.add("out-of-stock-option");
+                li.style.pointerEvents = "none";
+                li.style.opacity = "0.4";
+                li.style.filter = "grayscale(1)";
+            }
+        }
+    });
+
+    const updateLabelValues = () => {
+        document.querySelectorAll("#product-variants-options .form-group").forEach(group => {
+            const label = group.querySelector("label");
+            const active = group.querySelector("li.active span");
+            if (label && active) {
+                let valueSpan = label.querySelector(".selected-value");
+                if (!valueSpan) {
+                    valueSpan = document.createElement("span");
+                    valueSpan.className = "selected-value";
+                    valueSpan.style.marginInlineStart = "4px";
+                    valueSpan.style.color = "#555";
+                    valueSpan.style.fontWeight = "normal";
+                    label.appendChild(valueSpan);
+                }
+                valueSpan.textContent = active.textContent.trim();
+            }
+        });
+    };
+
+    updateLabelValues();
+
+    document.querySelectorAll("#product-variants-options li").forEach(li => {
+        li.addEventListener("click", () => setTimeout(updateLabelValues, 150));
+    });
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function removeLazyFromFirstCarouselImages() {
+            const imgs = document.querySelectorAll('.carousel-img');
+            imgs.forEach((img, i) => {
+                if (i < 4) {
+                    img.removeAttribute('loading');
+                    img.removeAttribute('fetchpriority');
+                }
+            });
+        }
+        removeLazyFromFirstCarouselImages();
+        const productsList = document.getElementById('products-list');
+        if (productsList) {
+            const observer = new MutationObserver(() => removeLazyFromFirstCarouselImages());
+            observer.observe(productsList, { childList: true, subtree: true });
+        }
+    });
+
+    const shareProduct = async () => {
+        const title = document.querySelector('h1.product-title')?.textContent?.trim() || '';
+        const url = window.location.href;
+        const text = title ? `شاهد هذا المنتج: ${title}` : 'شاهد هذا المنتج';
+        if (navigator.share) {
+            try {
+                await navigator.share({ title, text, url });
+            } catch (err) {
+                console.warn('Web Share API failed:', err);
+                fallbackCopy(url);
+            }
+        } else {
+            fallbackCopy(url);
+        }
+    };
+
+    const fallbackCopy = (url) => {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('تم نسخ الرابط إلى الحافظة');
+            }).catch(() => {
+                promptCopy(url);
+            });
+        } else {
+            promptCopy(url);
+        }
+    };
+
+    const promptCopy = (url) => {
+        const result = prompt('انسخ الرابط:', url);
+        if (result === null) {
+            return;
+        }
+    };
+</script>
+{% endblock %}

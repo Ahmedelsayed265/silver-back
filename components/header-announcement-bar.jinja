@@ -1,0 +1,105 @@
+{% if settings.announcement_bar_display %}
+    {% if not (settings.announcement_bar_page_display)
+        or (template == 'home' and settings.announcement_bar_page_display == 'home')
+        or settings.announcement_bar_page_display == 'all'
+    %}
+<div class="announcement-bar" style="z-index: 9; width:100%">
+    <div class="container-fluid">
+        <div id="announcement-container">
+            {% for item in settings.announcement_bar_slides %}
+            <a class="space_itme announcement-item" href="{{ item.url }}">
+                <span class="announcement-text mb-0 text-center py-1"
+                    style="{% if settings.announcement_bar_text_color %}color: {{ settings.announcement_bar_text_color }}{% endif %}">
+                    {{ item.text }}
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    #announcement-container {
+        position: relative;
+        overflow: hidden;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .announcement-item {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        opacity: 0;
+        transform: translateX(100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .announcement-item.active {
+        animation: nikeSlide 6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes nikeSlide {
+        0% {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        12% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        65% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+    }
+
+    .announcement-text {
+        font-weight: 500;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const container = document.querySelector('#announcement-container');
+        if (!container) return;
+
+        const items = container.querySelectorAll('.announcement-item');
+        if (!items.length) return;
+
+        let index = 0;
+        const duration = 6000;
+
+        function showNext() {
+            items.forEach(el => {
+                el.classList.remove('active');
+                void el.offsetWidth;
+            });
+
+            if (items[index]) {
+                items[index].classList.add('active');
+            }
+            index = (index + 1) % items.length;
+        }
+
+        showNext();
+        setInterval(showNext, duration);
+    });
+</script>
+
+{% endif %}

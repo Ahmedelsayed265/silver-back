@@ -1,0 +1,107 @@
+{
+  "section_id": "hero-section",
+  "template": "sections/hero-section.jinja",
+  "icon": "fal fa-user",
+  "name": {
+    "ar": "القسم الرئيسي",
+    "en": "Hero Section"
+  },
+  "settings": [
+    {
+      "id": "image",
+      "type": "image",
+      "label": {
+        "ar": "صورة الكمبيوتر",
+        "en": "Desktop image"
+      }
+    },
+    {
+      "id": "image_mobile",
+      "type": "image",
+      "label": {
+        "ar": "صورة الموبيل",
+        "en": "Mobile image"
+      }
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    {
+      "id": "desc",
+      "type": "text",
+      "label": {
+        "ar": "الشرح",
+        "en": "Description"
+      }
+    },
+    {
+      "id": "bton",
+      "type": "text",
+      "label": {
+        "ar": "نص الزرار",
+        "en": "Button text"
+      }
+    },
+    {
+      "id": "href",
+      "type": "url",
+      "label": {
+        "ar": "الرابط",
+        "en": "URL"
+      }
+    },
+    {
+      "id": "title_color",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان",
+        "en": "Title color"
+      }
+    },
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": {
+        "ar": "لون النص",
+        "en": "Text color"
+      }
+    },
+    {
+      "id": "button_color",
+      "type": "color",
+      "label": {
+        "ar": "لون الزرار",
+        "en": "Button color"
+      }
+    },
+    {
+      "id": "button_bg",
+      "type": "color",
+      "label": {
+        "ar": "خلفية الزرار",
+        "en": "Button background"
+      }
+    },
+    {
+      "id": "button_hover_color",
+      "type": "color",
+      "label": {
+        "ar": "لون الزرار أثناء التمرير",
+        "en": "Button color on hover"
+      }
+    },
+    {
+      "id": "button_hover_bg",
+      "type": "color",
+      "label": {
+        "ar": "خلفية الزرار أثناء التمرير",
+        "en": "Button background on hover"
+      }
+    }
+  ]
+}

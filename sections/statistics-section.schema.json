@@ -1,0 +1,47 @@
+{
+  "section_id": "uuid",
+  "template": "sections/statistics-section.jinja",
+  "icon": "fa-solid fa-chart-bar",
+  "name": {
+    "ar": "خصائص المتجر",
+    "en": "Store features"
+  },
+  "display": true,
+  "settings": [
+    {
+      "id": "features",
+      "type": "list",
+      "label": {
+        "ar": "الخصائص",
+        "en": "Features"
+      },
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Image"
+          },
+          "required": false
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان",
+            "en": "Title"
+          }
+        },
+        {
+          "id": "color",
+          "type": "color",
+          "label": {
+            "ar": "لون العنوان",
+            "en": "Title Color"
+          }
+        }
+      ]
+    }
+  ]
+}

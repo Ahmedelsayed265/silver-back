@@ -1,0 +1,15 @@
+<section id="{{ sectionId }}" section-id="{{ sectionId }}" class="hero_section">
+    <picture>
+        <source media="(max-width: 991px)" srcset="{{ settings.image_mobile }}">
+        <img src="{{ settings.image }}" alt="{{ settings.title }}">
+    </picture>
+
+    <div class="hero_content">
+        <h1 style="color: {{ settings.title_color }}">{{ settings.title }}</h1>
+        <p style="color: {{ settings.text_color }}">{{ settings.desc }}</p>
+
+        {% if settings.href and settings.bton %}
+        <a href="{{ settings.href }}" class="btn" style="background-color: {{ settings.button_bg }}; color: {{ settings.button_color }}">{{ settings.bton }}</a>
+        {% endif %}
+    </div>
+</section>

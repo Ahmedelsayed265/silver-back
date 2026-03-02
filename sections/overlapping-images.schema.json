@@ -1,0 +1,93 @@
+{
+  "section_id": "uuid",
+  "template": "sections/overlapping-images.jinja",
+  "icon": "fal fa-user",
+  "name": {
+    "ar": "صور متراكبة",
+    "en": "Banner Section"
+  },
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    {
+      "id": "color1",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان",
+        "en": "Title color"
+      }
+    },
+    {
+      "id": "desc",
+      "type": "text",
+      "label": {
+        "ar": "الشرح",
+        "en": "Description"
+      }
+    },
+    {
+      "id": "bton",
+      "type": "text",
+      "label": {
+        "ar": "نص الزرار",
+        "en": "Button text"
+      }
+    },
+    {
+      "id": "btn_color",
+      "type": "color",
+      "label": {
+        "ar": "لون الزرار",
+        "en": "Button text color"
+      }
+    },
+    {
+      "id": "btn_back",
+      "type": "color",
+      "label": {
+        "ar": "خلفية الزرار",
+        "en": "Button background"
+      }
+    },
+    {
+      "id": "href",
+      "type": "url",
+      "label": {
+        "ar": "الرابط",
+        "en": "URL"
+      }
+    },
+    {
+      "id": "images",
+      "type": "list",
+      "label": {
+        "ar": "صور متراكبة",
+        "en": "Overlapping images"
+      },
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Image"
+          }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "Link"
+          }
+        }
+      ]
+    }
+  ]
+}

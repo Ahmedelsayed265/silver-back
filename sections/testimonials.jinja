@@ -1,0 +1,99 @@
+<section aria-label="{{ settings.title or 'قسم آراء العملاء' }}">
+  <div class="container-fluid  section-padding-space">
+
+    {% if settings.title or settings.subtitle %}
+       <div class="d-flex flex-column mb-3">
+            {% if settings.title %}
+            <h1 class="section-title-custom w-fit" {% if settings.color1 %} style="color:{{settings.color1}}" {% endif %}>{{ settings.title }}</h1>
+            {% endif %}
+            {% if settings.subtitle %}
+            <h2 class="sub-title" {% if settings.color2 %} style="color:{{settings.color2}}" {% endif %}>{{ settings.subtitle }}</h2>
+            {% endif %}
+       </div>
+    {% endif %}
+
+    <div class="testimonials-slider-wrapper">
+      <div class="testimonials-sliders">
+        {% for testimonial in safeget(settings, "testimonials", []) %}
+          <article class="testimonials-customer" aria-label="تقييم من {{ testimonial.name }}">
+            <div class="card-body">
+
+             
+            <div class="testimonials-icons"> <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewbox="0 0 13 14" fill="none"> <g clip-path="url(#clip0_1_2964)"> <path d="M12.9816 5.50829C12.9368 5.3704 12.8176 5.2699 12.6742 5.24908L8.64412 4.66345L6.84177 1.01161C6.77763 0.881607 6.64522 0.799316 6.50027 0.799316C6.35529 0.799316 6.2229 0.881607 6.15874 1.01161L4.35632 4.66345L0.326331 5.24908C0.1829 5.2699 0.0636917 5.3704 0.0189028 5.50827C-0.0259115 5.64616 0.0114634 5.79752 0.115285 5.8987L3.03134 8.74127L2.34305 12.7551C2.31852 12.898 2.37728 13.0423 2.49456 13.1276C2.5609 13.1758 2.63948 13.2003 2.71845 13.2003C2.77908 13.2003 2.83992 13.1859 2.89562 13.1566L6.50024 11.2615L10.1047 13.1565C10.2331 13.224 10.3885 13.2128 10.5058 13.1276C10.6231 13.0423 10.6819 12.8979 10.6574 12.755L9.96884 8.74127L12.8852 5.89867C12.989 5.79752 13.0264 5.64616 12.9816 5.50829Z" fill="#FFC62A"/> </g> <defs> <clipPath id="clip0_1_2964"> <rect width="13" height="13" fill="white" transform="translate(0.000244141 0.5)"/> </clipPath> </defs> </svg> <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewbox="0 0 13 14" fill="none"> <g clip-path="url(#clip0_1_2964)"> <path d="M12.9816 5.50829C12.9368 5.3704 12.8176 5.2699 12.6742 5.24908L8.64412 4.66345L6.84177 1.01161C6.77763 0.881607 6.64522 0.799316 6.50027 0.799316C6.35529 0.799316 6.2229 0.881607 6.15874 1.01161L4.35632 4.66345L0.326331 5.24908C0.1829 5.2699 0.0636917 5.3704 0.0189028 5.50827C-0.0259115 5.64616 0.0114634 5.79752 0.115285 5.8987L3.03134 8.74127L2.34305 12.7551C2.31852 12.898 2.37728 13.0423 2.49456 13.1276C2.5609 13.1758 2.63948 13.2003 2.71845 13.2003C2.77908 13.2003 2.83992 13.1859 2.89562 13.1566L6.50024 11.2615L10.1047 13.1565C10.2331 13.224 10.3885 13.2128 10.5058 13.1276C10.6231 13.0423 10.6819 12.8979 10.6574 12.755L9.96884 8.74127L12.8852 5.89867C12.989 5.79752 13.0264 5.64616 12.9816 5.50829Z" fill="#FFC62A"/> </g> <defs> <clipPath id="clip0_1_2964"> <rect width="13" height="13" fill="white" transform="translate(0.000244141 0.5)"/> </clipPath> </defs> </svg> <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewbox="0 0 13 14" fill="none"> <g clip-path="url(#clip0_1_2964)"> <path d="M12.9816 5.50829C12.9368 5.3704 12.8176 5.2699 12.6742 5.24908L8.64412 4.66345L6.84177 1.01161C6.77763 0.881607 6.64522 0.799316 6.50027 0.799316C6.35529 0.799316 6.2229 0.881607 6.15874 1.01161L4.35632 4.66345L0.326331 5.24908C0.1829 5.2699 0.0636917 5.3704 0.0189028 5.50827C-0.0259115 5.64616 0.0114634 5.79752 0.115285 5.8987L3.03134 8.74127L2.34305 12.7551C2.31852 12.898 2.37728 13.0423 2.49456 13.1276C2.5609 13.1758 2.63948 13.2003 2.71845 13.2003C2.77908 13.2003 2.83992 13.1859 2.89562 13.1566L6.50024 11.2615L10.1047 13.1565C10.2331 13.224 10.3885 13.2128 10.5058 13.1276C10.6231 13.0423 10.6819 12.8979 10.6574 12.755L9.96884 8.74127L12.8852 5.89867C12.989 5.79752 13.0264 5.64616 12.9816 5.50829Z" fill="#FFC62A"/> </g> <defs> <clipPath id="clip0_1_2964"> <rect width="13" height="13" fill="white" transform="translate(0.000244141 0.5)"/> </clipPath> </defs> </svg> <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewbox="0 0 13 14" fill="none"> <g clip-path="url(#clip0_1_2964)"> <path d="M12.9816 5.50829C12.9368 5.3704 12.8176 5.2699 12.6742 5.24908L8.64412 4.66345L6.84177 1.01161C6.77763 0.881607 6.64522 0.799316 6.50027 0.799316C6.35529 0.799316 6.2229 0.881607 6.15874 1.01161L4.35632 4.66345L0.326331 5.24908C0.1829 5.2699 0.0636917 5.3704 0.0189028 5.50827C-0.0259115 5.64616 0.0114634 5.79752 0.115285 5.8987L3.03134 8.74127L2.34305 12.7551C2.31852 12.898 2.37728 13.0423 2.49456 13.1276C2.5609 13.1758 2.63948 13.2003 2.71845 13.2003C2.77908 13.2003 2.83992 13.1859 2.89562 13.1566L6.50024 11.2615L10.1047 13.1565C10.2331 13.224 10.3885 13.2128 10.5058 13.1276C10.6231 13.0423 10.6819 12.8979 10.6574 12.755L9.96884 8.74127L12.8852 5.89867C12.989 5.79752 13.0264 5.64616 12.9816 5.50829Z" fill="#FFC62A"/> </g> <defs> <clipPath id="clip0_1_2964"> <rect width="13" height="13" fill="white" transform="translate(0.000244141 0.5)"/> </clipPath> </defs> </svg> <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewbox="0 0 13 14" fill="none"> <g clip-path="url(#clip0_1_2964)"> <path d="M12.9816 5.50829C12.9368 5.3704 12.8176 5.2699 12.6742 5.24908L8.64412 4.66345L6.84177 1.01161C6.77763 0.881607 6.64522 0.799316 6.50027 0.799316C6.35529 0.799316 6.2229 0.881607 6.15874 1.01161L4.35632 4.66345L0.326331 5.24908C0.1829 5.2699 0.0636917 5.3704 0.0189028 5.50827C-0.0259115 5.64616 0.0114634 5.79752 0.115285 5.8987L3.03134 8.74127L2.34305 12.7551C2.31852 12.898 2.37728 13.0423 2.49456 13.1276C2.5609 13.1758 2.63948 13.2003 2.71845 13.2003C2.77908 13.2003 2.83992 13.1859 2.89562 13.1566L6.50024 11.2615L10.1047 13.1565C10.2331 13.224 10.3885 13.2128 10.5058 13.1276C10.6231 13.0423 10.6819 12.8979 10.6574 12.755L9.96884 8.74127L12.8852 5.89867C12.989 5.79752 13.0264 5.64616 12.9816 5.50829Z" fill="#FFC62A"/> </g> <defs> <clipPath id="clip0_1_2964"> <rect width="13" height="13" fill="white" transform="translate(0.000244141 0.5)"/> </clipPath> </defs> </svg> </div>
+
+       
+              {% if testimonial.text %}
+                <div class="customer-text">
+                  <p class="testimonial-text">{{ testimonial.text }}</p>
+                </div>
+              {% endif %}
+
+
+              {% if testimonial.name %}
+                <div class="account">
+                  <span class="icon-account_circle_black_24dp testimonials-customer-icon" aria-hidden="true"></span>
+                  <h3 class="testimonials-name">{{ testimonial.name }}</h3>
+                </div>
+              {% endif %}
+
+       
+              <div class="commit-svg" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+                  <path d="M0.34 22.2C0.34 26.41 3.75 29.82 7.96 29.82C12.16 29.82 15.58 26.41 15.58 22.2C15.58 17.99 12.16 14.59 7.96 14.59C7.09 14.59 6.27 14.74 5.49 15C7.2 5.17 14.87 -1.17 7.76 4.05C-0.12 9.84 0.33 21.97 0.34 22.19C0.34 22.2 0.34 22.2 0.34 22.2Z" fill="#EEEEEE"/>
+                  <path d="M17.1 22.2C17.1 26.41 20.51 29.82 24.72 29.82C28.92 29.82 32.33 26.41 32.33 22.2C32.33 17.99 28.92 14.59 24.72 14.59C23.85 14.59 23.02 14.74 22.25 15C23.96 5.17 31.63 -1.17 24.52 4.05C16.64 9.84 17.09 21.97 17.1 22.19C17.1 22.2 17.1 22.2 17.1 22.2Z" fill="#EEEEEE"/>
+                </svg>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+ <script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var arrowNextClass = (window.appDirection === 'ltr') ? 'fa-solid fa-angle-right': 'fa-solid fa-angle-left';
+        var arrowPrevClass = (window.appDirection === 'ltr') ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right';
+        var screenWidth = window.screen.width;
+        var autoPlayEnabled = {{ "true" if settings.auto else "false" }};
+        var infiniteEnabled = {{ "true" if settings.infinite else "false" }};
+        var hideDots = {{ "true" if settings.hide_dots else "false" }};
+        var editingMode = {% if store.editing_mode %}true{% else %}false{% endif %};
+        if(screenWidth >= 768 || editingMode){
+            $('.testimonials-sliders').slick({
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                 infinite: infiniteEnabled,
+                autoplay: autoPlayEnabled,
+                arrows: false,
+                dots: !hideDots,
+                rtl: !(window.appDirection === 'ltr'),
+                responsive: [
+                    {
+                        breakpoint: 1200,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 1.5,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 576,
+                        settings: {
+                            slidesToShow: 1.2,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        }
+    });
+</script>

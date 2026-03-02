@@ -1,0 +1,369 @@
+{% extends "layout.jinja" %}
+
+{% block header %} {% include 'header.jinja' %} {% endblock %}
+
+{% block top_links %}
+<link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}" />
+{% endblock %}
+
+{% block main_content %}
+<section class="breadcrumb-section">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <div class="container-fluid d-flex flex-wrap">
+                <li class="breadcrumb-item" aria-current="page">
+                    <a href="/">{{ _("Home") }}</a>
+                </li>
+
+                {% if category.parent_category.parent_category %}
+                <li class="breadcrumb-item" aria-current="page">
+                    <a href="{{ category.parent_category.parent_category.url }}">
+                        {{ category.parent_category.parent_category.name }}
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if category.parent_category %}
+                <li class="breadcrumb-item" aria-current="page">
+                    <a href="{{ category.parent_category.url }}">
+                        {{ category.parent_category.name }}
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+            </div>
+        </ol>
+    </nav>
+</section>
+
+{% set title = category.name %}
+{% include 'components/breadcrumb-subTitle-detail.jinja' %}
+
+
+{% if categories_banner is defined and categories_banner is not none and categories_banner | length > 0 %}
+    {% for item in categories_banner %}
+        {% if item.category.id == category.id %}
+            {% if item.image %}
+                <img src="{{ item.image }}" alt="{{category.name}}" class="banner-category default-img">
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+    
+<div class="container-fluid d-flex flex-row">
+    {% if products.filters | length > 0 %}
+    {% set async = true %}
+    {% include 'vitrin:products/filters.jinja' %}
+    {% endif %}
+
+    <div class="products-container flex-grow-1 pt-4">
+        <div>
+            {% set count = products.count %}
+            {% set has_products_filtration = (products.filters | length > 0) %}
+            {% include 'components/products-filter.jinja' %}
+        </div>
+        <div id="products-list" class="row products-list">
+            {% for product in products.results %}
+            <div data-product-id="{{ product.id }}"
+                class="prod-col {% if products.filters | length > 0 %}prod-col-attr{% endif %} prod-col-tb">
+                {% set product = product %}
+                {% set index = key %}
+                {% include 'components/product-card.jinja' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{# Pagination logic - Load More #}
+{% set totalPages = products.pages_count %}
+{% set currentPage = products.page %}
+{% set type = 'load_more' %}
+{% include 'components/pagination.jinja' %}
+
+<div class="container">
+    {% set entity = category %}
+    {% include 'vitrin:shared/metafields.jinja' %}
+</div>
+
+    {% set ns = namespace(matched_blogs=0) %}
+    {% if settings.categoryBlog_blogs %}
+        {% for blog in settings.categoryBlog_blogs %}
+            {% if blog.category is defined and blog.category and blog.category.id == category.id %}
+                {% set ns.matched_blogs = ns.matched_blogs + 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if category.description is not none %}
+        <div class="container-fluid mb-5">
+            <p class="category_dec">{{ category.description }}</p>
+        </div>
+    {% endif %}
+
+    {% set ns_questions = namespace(matched=0, display_index=0) %}
+
+    {% for item in safeget(settings, 'categy_collection', []) %}
+        {% if item.category is defined and item.category and item.category.id == category.id %}
+            {% set ns_questions.matched = ns_questions.matched + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    {% if ns_questions.matched > 0 %}
+        <div class="container-fluid questinons">
+
+            {% if settings.categy_title %}
+                <div class="d-flex align-items-center mb-4">
+                    <div class="content">
+                        <h1 class="section-title-custom" style="color:{{ settings.categy_color }}">
+                            {{ settings.categy_title }}
+                        </h1>
+                    </div>
+                </div>
+            {% endif %}
+
+            <section class="faq-section">
+                <div class="faq-grid">
+                    {% for item in safeget(settings, 'categy_collection', []) %}
+                        {% if item.category is defined and item.category and item.category.id == category.id %}
+                            {% set ns_questions.display_index = ns_questions.display_index + 1 %}
+
+                            <div class="questions_div">
+                                <div class="question_icons">
+                                    <div class="question_right">
+                                        <span>
+                                            {% if ns_questions.display_index < 10 %}
+                                                0{{ ns_questions.display_index }}
+                                            {% else %}
+                                                {{ ns_questions.display_index }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
+                                    <h1 style="color:{{ item.color1 }}">
+                                        {{ item.the_question }}
+                                    </h1>
+
+                                    <div class="question_right">
+                                        <i class="fa-solid fa-angle-up"></i>
+                                    </div>
+                                </div>
+
+                                {% if item.question_answer %}
+                                    <div class="answeer_div" style="color:{{ item.color2 }}">
+                                        {{ item.question_answer }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    {% endif %}
+        
+    <section class="container-fluid mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="content">
+                {% if settings.categoryBlog_title and ns.matched_blogs > 0 %}
+                    <h1 class="section-title-custom" style="color:{{ settings.categoryBlog_color }}">{{ settings.categoryBlog_title }}</h1>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="blogs">
+            {% if settings.categoryBlog_blogs and ns.matched_blogs > 0 %}
+            {% for blog in settings.categoryBlog_blogs %}
+            {% if blog.category is defined and blog.category and blog.category.id == category.id %}
+            <a href="{{ blog.href or '#' }}" class="main-blogs" aria-label="{{ blog.title or 'مدونة' }}" >
+                <div>
+                    {% if blog.image %}
+                    <img class="blog-image" src="{{ blog.image }}" alt="{{ blog.alt or blog.title or 'image' }}"
+                        loading="lazy" decoding="async">
+                    {% endif %}
+                </div>
+
+                <div>
+                    <div class="date-name">
+                        {% if blog.name %}
+                        <span style="color:{{ blog.color1 }}">{{ blog.name }}</span>
+                        {% endif %}
+                        {% if blog.date %}
+                        <span style="color:{{ blog.color2 }}">{{ blog.date }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if blog.title %}
+                    <h2 class="title-blog" style="color:{{ blog.color3 }}">{{ blog.title }}</h2>
+                    {% endif %}
+                    {% if blog.desc %}
+                    <p class="disc-blog" style="color:{{ blog.color4 }}">{{ blog.desc }}</p>
+                    {% endif %}
+
+                    <div class="linked">
+                        {% if blog.btn1 %}
+                        <span>{{ blog.btn1 }}</span>
+                        {% endif %}
+                        {% if blog.btn2 %}
+                        <span>{{ blog.btn2 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Debug info - REMOVE IN PRODUCTION -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log('=== PRODUCT DEBUG INFO ===');
+            
+            // Log product object
+            var productData = {{ product|tojson }};
+            console.log('Product object:', productData);
+            console.log('Product ID:', productData.id);
+            console.log('Product name:', productData.name);
+            console.log('Selected product:', productData.selected_product);
+            console.log('Variants count:', productData.variants ? productData.variants.length : 0);
+            console.log('Related products count:', productData.related_products ? productData.related_products.length : 0);
+            
+            // Log blogs settings
+            {% if settings.categoryBlog_blogs %}
+            var blogsData = {{ settings.categoryBlog_blogs|tojson }};
+            console.log('Blogs count:', blogsData ? blogsData.length : 0);
+            console.log('Blogs data:', blogsData);
+            {% else %}
+            console.log('No blogs configured');
+            {% endif %}
+            
+            console.log('=========================');
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const faqs = document.querySelectorAll(".questions_div");
+
+            faqs.forEach((faq) => {
+                faq.addEventListener("click", () => {
+                    faqs.forEach((f) => {
+                        if (f !== faq) {
+                            f.classList.remove("active");
+                        }
+                    });
+
+                    faq.classList.toggle("active");
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var screenWidth = window.screen.width;
+            var autoPlayEnabled = true;
+            var infiniteEnabled = true;
+            var editingMode = {% if store.editing_mode %}true{% else %} false{% endif %};
+
+            // Log blogs container
+            var $blogs = $('.blogs');
+            console.log('Blogs container found:', $blogs.length > 0);
+            
+            if ($blogs.length && (screenWidth >= 0 || editingMode)) {
+                var blogCount = $blogs.find('.main-blogs').length;
+                console.log('Blog items count:', blogCount);
+                
+                if (blogCount > 1) {
+                    // Clean up any previous initialization
+                    if ($blogs.hasClass('slick-initialized')) {
+                        $blogs.slick('unslick');
+                    }
+                    
+                    $blogs.slick({
+                        slidesToShow: Math.min(4, blogCount),
+                        slidesToScroll: 2,
+                        infinite: infiniteEnabled,
+                        autoplay: autoPlayEnabled,
+                        arrows: false,
+                        dots: false,
+                        rtl: !(window.appDirection === 'ltr'),
+                        responsive: [
+                            {
+                                breakpoint: 1200,
+                                settings: {
+                                    slidesToShow: Math.min(2.5, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            },
+                            {
+                                breakpoint: 768,
+                                settings: {
+                                    slidesToShow: Math.min(2, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            },
+                            {
+                                breakpoint: 450,
+                                settings: {
+                                    slidesToShow: Math.min(1.6, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            },
+                            {
+                                breakpoint: 350,
+                                settings: {
+                                    slidesToShow: Math.min(1.3, blogCount),
+                                    slidesToScroll: 1
+                                }
+                            }
+                        ]
+                    });
+                    
+                    console.log('Blogs slider initialized');
+                } else {
+                    console.log('Not enough blog items for slider');
+                }
+            }
+        });
+    </script>
+
+{% endblock %}
+
+{% block footer %}
+{% include 'footer.jinja' %}
+{% endblock %}
+
+{% block footer_scripts %}
+<script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
+<script>
+    window.onProductAttributesTriggered = function () {
+        $('#products-list').css('opacity', '0.4');
+        $('#product-pagination').css('opacity', '0');
+    }
+
+    window.onProductAttributesChanged = function (htmlStr) {
+        var html = $.parseHTML(htmlStr);
+        $('#products-list').html($('#products-list', html).html());
+        $('#products-list').css('opacity', '1');
+        $('#product-filter-count').html($('#product-filter-count', html).html());
+        $('#product-filter-count').css('opacity', '1');
+
+        if ($('#product-pagination', html).length > 0) {
+            $('#product-pagination').html($('#product-pagination', html).html());
+            $('#product-pagination').css('opacity', '1');
+        }
+    }
+
+    {% if products.data | length > 0 %}
+    document.addEventListener("DOMContentLoaded", function () {
+        var productsObj = {{ products.data | tojson
+    }};
+    window.sendGaProductsViewItemsListEvent('{{ category.name }}', productsObj);
+            });
+    {% endif %}
+</script>
+{% endblock %}

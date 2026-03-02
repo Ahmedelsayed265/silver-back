@@ -1,0 +1,100 @@
+<section section-id="{{ sectionId }}" class="container-fluid mp">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        {% if settings.title %}
+        <h2 class="section-title-custom" {% if settings.color %} style="color: {{ settings.color }}" {% endif %}>
+            {{ settings.title }}
+        </h2>
+        {% endif %}
+    </div>
+
+    <div class="blogs">
+        {% for key in safeget(settings, "blogs", []) %}
+        <a href="{{ key.href | default('#') }}" class="main-blogs" aria-label="{{ key.title | default('مدونة') }}">
+        
+                {% if key.image %}
+                <img class="blog-image" src="{{ key.image }}" alt="{{ key.alt or key.title or 'image' }}" loading="lazy" decoding="async">
+                {% endif %}
+            
+
+            <div>
+                <div class="date-name">
+                    {% if key.name %}
+                    <span style="color:{{key.color1}}">{{ key.name }}</span>
+                    {% endif %}
+                    {% if key.date %}
+                    <span style="color:{{key.color2}}">{{ key.date }}</span>
+                    {% endif %}
+                </div>
+
+                {% if key.title %}
+                <h2 class="title-blog" style="color:{{key.color3}}">{{ key.title }}</h2>
+                {% endif %}
+                {% if key.desc %}
+                <p class="disc-blog" style="color:{{key.color4}}">{{ key.desc }}</p>
+                {% endif %}
+
+                <div class="linked">
+                    {% if key.btn1 %}
+                    <span>{{ key.btn1 }}</span>
+                    {% endif %}
+                    {% if key.btn2 %}
+                    <span>{{ key.btn2 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var arrowNextClass = (window.appDirection === 'ltr') ? 'fa-solid fa-angle-right': 'fa-solid fa-angle-left';
+        var arrowPrevClass = (window.appDirection === 'ltr') ? 'fa-solid fa-angle-left' : 'fa-solid fa-angle-right';
+        var screenWidth = window.screen.width;
+        var autoPlayEnabled = {{ "true" if settings.auto else "false" }};
+        var infiniteEnabled = {{ "true" if settings.infinite else "false" }};
+        var editingMode = {% if store.editing_mode %}true{% else %}false{% endif %};
+        if(screenWidth >= 768 || editingMode){
+            $('.blogs').slick({
+                slidesToShow: 4,
+                slidesToScroll: 2,
+                infinite: infiniteEnabled,
+                autoplay: autoPlayEnabled,
+                arrows: false,
+                dots: false,
+                rtl: !(window.appDirection === 'ltr'),
+                responsive: [
+                    {
+                        breakpoint: 1200,
+                        settings: {
+                            slidesToShow: 2.5,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 450,
+                        settings: {
+                            slidesToShow: 1.6,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 350,
+                        settings: {
+                            slidesToShow: 1.3,
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
+            });
+        }
+    });
+</script>

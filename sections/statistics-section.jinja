@@ -1,0 +1,45 @@
+<section section-id="{{ sectionId }}" class="section-statistics container-fluid mp"
+    aria-label="{{ settings.title or 'إحصائيات الموقع' }}">
+    {% if settings.title %}
+    <div class="section-header">
+        <h2 class="section-title">{{ settings.title }}</h2>
+    </div>
+    {% endif %}
+    
+    <div class="statistics-wrapper">
+        <div class="statistics">
+            {% set stats = safeget(settings, "features", []) %}
+            {% for stat in stats %}
+            {% if stat.title or stat.image %}
+            <article class="statistic-item" aria-label="إحصائية {{ stat.title or 'غير معنون' }}">
+                {% if stat.image %}
+                <div class="image-statistics">
+                    <img src="{{ stat.image }}" 
+                         alt="{{ stat.alt or stat.title or 'إحصائية' }}" 
+                         loading="lazy"
+                         decoding="async"
+                         width="80"
+                         height="80">
+                </div>
+                {% endif %}
+                
+                {% if stat.title %}
+                <div class="content-statistics">
+                    <h3 class="title-statistics" 
+                        {% if stat.color %} style="color:{{stat.color}}" {% endif %}>
+                        {{ stat.title }}
+                    </h3>
+                </div>
+                {% endif %}
+            </article>
+            {% endif %}
+            {% endfor %}
+            
+            {% if stats|length == 0 %}
+            <div class="no-statistics">
+                <p>لا توجد خصائص متاحة</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>

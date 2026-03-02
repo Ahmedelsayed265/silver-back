@@ -1,0 +1,131 @@
+{% if totalPages > 1 %}
+{#
+Load More Pagination:
+Uses AJAX to fetch and append products to the existing list.
+#}
+{% if type == 'load_more' %}
+{% if currentPage < totalPages %} <div class="text-center mt-4 mb-5">
+    <button id="load-more-products" class="btn btn-primary" data-current-page="{{ currentPage }}"
+        data-last-page="{{ totalPages }}">
+        {{ _("more") }}
+    </button>
+
+    {# Hidden spinner shown during AJAX request #}
+    <img id="load-more-spinner" style="display: inline" class="add-to-cart-progress d-none"
+        src="{{ 'spinner.gif' | asset_url }}" width="20" height="20" />
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById("load-more-products");
+            if (!btn) return;
+
+            btn.addEventListener("click", function () {
+                const spinner = document.getElementById("load-more-spinner");
+                const productsList = document.getElementById("products-list");
+
+                let currentPage = parseInt(btn.getAttribute("data-current-page"));
+                const lastPage = parseInt(btn.getAttribute("data-last-page"));
+
+                if (currentPage >= lastPage) return;
+
+                // Show loader and disable button
+                spinner.classList.remove("d-none");
+                btn.disabled = true;
+
+                // Build URL with next page number
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', currentPage + 1);
+
+                fetch(url.toString())
+                    .then(res => res.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, "text/html");
+
+                        // Find newly loaded products and append to existing list
+                        const newProducts = doc.querySelectorAll("#products-list .prod-col");
+                        newProducts.forEach(prod => productsList.appendChild(prod));
+
+                        // Dispatch event for other components (e.g., bundle offers)
+                        const event = new CustomEvent("productsLoaded", {
+                            detail: { context: productsList }
+                        });
+                        document.dispatchEvent(event);
+
+                        // Update current page attribute
+                        btn.setAttribute("data-current-page", currentPage + 1);
+
+                        // Hide button container if last page is reached
+                        if ((currentPage + 1) >= lastPage) {
+                            btn.parentElement.classList.add('d-none');
+                        }
+                    })
+                    .catch(err => console.error("Error loading more products:", err))
+                    .finally(() => {
+                        spinner.classList.add("d-none");
+                        btn.disabled = false;
+                    });
+            });
+        });
+    </script>
+    {% endif %}
+    {% else %}
+    {#
+    Standard Pagination:
+    Traditional page-by-page navigation.
+    #}
+    <nav id="product-pagination" class="products-pagination" aria-label="products navigation">
+        <ul class="pagination flex-wrap justify-content-center">
+            {# Previous Button #}
+            <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ session.url.include_query_params(page=(currentPage - 1)) }}"
+                    tabindex="-1">{{ _("Prev") }}</a>
+            </li>
+
+            {# First Page Link #}
+            {% if currentPage > 3 and totalPages > 5 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ session.url.include_query_params(page=1) }}">1</a>
+            </li>
+            {% endif %}
+
+            {% if currentPage > 3 and totalPages > 5 %}
+            <li class="disabled page-item hidden-xxs-down"><a class="page-link">...</a></li>
+            {% endif %}
+
+            {# Calculate dynamic range for page numbers #}
+            {% if currentPage <= 2 %} {% set startPage=1 %} {% else %} {% set startPage=(currentPage - 2) %} {% endif %}
+                {% if (currentPage + 2) <=totalPages %} {% set endPage=(currentPage + 2) %} {% else %} {% set
+                endPage=totalPages %} {% endif %} {# Page Number Links #} {% for n in range(startPage, endPage + 1) %}
+                <li
+                class="page-item {% if totalPages > 5 and (n - currentPage == 2 or currentPage - n == 2) %} page-item-n-last {% endif %}">
+                <a class="page-link {% if currentPage == n %}active{% endif %}" {% if currentPage !=n %}
+                    href="{{ session.url.include_query_params(page=n) }}" {% endif %}>
+                    {{ n }}
+                </a>
+                </li>
+                {% endfor %}
+
+                {% if currentPage < (totalPages - 3) and totalPages> 5 %}
+                    <li class="disabled page-item hidden-xxs-down"><a class="page-link">...</a></li>
+                    {% endif %}
+
+                    {# Last Page Link #}
+                    {% if currentPage < (totalPages - 2) and totalPages> 5 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ session.url.include_query_params(page=totalPages) }}">{{
+                                totalPages }}</a>
+                        </li>
+                        {% endif %}
+
+                        {# Next Button #}
+                        <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+                            <a class="page-link" href="{{ session.url.include_query_params(page=(currentPage + 1)) }}">
+                                {{ _("Next") }}
+                            </a>
+                        </li>
+        </ul>
+    </nav>
+    {% endif %}
+{% endif %}

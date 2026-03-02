@@ -1,0 +1,185 @@
+<section section-id="{{ sectionId }}" class="reels-section" aria-label="{{ settings.title or 'مقاطع الفيديو' }}">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            {% if settings.title %}
+                <h2 class="section-title-custom" {% if settings.color1 %} style="color: {{ settings.color1 }}" {% endif %}>
+                    {{ settings.title }}
+                </h2>
+            {% endif %}
+        </div>
+
+        {% if settings.viedos %}
+            <div class="reels-slider-wrapper position-relative">
+                <button class="reels-nav-btn reels-nav-prev" aria-label="السابق">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+
+                <div class="video-reels">
+                    {% for item in settings.viedos %}
+                    <div class="video-wrapper position-relative">
+                        <video class="reels-container" playsinline loop preload="metadata" {% if item.autoplay %}autoplay muted{% endif %} poster="{{ item.poster or '' }}">
+                            <source src="{{ item.video }}" type="video/mp4">
+                            متصفحك لا يدعم تشغيل الفيديو
+                        </video>
+
+                        <button class="play-icon" type="button" aria-label="تشغيل الفيديو">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+                                <path d="M23.0866 10.4779C29 14 32 16 32 20C32 24 29 26 23.0866 29.5223C17 33 14 34 11 33C8 32 7 29 7 20C7 11 8 8 11 7C14 6 17 7 23.0866 10.4779Z" fill="#fff"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="reels-nav-btn reels-nav-next" aria-label="التالي">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+            </div>
+        {% else %}
+            <p class="text-muted text-center">لا توجد مقاطع فيديو حالياً</p>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+  .reels-slider-wrapper {
+    padding: 0 8px;
+  }
+
+  /* Nav buttons */
+  .reels-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a1a1a;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    opacity: 0.92;
+  }
+
+  .reels-nav-btn:hover {
+    background: #fff;
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.12);
+    transform: translateY(-50%) scale(1.08);
+    opacity: 1;
+  }
+
+  .reels-nav-btn:active {
+    transform: translateY(-50%) scale(0.96);
+  }
+
+  .reels-nav-btn svg {
+    flex-shrink: 0;
+  }
+
+  .reels-nav-prev {
+    left: -8px;
+  }
+
+  .reels-nav-next {
+    right: -8px;
+  }
+
+  /* RTL flip */
+  [dir="rtl"] .reels-nav-prev {
+    left: auto;
+    right: -8px;
+  }
+
+  [dir="rtl"] .reels-nav-next {
+    right: auto;
+    left: -8px;
+  }
+
+  /* Hide when slider not initialized (mobile without editing mode) */
+  .reels-nav-btn.reels-nav-hidden {
+    display: none;
+  }
+
+  /* Disabled state */
+  .reels-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+      var isLtr = window.appDirection === 'ltr';
+      var screenWidth = window.screen.width;
+      var autoPlayEnabled = {{ "true" if settings.auto else "false" }};
+      var infiniteEnabled = {{ "true" if settings.infinite else "false" }};
+      var editingMode = {% if store.editing_mode %}true{% else %}false{% endif %};
+
+      var $prevBtn = $('.reels-nav-prev');
+      var $nextBtn = $('.reels-nav-next');
+
+      if (screenWidth >= 768 || editingMode) {
+          var $slider = $('.video-reels').slick({
+              slidesToShow: 4,
+              slidesToScroll: 1,
+              infinite: infiniteEnabled,
+              autoplay: autoPlayEnabled,
+              arrows: false,
+              dots: false,
+              rtl: !isLtr,
+              responsive: [
+                  { breakpoint: 992, settings: { slidesToShow: 3.5 } },
+                  { breakpoint: 768, settings: { slidesToShow: 3 } },
+                  { breakpoint: 576, settings: { slidesToShow: 2.5 } },
+                  { breakpoint: 450, settings: { slidesToShow: 1.5 } }
+              ]
+          });
+
+          // Wire up buttons — respect RTL direction swap
+          $prevBtn.on('click', function() {
+              isLtr ? $slider.slick('slickPrev') : $slider.slick('slickNext');
+          });
+
+          $nextBtn.on('click', function() {
+              isLtr ? $slider.slick('slickNext') : $slider.slick('slickPrev');
+          });
+
+      } else {
+          // Hide nav buttons on small mobile without slider
+          $prevBtn.addClass('reels-nav-hidden');
+          $nextBtn.addClass('reels-nav-hidden');
+      }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const wrappers = document.querySelectorAll('.video-wrapper');
+    wrappers.forEach(wrapper => {
+      const video = wrapper.querySelector('.reels-container');
+      wrapper.addEventListener('click', function() {
+        if (video.paused) {
+          video.play();
+          wrapper.classList.add('playing');
+        } else {
+          video.pause();
+          wrapper.classList.remove('playing');
+        }
+      });
+      video.addEventListener('ended', () => {
+        wrapper.classList.remove('playing');
+      });
+    });
+  });
+</script>
