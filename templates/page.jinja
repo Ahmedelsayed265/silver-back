@@ -1,5 +1,13 @@
 {% extends "layout.jinja" %}
 
+{% block top_links %}
+{% if page.slug == 'bundle' %}
+<title>صمّم مجموعتك الخاصة من الأجهزة الرياضية في السعودية | سيلفرباك</title>
+<meta name="description"
+    content="صمّم مجموعتك الخاصة من الأجهزة الرياضية في السعودية بسهولة ✔ اختر معداتك المفضلة بجودة عالية وتصميم يناسب احتياجات الجيم المنزلي والمراكز الرياضية فقط مع سيلفرباك">
+{% endif %}
+{% endblock %}
+
 {% block header %}
 {% include 'header.jinja' %}
 {% endblock %}
@@ -30,8 +38,7 @@
             <div class="banners_section">
                 {% for item in safeget(settings ,"bundle_banner_list" , []) %}
                 <a href="{{ item.url_img }}" class="banner_div">
-                    <img src="{{ item.banner_img }}"
-                        alt="{{ item.banner_title | default('صمّم مجموعتك الخاصة من الأجهزة الرياضية في السعودية') }}">
+                    <img src="{{ item.banner_img }}" alt="صمّم مجموعتك الخاصة من الأجهزة الرياضية في السعودية">
                     {% if item.banner_title %}
                     <p class="banner_title">{{ item.banner_title }}</p>
                     {% endif %}
@@ -50,7 +57,7 @@
             {% if settings.bundle_category %}
             <div class="products_titels">
                 {% if settings.bundle_main_titel0 %}
-                <h1>{{ settings.bundle_main_titel0 }}</h1>
+                <h2>{{ settings.bundle_main_titel0 }}</h2>
                 {% endif %}
                 {% if settings.bundle_sub_titel0 %}
                 <p>{{ settings.bundle_sub_titel0 }}</p>
@@ -71,7 +78,7 @@
             {% if settings.bundle_category1 %}
             <div class="products_titels">
                 {% if settings.bundle_main_titel1 %}
-                <h1>{{ settings.bundle_main_titel1 }}</h1>
+                <h2>{{ settings.bundle_main_titel1 }}</h2>
                 {% endif %}
                 {% if settings.bundle_sub_titel1 %}
                 <p>{{ settings.bundle_sub_titel1 }}</p>
@@ -92,7 +99,7 @@
             {% if settings.bundle_category2 %}
             <div class="products_titels">
                 {% if settings.bundle_main_titel2 %}
-                <h1>{{ settings.bundle_main_titel2 }}</h1>
+                <h2>{{ settings.bundle_main_titel2 }}</h2>
                 {% endif %}
                 {% if settings.bundle_sub_titel2 %}
                 <p>{{ settings.bundle_sub_titel2 }}</p>
@@ -121,7 +128,7 @@
             {% endif %}
             <div class="slide-content">
                 {% if slide.title %}
-                <h1 class="slide-title">{{ slide.title }}</h1>
+                <h2 class="slide-title">{{ slide.title }}</h2>
                 {% endif %}
                 {% if slide.subtitle %}
                 <p class="slide-subtitle">{{ slide.subtitle }}</p>
@@ -307,7 +314,7 @@
                                                     <div class="product_content">
                                                         <div class="product-title" style="margin-top: 15px">
                                                             ${categoryHtml}
-                                                            <a href="${productLink}" class="title">${productName}</a>
+                                                            <h3 class="title"><a href="${productLink}">${productName}</a></h3>
                                                         </div>
                                                         
                                                         <div class="product-crd-spec">

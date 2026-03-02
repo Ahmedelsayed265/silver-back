@@ -15,7 +15,7 @@
             <div class="tetx_breadcrumb">
                 <div style="display: flex;align-items: flex-start;">
                     <li class="breadcrumb-item pageed" aria-current="page">
-                        <a href="/" >{{ _("Home") }}</a>
+                        <a href="/">{{ _("Home") }}</a>
                     </li>
                     {% if product.categories and product.categories|count > 0 %}
                     <li class="breadcrumb-item active">
@@ -93,7 +93,8 @@
                                                             alt="{{ image.alt_text }}">
                                                         {% if image.provider and image.link %}
                                                         <img id="main-video-icon" class="play-icon"
-                                                            src="{{ 'video-play.svg' | asset_url }}" alt="play" width="25"
+                                                            src="{{ 'video-play.svg' | asset_url }}" alt="play"
+                                                            width="25" height="25"
                                                             onClick="showIframe(this, '{{ image.link }}')" />
                                                         {% endif %}
                                                     </a>
@@ -126,11 +127,12 @@
                                             <div class="content">
                                                 <a class="d-flex align-items-center justify-content-center thumb-image-a"
                                                     data-index="{{ loop.index0 }}" style="width: 100%; height: 100%;">
-                                                    <img src="{{ image.image.medium }}" data-index="{{ loop.index0 }}">
+                                                    <img src="{{ image.image.medium }}" data-index="{{ loop.index0 }}"
+                                                        width="100" height="100">
                                                     {% if image.provider and image.link %}
                                                     <img id="video-play-icon" class="play-icon"
                                                         src="{{ 'video-play.svg' | asset_url }}" alt="play"
-                                                        data-index="{{ loop.index0 }}" />
+                                                        data-index="{{ loop.index0 }}" width="25" height="25" />
                                                     {% endif %}
                                                 </a>
                                             </div>
@@ -298,7 +300,8 @@
                             {% endif %}
                         </div>
 
-                        <div class="section-out-of-stock-notify-me {% if not product.selected_product.in_stock %}d-block{% else %}d-none{% endif %}">
+                        <div
+                            class="section-out-of-stock-notify-me {% if not product.selected_product.in_stock %}d-block{% else %}d-none{% endif %}">
                             <div>
                                 <h4 class="product-title">{{ _("This product is out of stock") }}</h4>
                                 <div class="notify-me-form-wrapper">
@@ -338,51 +341,56 @@
                             {% include 'vitrin:products/payment_widgets.jinja' %}
                         </div>
                         <div class="quantity-add-to">
-                            
-                            <div class="product-buttons {% if product.selected_product.out_of_stock %}d-none{% else %}d-flex{% endif %}" style="flex-direction: column; gap: 4px;">
+
+                            <div class="product-buttons {% if product.selected_product.out_of_stock %}d-none{% else %}d-flex{% endif %}"
+                                style="flex-direction: column; gap: 4px;">
                                 <div class="d-flex align-center" style="gap: 8px;">
-                                    {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
-                                        <div class="price-count">
-                                            {% if product.selected_product.is_infinite or product.selected_product.quantity > 0
-                                            %}
-                                            <div class="select-quantity-div">
-                                                <div class="form-group">
-                                                    <div class="qty-input counter-group">
-                                                        <button class="qty-count qty-count--minus " data-action="minus"
-                                                            type="button">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16"
-                                                                x="0" y="0" viewBox="0 0 121.805 121.804"
-                                                                style="enable-background:new 0 0 512 512" xml:space="preserve"
-                                                                class="">
-                                                                <g>
-                                                                    <path
-                                                                        d="M7.308 68.211h107.188a7.309 7.309 0 0 0 7.309-7.31 7.308 7.308 0 0 0-7.309-7.309H7.308a7.31 7.31 0 0 0 0 14.619z"
-                                                                        fill="#000000" opacity="1" data-original="#000000">
-                                                                    </path>
-                                                                </g>
-                                                            </svg>
-                                                        </button>
-                                                        <input class="product-qty " id="product-quantity" type="number"
-                                                            name="quantity" min="1" max="100" value="1">
-                                                        <button class="qty-count qty-count--add" data-action="add" type="button">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-                                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"
-                                                                x="0" y="0" viewBox="0 0 426.667 426.667"
-                                                                style="enable-background:new 0 0 512 512" xml:space="preserve">
-                                                                <g>
-                                                                    <path
-                                                                        d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"
-                                                                        fill="#000000" opacity="1" data-original="#000000">
-                                                                    </path>
-                                                                </g>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
+                                    {% if product.selected_product.is_infinite or product.selected_product.quantity > 0
+                                    %}
+                                    <div class="price-count">
+                                        {% if product.selected_product.is_infinite or product.selected_product.quantity
+                                        > 0
+                                        %}
+                                        <div class="select-quantity-div">
+                                            <div class="form-group">
+                                                <div class="qty-input counter-group">
+                                                    <button class="qty-count qty-count--minus " data-action="minus"
+                                                        type="button">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="16"
+                                                            height="16" x="0" y="0" viewBox="0 0 121.805 121.804"
+                                                            style="enable-background:new 0 0 512 512"
+                                                            xml:space="preserve" class="">
+                                                            <g>
+                                                                <path
+                                                                    d="M7.308 68.211h107.188a7.309 7.309 0 0 0 7.309-7.31 7.308 7.308 0 0 0-7.309-7.309H7.308a7.31 7.31 0 0 0 0 14.619z"
+                                                                    fill="#000000" opacity="1" data-original="#000000">
+                                                                </path>
+                                                            </g>
+                                                        </svg>
+                                                    </button>
+                                                    <input class="product-qty " id="product-quantity" type="number"
+                                                        name="quantity" min="1" max="100" value="1">
+                                                    <button class="qty-count qty-count--add" data-action="add"
+                                                        type="button">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="14"
+                                                            height="14" x="0" y="0" viewBox="0 0 426.667 426.667"
+                                                            style="enable-background:new 0 0 512 512"
+                                                            xml:space="preserve">
+                                                            <g>
+                                                                <path
+                                                                    d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"
+                                                                    fill="#000000" opacity="1" data-original="#000000">
+                                                                </path>
+                                                            </g>
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                             </div>
-                                            {% endif %}
                                         </div>
+                                        {% endif %}
+                                    </div>
                                     {% endif %}
 
                                     <button class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
@@ -399,20 +407,25 @@
                                     </button>
 
                                     <!-- Checkout dialog -->
-                               
+
                                 </div>
-                                
-                                 {% include 'vitrin:checkout/checkout_dialog.jinja' %}
+
+                                {% include 'vitrin:checkout/checkout_dialog.jinja' %}
 
                                 <button class="btn btn-buy-now " type="button" onclick="zidProductBuyNow()"
-                                        style="margin-inline-start: 10px;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#ffffff" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M14 3H5C3.89543 3 3 3.89543 3 5C3 6.10457 3.89543 7 5 7H18C18 6.07003 18 5.60504 17.8978 5.22354C17.6204 4.18827 16.8117 3.37962 15.7765 3.10222C15.395 3 14.93 3 14 3Z" />
-                                            <path d="M3 5V15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15V13C21 10.1716 21 8.75736 20.1213 7.87868C19.2426 7 17.8284 7 15 7H7" />
-                                            <path d="M21 12H19C18.535 12 18.3025 12 18.1118 12.0511C17.5941 12.1898 17.1898 12.5941 17.0511 13.1118C17 13.3025 17 13.535 17 14C17 14.465 17 14.6975 17.0511 14.8882C17.1898 15.4059 17.5941 15.8102 18.1118 15.9489C18.3025 16 18.535 16 19 16H21" />
+                                    style="margin-inline-start: 10px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                                        color="#ffffff" fill="none" stroke="#ffffff" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M14 3H5C3.89543 3 3 3.89543 3 5C3 6.10457 3.89543 7 5 7H18C18 6.07003 18 5.60504 17.8978 5.22354C17.6204 4.18827 16.8117 3.37962 15.7765 3.10222C15.395 3 14.93 3 14 3Z" />
+                                        <path
+                                            d="M3 5V15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15V13C21 10.1716 21 8.75736 20.1213 7.87868C19.2426 7 17.8284 7 15 7H7" />
+                                        <path
+                                            d="M21 12H19C18.535 12 18.3025 12 18.1118 12.0511C17.5941 12.1898 17.1898 12.5941 17.0511 13.1118C17 13.3025 17 13.535 17 14C17 14.465 17 14.6975 17.0511 14.8882C17.1898 15.4059 17.5941 15.8102 18.1118 15.9489C18.3025 16 18.535 16 19 16H21" />
                                     </svg>
-                                        <img class="buy-now-progress d-none" src="{{ 'spinner.gif' | asset_url }}"
-                                            width="25" height="25" />
+                                    <img class="buy-now-progress d-none" src="{{ 'spinner.gif' | asset_url }}"
+                                        width="25" height="25" />
 
                                     <span>{{ _("Buy now") }}</span>
                                 </button>
@@ -484,16 +497,16 @@
                             <script>
                                 document.addEventListener('DOMContentLoaded', function () {
                                     console.log('DOM loaded - starting category products fetch');
-                                    
+
                                     const sections = document.querySelectorAll('.category-products');
                                     console.log('Found category sections:', sections.length);
 
                                     sections.forEach(container => {
                                         const loader = container.querySelector('.loading-spinner');
                                         const categoryId = container.getAttribute('data-cat-id');
-                                        
+
                                         console.log('Processing category container:', { categoryId, container });
-                                        
+
                                         if (!categoryId) {
                                             console.warn('No category ID found for container');
                                             return;
@@ -505,7 +518,7 @@
                                         // Fetch products from category
                                         zid.store.product.fetchAll(categoryId, { per_page: 8 }).then(function (response) {
                                             console.log('API Response for category', categoryId, ':', response);
-                                            
+
                                             if (loader) loader.style.display = 'none';
 
                                             if (response.status === 'success' && response.data && response.data.products) {
@@ -548,7 +561,7 @@
                                                                     <div class="main_product" style="width: 100%; height: 100%;">
                                                                         <div class="imaged">
                                                                             <a href="${p.html_url}">
-                                                                                <img class="image-static" src="${img}" alt="${p.name}" loading="lazy">
+                                                                                <img class="image-static" src="${img}" alt="${p.name}" loading="lazy" width="250" height="250">
                                                                             </a>
                                                                             ${!p.is_infinite && p.quantity <= 0 ? `<small>غير متوفر حالياً</small>` : ''}
                                                                         </div>
@@ -607,82 +620,82 @@
 
                                     function initProductSlider(sliderElement) {
                                         console.log('Initializing product slider for:', sliderElement);
-                                        
+
                                         var screenWidth = window.innerWidth;
                                         var editingMode = {% if store.editing_mode %} true{% else %} false{% endif %};
 
-                                        // Check if there are elements in the slider
-                                        const slideCount = sliderElement.querySelectorAll('.prod-col').length;
-                                        console.log('Slide count:', slideCount);
-                                        
-                                        if (slideCount <= 1) {
-                                            console.log('Not enough slides for slider');
-                                            return;
+                                    // Check if there are elements in the slider
+                                    const slideCount = sliderElement.querySelectorAll('.prod-col').length;
+                                    console.log('Slide count:', slideCount);
+
+                                    if (slideCount <= 1) {
+                                        console.log('Not enough slides for slider');
+                                        return;
+                                    }
+
+                                    if (screenWidth >= 0 || editingMode) {
+                                        // Clean up any previous Slick initialization
+                                        if ($(sliderElement).hasClass('slick-initialized')) {
+                                            $(sliderElement).slick('unslick');
                                         }
 
-                                        if (screenWidth >= 0 || editingMode) {
-                                            // Clean up any previous Slick initialization
-                                            if ($(sliderElement).hasClass('slick-initialized')) {
-                                                $(sliderElement).slick('unslick');
-                                            }
-
-                                            // Setup Slick slider
-                                            try {
-                                                $(sliderElement).slick({
-                                                    slidesToShow: Math.min(4, slideCount),
-                                                    slidesToScroll: 1,
-                                                    infinite: false,
-                                                    autoplay: false,
-                                                    arrows: false,
-                                                    dots: false,
-                                                    rtl: !(window.appDirection === 'ltr'),
-                                                    adaptiveHeight: true,
-                                                    nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="icon-keyboard_arrow_right"></span></button>',
-                                                    prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="icon-keyboard_arrow_left"></span></button>',
-                                                    responsive: [
-                                                        {
-                                                            breakpoint: 1400,
-                                                            settings: {
-                                                                slidesToShow: Math.min(3, slideCount),
-                                                                slidesToScroll: 1
-                                                            }
-                                                        },
-                                                        {
-                                                            breakpoint: 992,
-                                                            settings: {
-                                                                slidesToShow: Math.min(2.5, slideCount),
-                                                                slidesToScroll: 1
-                                                            }
-                                                        },
-                                                        {
-                                                            breakpoint: 768,
-                                                            settings: {
-                                                                slidesToShow: Math.min(2, slideCount),
-                                                                slidesToScroll: 1
-                                                            }
-                                                        },
-                                                        {
-                                                            breakpoint: 576,
-                                                            settings: {
-                                                                slidesToShow: Math.min(1.5, slideCount),
-                                                                slidesToScroll: 1
-                                                            }
-                                                        },
-                                                        {
-                                                            breakpoint: 400,
-                                                            settings: {
-                                                                slidesToShow: 1,
-                                                                slidesToScroll: 1
-                                                            }
+                                        // Setup Slick slider
+                                        try {
+                                            $(sliderElement).slick({
+                                                slidesToShow: Math.min(4, slideCount),
+                                                slidesToScroll: 1,
+                                                infinite: false,
+                                                autoplay: false,
+                                                arrows: false,
+                                                dots: false,
+                                                rtl: !(window.appDirection === 'ltr'),
+                                                adaptiveHeight: true,
+                                                nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="icon-keyboard_arrow_right"></span></button>',
+                                                prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="icon-keyboard_arrow_left"></span></button>',
+                                                responsive: [
+                                                    {
+                                                        breakpoint: 1400,
+                                                        settings: {
+                                                            slidesToShow: Math.min(3, slideCount),
+                                                            slidesToScroll: 1
                                                         }
-                                                    ]
-                                                });
-                                                console.log('Slick slider initialized successfully');
-                                            } catch (error) {
-                                                console.error('Error initializing slick slider:', error);
-                                            }
+                                                    },
+                                                    {
+                                                        breakpoint: 992,
+                                                        settings: {
+                                                            slidesToShow: Math.min(2.5, slideCount),
+                                                            slidesToScroll: 1
+                                                        }
+                                                    },
+                                                    {
+                                                        breakpoint: 768,
+                                                        settings: {
+                                                            slidesToShow: Math.min(2, slideCount),
+                                                            slidesToScroll: 1
+                                                        }
+                                                    },
+                                                    {
+                                                        breakpoint: 576,
+                                                        settings: {
+                                                            slidesToShow: Math.min(1.5, slideCount),
+                                                            slidesToScroll: 1
+                                                        }
+                                                    },
+                                                    {
+                                                        breakpoint: 400,
+                                                        settings: {
+                                                            slidesToShow: 1,
+                                                            slidesToScroll: 1
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                            console.log('Slick slider initialized successfully');
+                                        } catch (error) {
+                                            console.error('Error initializing slick slider:', error);
                                         }
                                     }
+                                }
                                 });
                             </script>
                         </div>
@@ -730,7 +743,8 @@
                     {% if item.iamges %}
                     <div class="product-detail-banner mb-4">
                         <img class="banars-deatils" src="{{ image_url(item.iamges, width=1400, height=400) }}"
-                            alt="تفاصيل المنتج" style="width:100%;border-radius:12px;object-fit:cover;">
+                            alt="تفاصيل المنتج" width="1400" height="400"
+                            style="width:100%;border-radius:12px;object-fit:cover;">
                     </div>
                     {% endif %}
 
@@ -768,113 +782,125 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="messages">
                     {% if store.settings.products.reviews_enabled %}
-                        <section class="review-details">
-                            <div class="rating_review">
-                                <div class="width" style="width: 100%">
-                                    {% if product.rating %}
-                                        <div class="rating-section">
-                                            <div class="rating-details">
-                                                <h4 class="rating-average">{{ product.rating.average }}</h4>
-                                                {% set rating=product.rating.average %}
-                                                {% include 'components/rating-stars.jinja' %}
-                                                <span class="product-card-rating-count">{{ product.rating.total_count }}&nbsp;{{ _("product review") }}</span>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                    <a href="/products/{{ product.slug}}/reviews/add" class="btn btn-primary add-review-btn" id="add-review-btn"><span class="icon-add_circle"></span>{{ _("add product review") }} </a>
-                                    <div class="reviews-break-down-div description-paragrah">
-                                        <div class="d-flex align-items-center">
-                                            {% if product.rating %}
-                                                <div class="d-flex flex-column">
-                                                    <div class="row card-rate">
-                                                        <span class="rating_count_5">{{ product.rating['5_ratings'].count }}</span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span> &nbsp; &nbsp;
-                                                        <span>{{ _("reviews rating 5") }}</span>
-                                                    </div>
-                                                    <div class="row card-rate">
-                                                        <span class="rating_count_4">{{ product.rating['4_ratings'].count }}</span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
-                                                        <span>{{ _("reviews rating 4") }}</span>
-                                                    </div>
-                                                    <div class="row card-rate">
-                                                        <span class="rating_count_3">{{ product.rating['3_ratings'].count }}</span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1 deactive"></span>
-                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
-                                                        <span>{{ _("reviews rating 3") }}</span>
-                                                    </div>
-                                                    <div class="row card-rate">
-                                                        <span class="rating_count_2">{{ product.rating['2_ratings'].count }}</span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1 deactive"></span>
-                                                        <span class="icon-star1 deactive"></span>
-                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
-                                                        <span>{{ _("reviews rating 2") }}</span>
-                                                    </div>
-                                                    <div class="row card-rate">
-                                                        <span class="rating_count_1">{{ product.rating['1_ratings'].count }}</span>
-                                                        <span class="icon-star1"></span>
-                                                        <span class="icon-star1 deactive"></span>
-                                                        <span class="icon-star1 deactive"></span>
-                                                        <span class="icon-star1 deactive"></span>
-                                                        <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
-                                                        <span>{{ _("reviews rating 1") }}</span>
-                                                    </div>
-                                                </div>
-                                            {% endif %}
-                                        </div>
+                    <section class="review-details">
+                        <div class="rating_review">
+                            <div class="width" style="width: 100%">
+                                {% if product.rating %}
+                                <div class="rating-section">
+                                    <div class="rating-details">
+                                        <h4 class="rating-average">{{ product.rating.average }}</h4>
+                                        {% set rating=product.rating.average %}
+                                        {% include 'components/rating-stars.jinja' %}
+                                        <span class="product-card-rating-count">{{ product.rating.total_count }}&nbsp;{{
+                                            _("product review") }}</span>
                                     </div>
                                 </div>
-                                <div class="conent-review">
-                                    <div class="reviews-break-down-empty description-paragrah d-none">
-                                        <div style="border: 1px solid #ccc; margin: 10px 0px; padding: 10px; border-radius: 3px">
-                                            <span>{{ _("product no reviews") }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="comment-section description-paragrah bg-transparent">
-                                        {% set reviews = product.reviews.data %}
-                                        {% include 'components/customer-reviews.jinja' %}
-
-                                        {% if product.reviews.count > product.reviews.page_size %}
-                                            <div class="text-right">
-                                                <a href="/products/{{ product.id }}/reviews" type="button" class="btn all-reviews-btn">
-                                                    {{ _("go all reviews") }}
-                                                </a>
+                                {% endif %}
+                                <a href="/products/{{ product.slug}}/reviews/add" class="btn btn-primary add-review-btn"
+                                    id="add-review-btn"><span class="icon-add_circle"></span>{{ _("add product review")
+                                    }} </a>
+                                <div class="reviews-break-down-div description-paragrah">
+                                    <div class="d-flex align-items-center">
+                                        {% if product.rating %}
+                                        <div class="d-flex flex-column">
+                                            <div class="row card-rate">
+                                                <span class="rating_count_5">{{ product.rating['5_ratings'].count
+                                                    }}</span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span> &nbsp; &nbsp;
+                                                <span>{{ _("reviews rating 5") }}</span>
                                             </div>
+                                            <div class="row card-rate">
+                                                <span class="rating_count_4">{{ product.rating['4_ratings'].count
+                                                    }}</span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                <span>{{ _("reviews rating 4") }}</span>
+                                            </div>
+                                            <div class="row card-rate">
+                                                <span class="rating_count_3">{{ product.rating['3_ratings'].count
+                                                    }}</span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1 deactive"></span>
+                                                <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                <span>{{ _("reviews rating 3") }}</span>
+                                            </div>
+                                            <div class="row card-rate">
+                                                <span class="rating_count_2">{{ product.rating['2_ratings'].count
+                                                    }}</span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1 deactive"></span>
+                                                <span class="icon-star1 deactive"></span>
+                                                <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                <span>{{ _("reviews rating 2") }}</span>
+                                            </div>
+                                            <div class="row card-rate">
+                                                <span class="rating_count_1">{{ product.rating['1_ratings'].count
+                                                    }}</span>
+                                                <span class="icon-star1"></span>
+                                                <span class="icon-star1 deactive"></span>
+                                                <span class="icon-star1 deactive"></span>
+                                                <span class="icon-star1 deactive"></span>
+                                                <span class="icon-star1 deactive"></span> &nbsp; &nbsp;
+                                                <span>{{ _("reviews rating 1") }}</span>
+                                            </div>
+                                        </div>
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
-                        </section>
+                            <div class="conent-review">
+                                <div class="reviews-break-down-empty description-paragrah d-none">
+                                    <div
+                                        style="border: 1px solid #ccc; margin: 10px 0px; padding: 10px; border-radius: 3px">
+                                        <span>{{ _("product no reviews") }}</span>
+                                    </div>
+                                </div>
+                                <div class="comment-section description-paragrah bg-transparent">
+                                    {% set reviews = product.reviews.data %}
+                                    {% include 'components/customer-reviews.jinja' %}
+
+                                    {% if product.reviews.count > product.reviews.page_size %}
+                                    <div class="text-right">
+                                        <a href="/products/{{ product.id }}/reviews" type="button"
+                                            class="btn all-reviews-btn">
+                                            {{ _("go all reviews") }}
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     {% endif %}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings">
-                        <section class="mt-1 review-details">
-                            <div class="question_reviews">
-                                <div class="question_content">
-                                    <div class="" style="width: 100%">
-                                        {% if product.questions %}
-                                            <button type="button" class="btn btn-primary add-review-btn" id="addQuestionButton"><span class="icon-add_circle"></span>{{ _("add product question")}} </button>
-                                        {% endif %}
-                                    </div>
+                    <section class="mt-1 review-details">
+                        <div class="question_reviews">
+                            <div class="question_content">
+                                <div class="" style="width: 100%">
+                                    {% if product.questions %}
+                                    <button type="button" class="btn btn-primary add-review-btn"
+                                        id="addQuestionButton"><span class="icon-add_circle"></span>{{ _("add product
+                                        question")}} </button>
+                                    {% endif %}
                                 </div>
-                                {% set questions = product.questions %}
-                                {% include 'components/product-questions.jinja' %}
                             </div>
-                            {% set product = product %}
-                            {% include 'components/product-question-add.jinja' %}
-                        </section>
+                            {% set questions = product.questions %}
+                            {% include 'components/product-questions.jinja' %}
+                        </div>
+                        {% set product = product %}
+                        {% include 'components/product-question-add.jinja' %}
+                    </section>
                 </div>
             </div>
         </div>
@@ -907,50 +933,50 @@
             // FIXED: Define showRelatedProducts function
             function showRelatedProducts() {
                 console.log('showRelatedProducts called');
-                console.log('Related products count:', {{ product.related_products|count }});
-                
-                {% if product.related_products|count > 0 %}
-                console.log('Related products data:', {{ product.related_products|tojson|safe }});
-                {% endif %}
-                
-                // Initialize slider for related products
-                var screenWidth = window.innerWidth;
-                var editingMode = {% if store.editing_mode %}true{% else %} false{% endif %};
-                
-                var $relatedSlider = $('#related-products');
-                if ($relatedSlider.length) {
-                    var slideCount = $relatedSlider.find('.prod-col').length;
-                    
-                    if (slideCount > 1 && (screenWidth >= 0 || editingMode)) {
-                        // Clean up any previous initialization
-                        if ($relatedSlider.hasClass('slick-initialized')) {
-                            $relatedSlider.slick('unslick');
-                        }
-                        
-                        // Initialize slider
-                        $relatedSlider.slick({
-                            slidesToShow: Math.min(5, slideCount),
-                            slidesToScroll: 1,
-                            infinite: false,
-                            autoplay: false,
-                            arrows: false,
-                            dots: false,
-                            rtl: !(window.appDirection === 'ltr'),
-                            adaptiveHeight: true,
-                            nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="icon-keyboard_arrow_right"></span></button>',
-                            prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="icon-keyboard_arrow_left"></span></button>',
-                            responsive: [
-                                { breakpoint: 1400, settings: { slidesToShow: Math.min(4, slideCount) } },
-                                { breakpoint: 992, settings: { slidesToShow: Math.min(2.5, slideCount) } },
-                                { breakpoint: 768, settings: { slidesToShow: Math.min(2, slideCount) } },
-                                { breakpoint: 576, settings: { slidesToShow: Math.min(1.5, slideCount) } },
-                                { breakpoint: 400, settings: { slidesToShow: 1 } }
-                            ]
-                        });
-                        
-                        console.log('Related products slider initialized');
+                console.log('Related products count:', {{ product.related_products | count }});
+
+            {% if product.related_products | count > 0 %}
+            console.log('Related products data:', {{ product.related_products | tojson | safe }});
+            {% endif %}
+
+            // Initialize slider for related products
+            var screenWidth = window.innerWidth;
+            var editingMode = {% if store.editing_mode %}true{% else %} false{% endif %};
+
+            var $relatedSlider = $('#related-products');
+            if ($relatedSlider.length) {
+                var slideCount = $relatedSlider.find('.prod-col').length;
+
+                if (slideCount > 1 && (screenWidth >= 0 || editingMode)) {
+                    // Clean up any previous initialization
+                    if ($relatedSlider.hasClass('slick-initialized')) {
+                        $relatedSlider.slick('unslick');
                     }
+
+                    // Initialize slider
+                    $relatedSlider.slick({
+                        slidesToShow: Math.min(5, slideCount),
+                        slidesToScroll: 1,
+                        infinite: false,
+                        autoplay: false,
+                        arrows: false,
+                        dots: false,
+                        rtl: !(window.appDirection === 'ltr'),
+                        adaptiveHeight: true,
+                        nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="icon-keyboard_arrow_right"></span></button>',
+                        prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="icon-keyboard_arrow_left"></span></button>',
+                        responsive: [
+                            { breakpoint: 1400, settings: { slidesToShow: Math.min(4, slideCount) } },
+                            { breakpoint: 992, settings: { slidesToShow: Math.min(2.5, slideCount) } },
+                            { breakpoint: 768, settings: { slidesToShow: Math.min(2, slideCount) } },
+                            { breakpoint: 576, settings: { slidesToShow: Math.min(1.5, slideCount) } },
+                            { breakpoint: 400, settings: { slidesToShow: 1 } }
+                        ]
+                    });
+
+                    console.log('Related products slider initialized');
                 }
+            }
             }
 
             document.addEventListener("DOMContentLoaded", function () {
@@ -964,11 +990,11 @@
     <section class="container-fluid mb-5">
         {% set ns = namespace(matched_blogs=0) %}
         {% if settings.productDetailsBlog_blogs %}
-            {% for blog in settings.productDetailsBlog_blogs %}
-                {% if blog.product is defined and blog.product and blog.product.id == product.id %}
-                    {% set ns.matched_blogs = ns.matched_blogs + 1 %}
-                {% endif %}
-            {% endfor %}
+        {% for blog in settings.productDetailsBlog_blogs %}
+        {% if blog.product is defined and blog.product and blog.product.id == product.id %}
+        {% set ns.matched_blogs = ns.matched_blogs + 1 %}
+        {% endif %}
+        {% endfor %}
         {% endif %}
 
         <div class="d-flex align-items-center mb-4">
@@ -984,11 +1010,11 @@
             {% if settings.productDetailsBlog_blogs and ns.matched_blogs > 0 %}
             {% for blog in settings.productDetailsBlog_blogs %}
             {% if blog.product is defined and blog.product and blog.product.id == product.id %}
-            <a href="{{ blog.href or '#' }}" class="main-blogs" aria-label="{{ blog.title or 'مدونة' }}" >
+            <a href="{{ blog.href or '#' }}" class="main-blogs" aria-label="{{ blog.title or 'مدونة' }}">
                 <div>
                     {% if blog.image %}
                     <img class="blog-image" src="{{ blog.image }}" alt="{{ blog.alt or blog.title or 'image' }}"
-                        loading="lazy" decoding="async">
+                        loading="lazy" decoding="async" width="400" height="250">
                     {% endif %}
                 </div>
 
@@ -1029,27 +1055,28 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             console.log('=== PRODUCT DEBUG INFO ===');
-            
+
             // Log product object
-            var productData = {{ product|tojson }};
-            console.log('Product object:', productData);
-            console.log('store Settings object:', store.settings);
-            console.log('Product ID:', productData.id);
-            console.log('Product name:', productData.name);
-            console.log('Selected product:', productData.selected_product);
-            console.log('Variants count:', productData.variants ? productData.variants.length : 0);
-            console.log('Related products count:', productData.related_products ? productData.related_products.length : 0);
-            
-            // Log blogs settings
-            {% if settings.productDetailsBlog_blogs %}
-            var blogsData = {{ settings.productDetailsBlog_blogs|tojson }};
-            console.log('Blogs count:', blogsData ? blogsData.length : 0);
-            console.log('Blogs data:', blogsData);
-            {% else %}
-            console.log('No blogs configured');
-            {% endif %}
-            
-            console.log('=========================');
+            var productData = {{ product| tojson
+        }};
+        console.log('Product object:', productData);
+        console.log('store Settings object:', store.settings);
+        console.log('Product ID:', productData.id);
+        console.log('Product name:', productData.name);
+        console.log('Selected product:', productData.selected_product);
+        console.log('Variants count:', productData.variants ? productData.variants.length : 0);
+        console.log('Related products count:', productData.related_products ? productData.related_products.length : 0);
+
+        // Log blogs settings
+        {% if settings.productDetailsBlog_blogs %}
+        var blogsData = {{ settings.productDetailsBlog_blogs| tojson }};
+        console.log('Blogs count:', blogsData ? blogsData.length : 0);
+        console.log('Blogs data:', blogsData);
+        {% else %}
+        console.log('No blogs configured');
+        {% endif %}
+
+        console.log('=========================');
         });
     </script>
 
@@ -1060,65 +1087,65 @@
             var infiniteEnabled = true;
             var editingMode = {% if store.editing_mode %}true{% else %} false{% endif %};
 
-            // Log blogs container
-            var $blogs = $('.blogs');
-            console.log('Blogs container found:', $blogs.length > 0);
-            
-            if ($blogs.length && (screenWidth >= 0 || editingMode)) {
-                var blogCount = $blogs.find('.main-blogs').length;
-                console.log('Blog items count:', blogCount);
-                
-                if (blogCount > 1) {
-                    // Clean up any previous initialization
-                    if ($blogs.hasClass('slick-initialized')) {
-                        $blogs.slick('unslick');
-                    }
-                    
-                    $blogs.slick({
-                        slidesToShow: Math.min(4, blogCount),
-                        slidesToScroll: 2,
-                        infinite: infiniteEnabled,
-                        autoplay: autoPlayEnabled,
-                        arrows: false,
-                        dots: false,
-                        rtl: !(window.appDirection === 'ltr'),
-                        responsive: [
-                            {
-                                breakpoint: 1200,
-                                settings: {
-                                    slidesToShow: Math.min(2.5, blogCount),
-                                    slidesToScroll: 1
-                                }
-                            },
-                            {
-                                breakpoint: 768,
-                                settings: {
-                                    slidesToShow: Math.min(2, blogCount),
-                                    slidesToScroll: 1
-                                }
-                            },
-                            {
-                                breakpoint: 450,
-                                settings: {
-                                    slidesToShow: Math.min(1.6, blogCount),
-                                    slidesToScroll: 1
-                                }
-                            },
-                            {
-                                breakpoint: 350,
-                                settings: {
-                                    slidesToShow: Math.min(1.3, blogCount),
-                                    slidesToScroll: 1
-                                }
-                            }
-                        ]
-                    });
-                    
-                    console.log('Blogs slider initialized');
-                } else {
-                    console.log('Not enough blog items for slider');
+        // Log blogs container
+        var $blogs = $('.blogs');
+        console.log('Blogs container found:', $blogs.length > 0);
+
+        if ($blogs.length && (screenWidth >= 0 || editingMode)) {
+            var blogCount = $blogs.find('.main-blogs').length;
+            console.log('Blog items count:', blogCount);
+
+            if (blogCount > 1) {
+                // Clean up any previous initialization
+                if ($blogs.hasClass('slick-initialized')) {
+                    $blogs.slick('unslick');
                 }
+
+                $blogs.slick({
+                    slidesToShow: Math.min(4, blogCount),
+                    slidesToScroll: 2,
+                    infinite: infiniteEnabled,
+                    autoplay: autoPlayEnabled,
+                    arrows: false,
+                    dots: false,
+                    rtl: !(window.appDirection === 'ltr'),
+                    responsive: [
+                        {
+                            breakpoint: 1200,
+                            settings: {
+                                slidesToShow: Math.min(2.5, blogCount),
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                slidesToShow: Math.min(2, blogCount),
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 450,
+                            settings: {
+                                slidesToShow: Math.min(1.6, blogCount),
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 350,
+                            settings: {
+                                slidesToShow: Math.min(1.3, blogCount),
+                                slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
+
+                console.log('Blogs slider initialized');
+            } else {
+                console.log('Not enough blog items for slider');
             }
+        }
         });
     </script>
 
@@ -1158,7 +1185,7 @@
                     <button type="button" class="close_btn" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    
+
                     <div id="product-images-modal-slider" class="modal-slick"></div>
                     <div id="product-images-modal-progress" class="modal-progress">
                         <div class="fill"></div>
@@ -1283,81 +1310,82 @@
                 }
 
                 {% if store.settings.products.low_stock_label_enabled %}
-                var store_low_stock_limit = {{ store.settings.products.low_stock_quantity_threshold }};
-                var low_stock_message = '{{ _("Remaining %s only") }}';
+                var store_low_stock_limit = {{ store.settings.products.low_stock_quantity_threshold }
+            };
+            var low_stock_message = '{{ _("Remaining %s only") }}';
 
-                if (!selected_product.is_infinite && selected_product.quantity < store_low_stock_limit) {
-                    $('.low-quantity-section').removeClass('d-none').addClass('d-inline-block');
-                    $('.low-quantity-section .low-quantity').html(low_stock_message.replace('%s', selected_product.quantity))
-                } else {
-                    $('.low-quantity-section').removeClass('d-inline-block').addClass('d-none');
-                }
-                {% endif %}
-
-                var sold_product_count_message = '{{ _("product sold more than x times") }}';
-                if (selected_product.sold_products_count) {
-                    $('.product-count').removeClass('d-none');
-                    $('.product-count .lang').html(sold_product_count_message.replace('%s', selected_product.sold_products_count))
-                } else {
-                    $('.product-count').addClass('d-none');
-                }
-                
-                var selectQuantity = ''
-
-                if (selected_product.is_infinite)
-                    selected_product.quantity = 100;
-
-                if (selected_product.quantity > 0) {
-                    $('.select-quantity-div').removeClass('d-none')
-                    var quantityMax = (selected_product.quantity > 100) ? 100 : selected_product.quantity;
-                    selectQuantity = '<option value="1"selected>1</option>'
-                    for (var i = 2; i <= quantityMax; i++) {
-                        selectQuantity += '<option value="' + i + '">' + i + '</option>';
-                    }
-                } else {
-                    $('.select-quantity-div').addClass('d-none')
-                }
-
-                $('.select-quantity').html(selectQuantity);
-
-                $('.product-buttons').removeClass('d-none');
-                $('.section-out-of-stock-notify-me').addClass('d-none');
-
-                $('.btn-add-to-cart span').html('{{ _("add to cart") }}');
-
-                updateProductImages(selected_product);
+            if (!selected_product.is_infinite && selected_product.quantity < store_low_stock_limit) {
+                $('.low-quantity-section').removeClass('d-none').addClass('d-inline-block');
+                $('.low-quantity-section .low-quantity').html(low_stock_message.replace('%s', selected_product.quantity))
             } else {
-                if (selected_product.formatted_sale_price) {
-                    $('.product-formatted-price').html(selected_product.formatted_sale_price)
-                    $('.product-formatted-price-old').html(selected_product.formatted_price)
-                } else {
-                    $('.product-formatted-price').html(selected_product.formatted_price)
-                    $('.product-formatted-price-old').html('')
-                }
-                $('.select-quantity-div').addClass('d-none')
-                $('.product-buttons').addClass('d-none');
-                $('.section-out-of-stock-notify-me').removeClass('d-none');
+                $('.low-quantity-section').removeClass('d-inline-block').addClass('d-none');
+            }
+            {% endif %}
 
-                $('.btn-add-to-cart span').html('{{ _("error item unavailable") }}');
-
-                if (selected_product.sku) {
-                    $('.div-product-sku').removeClass('d-none');
-                    $('.div-product-sku .product-sku').html(selected_product.sku)
-                } else {
-                    $('.div-product-sku').addClass('d-none');
-                }
-                updateProductImages(selected_product);
+            var sold_product_count_message = '{{ _("product sold more than x times") }}';
+            if (selected_product.sold_products_count) {
+                $('.product-count').removeClass('d-none');
+                $('.product-count .lang').html(sold_product_count_message.replace('%s', selected_product.sold_products_count))
+            } else {
+                $('.product-count').addClass('d-none');
             }
 
+            var selectQuantity = ''
+
+            if (selected_product.is_infinite)
+                selected_product.quantity = 100;
+
+            if (selected_product.quantity > 0) {
+                $('.select-quantity-div').removeClass('d-none')
+                var quantityMax = (selected_product.quantity > 100) ? 100 : selected_product.quantity;
+                selectQuantity = '<option value="1"selected>1</option>'
+                for (var i = 2; i <= quantityMax; i++) {
+                    selectQuantity += '<option value="' + i + '">' + i + '</option>';
+                }
+            } else {
+                $('.select-quantity-div').addClass('d-none')
+            }
+
+            $('.select-quantity').html(selectQuantity);
+
+            $('.product-buttons').removeClass('d-none');
+            $('.section-out-of-stock-notify-me').addClass('d-none');
+
+            $('.btn-add-to-cart span').html('{{ _("add to cart") }}');
+
+            updateProductImages(selected_product);
         } else {
+            if (selected_product.formatted_sale_price) {
+                $('.product-formatted-price').html(selected_product.formatted_sale_price)
+                $('.product-formatted-price-old').html(selected_product.formatted_price)
+            } else {
+                $('.product-formatted-price').html(selected_product.formatted_price)
+                $('.product-formatted-price-old').html('')
+            }
             $('.select-quantity-div').addClass('d-none')
             $('.product-buttons').addClass('d-none');
             $('.section-out-of-stock-notify-me').removeClass('d-none');
 
             $('.btn-add-to-cart span').html('{{ _("error item unavailable") }}');
 
+            if (selected_product.sku) {
+                $('.div-product-sku').removeClass('d-none');
+                $('.div-product-sku .product-sku').html(selected_product.sku)
+            } else {
+                $('.div-product-sku').addClass('d-none');
+            }
             updateProductImages(selected_product);
         }
+
+    } else {
+        $('.select-quantity-div').addClass('d-none')
+        $('.product-buttons').addClass('d-none');
+        $('.section-out-of-stock-notify-me').removeClass('d-none');
+
+        $('.btn-add-to-cart span').html('{{ _("error item unavailable") }}');
+
+        updateProductImages(selected_product);
+    }
     }
 
     function updateProductImages(selected_product) {
@@ -1385,9 +1413,9 @@
                     '        <div class="content">\n' +
                     '            <a class="image-link"\n' +
                     '               style="display:block; width: 100%; height: 100%;">\n' +
-                    '                <img id="carousel-img-' + z + '" loading="lazy" src="' + prImage.image.full_size + '" class="carousel-img" alt="' + selected_product.name + '">\n' +
-                    (prImage.provider && prImage.link ? '<img id="main-video-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play"' +
-                    '   onclick="' + (window.innerWidth < 992 ? 'showIframe' : 'toggleStaticIframe') + '(this, \'' + prImage.link + '\')"/>' : '') +
+                    '                <img id="carousel-img-' + z + '" loading="lazy" src="' + prImage.image.full_size + '" width="359" height="359" class="carousel-img" alt="' + selected_product.name + '">\n' +
+                    (prImage.provider && prImage.link ? '<img id="main-video-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play" width="25" height="25"' +
+                        '   onclick="' + (window.innerWidth < 992 ? 'showIframe' : 'toggleStaticIframe') + '(this, \'' + prImage.link + '\')"/>' : '') +
                     '            </a>\n' +
                     '          <div class="iframe-video pt-1 d-none">\n' +
                     '             <a id="iframe-close-btn" type="button" class="text-white btn btn-none grow"' +
@@ -1406,10 +1434,10 @@
                     '        <div class="content">\n' +
                     '            <a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="' + z + '"\n' +
                     '               style="width: 100%; height: 100%;" >\n' +
-                    '                <img src="' + prImage.image.medium + '" data-index="' + z + '">\n' +
+                    '                <img src="' + prImage.image.medium + '" data-index="' + z + '" width="100" height="100">\n' +
                     (prImage.provider && prImage.link ? '<img id="video-play-icon" class="play-icon"' +
                         '                 src="{{ "video-play.svg" | asset_url }}" alt="play"' +
-                        '                 data-index="' + z + '">\n' : '') +
+                        '                 data-index="' + z + '" width="25" height="25">\n' : '') +
                     '            </a>\n' +
                     '        </div>\n' +
                     '    </div>\n' +
@@ -1462,32 +1490,32 @@
         if (customerWishlistIds) {
             fillWishlistItems(customerWishlistIds.map(id => ({ id })));
         }
-        
+
         // إضافة event listeners للصور لفتح المودال
-        $(document).on('click', '.carousel-img', function(e) {
+        $(document).on('click', '.carousel-img', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             if ($(e.target).hasClass('play-icon')) {
                 return; // لا تفتح المودال إذا كان زر فيديو
             }
-            
+
             var src = $(this).attr('src');
             console.log('Image clicked, src:', src);
             if (src) {
                 openImagesModalBySrc(src);
             }
         });
-        
+
         // إضافة event listener للروابط التي تحتوي على الصور
-        $(document).on('click', '.image-link', function(e) {
+        $(document).on('click', '.image-link', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             if ($(e.target).hasClass('play-icon')) {
                 return; // لا تفتح المودال إذا كان زر فيديو
             }
-            
+
             var img = $(this).find('img.carousel-img');
             if (img.length) {
                 var src = img.attr('src');
@@ -1497,16 +1525,16 @@
                 }
             }
         });
-        
+
         // إضافة event listener للصور الثابتة (في وضع الكمبيوتر)
-        $(document).on('click', '.static-image-entry', function(e) {
+        $(document).on('click', '.static-image-entry', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             if ($(e.target).hasClass('play-icon')) {
                 return; // لا تفتح المودال إذا كان زر فيديو
             }
-            
+
             var img = $(this).find('img.carousel-img');
             if (img.length) {
                 var src = img.attr('src');
@@ -1516,12 +1544,12 @@
                 }
             }
         });
-        
+
         // زر اختبار (اختياري)
         if (window.location.search.includes('test=modal')) {
             $('<button id="test-modal" style="position:fixed; top:10px; left:10px; z-index:9999; background:red; color:white; padding:10px;">اختبار المودال</button>')
                 .appendTo('body')
-                .click(function() {
+                .click(function () {
                     var firstImage = $('.carousel-img').first().attr('src');
                     if (firstImage) {
                         openImagesModalBySrc(firstImage);
@@ -1533,7 +1561,7 @@
     $(document).on('click', '.thumb-image-a, #video-play-icon', function (event) {
         var tarr = event.target;
         var index = $(tarr).attr('data-index') || $(tarr).closest('[data-index]').attr('data-index');
-        
+
         if ($('#product-images-slick')) {
             $('#product-images-slick').slick('slickGoTo', index, true);
         }
@@ -1566,7 +1594,7 @@
                 customPaging: function (slider, i) {
                     const item = productImages[i];
                     const thumb = item?.image?.small || item?.image?.medium || item?.image?.large || "";
-                    return `<img src="${thumb}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;" />`;
+                    return `<img src="${thumb}" width="45" height="45" style="width:45px;height:45px;object-fit:cover;border-radius:6px;" />`;
                 }
             });
         } else {
@@ -1583,11 +1611,12 @@
             const html = `
                 <div class="">
                     <div class="position-relative static-image-entry" data-index="${i}">
-                        <img src="${item.image.full_size}" class="carousel-img" alt="${item.alt_text || ""}">
+                        <img src="${item.image.full_size}" class="carousel-img" alt="${item.alt_text || ""}" width="359" height="359">
                         ${isVideo ? `<img id="main-video-icon" class="play-icon" 
                                 src="{{ "video-play.svg" | asset_url }}" 
                                 alt="play"
                                 width="25"
+                                height="25"
                                 onclick="toggleStaticIframe(this,'${item.link}')">` : ""}
                         ${isVideo ? `<div class="iframe-video pt-1 d-none">
                                 <a id="iframe-close-btn" type="button" class="text-white btn btn-none grow" onclick="hideIframe(this)">X</a>
@@ -1633,11 +1662,11 @@
         if (startIndex < 0) startIndex = 0;
 
         var $slider = $('#product-images-modal-slider');
-        var $modal  = $('#product-images-modal');
+        var $modal = $('#product-images-modal');
 
         // تنظيف كامل
         if ($slider.hasClass('slick-initialized')) {
-            try { $slider.slick('unslick'); } catch(e) {}
+            try { $slider.slick('unslick'); } catch (e) { }
             $slider.removeClass('slick-initialized');
         }
         $slider.html('');
@@ -1645,21 +1674,21 @@
 
         // بناء الـ slides
         for (var i = 0; i < images.length; i++) {
-            $slider.append('<div><img src="' + images[i] + '" alt="صورة المنتج ' + (i+1) + '"/></div>');
+            $slider.append('<div><img src="' + images[i] + '" alt="صورة المنتج ' + (i + 1) + '" width="800" height="800"/></div>');
         }
 
         var isRTL = !(window.appDirection === 'ltr');
         var arrowNext = isRTL ? 'icon-keyboard_arrow_left' : 'icon-keyboard_arrow_right';
         var arrowPrev = isRTL ? 'icon-keyboard_arrow_right' : 'icon-keyboard_arrow_left';
 
-        var updateProgress = function(idx, total) {
+        var updateProgress = function (idx, total) {
             var pct = ((idx + 1) / total) * 100;
             $('#product-images-modal-progress .fill').css('width', pct + '%');
             $('#modal-slide-counter').text((idx + 1) + ' / ' + total);
         };
 
         // دالة التهيئة مع recursive check
-        var initSlider = function() {
+        var initSlider = function () {
             if (!$slider.length || !$slider.is(':visible')) {
                 setTimeout(initSlider, 50);
                 return;
@@ -1668,30 +1697,30 @@
             $slider.off('init afterChange');
 
             if ($slider.hasClass('slick-initialized')) {
-                try { $slider.slick('unslick'); } catch(e) {}
+                try { $slider.slick('unslick'); } catch (e) { }
                 $slider.removeClass('slick-initialized');
             }
 
             // إخفاء الـ slider أثناء التهيئة لمنع الـ glitch
             $slider.css('visibility', 'hidden');
 
-            $slider.on('init', function(e, slick) {
+            $slider.on('init', function (e, slick) {
                 updateProgress(slick.currentSlide, slick.slideCount);
-                setTimeout(function() {
+                setTimeout(function () {
                     if ($slider.hasClass('slick-initialized')) {
                         try {
                             if (startIndex !== slick.currentSlide) {
                                 $slider.slick('slickGoTo', startIndex, true);
                             }
                             $slider.slick('setPosition');
-                        } catch(e) {}
+                        } catch (e) { }
                     }
                     // إظهار الـ slider بعد انتهاء التهيئة والانتقال للصورة الصح
                     $slider.css('visibility', 'visible');
                 }, 100);
             });
 
-            $slider.on('afterChange', function(e, slick, currentSlide) {
+            $slider.on('afterChange', function (e, slick, currentSlide) {
                 updateProgress(currentSlide, slick.slideCount);
             });
 
@@ -1709,7 +1738,7 @@
                     nextArrow: '<button class="slick-next modal-arrow" type="button"><span class="' + arrowNext + '"></span></button>',
                     prevArrow: '<button class="slick-prev modal-arrow" type="button"><span class="' + arrowPrev + '"></span></button>'
                 });
-            } catch(e) {
+            } catch (e) {
                 console.error('Slick init error:', e);
                 $slider.css('visibility', 'visible'); // fallback
             }
@@ -1721,9 +1750,9 @@
 
         // إعداد events مرة واحدة فقط
         if (!$modal.data('events-initialized')) {
-            $modal.on('hidden.bs.modal', function() {
+            $modal.on('hidden.bs.modal', function () {
                 if ($slider.hasClass('slick-initialized')) {
-                    try { $slider.slick('unslick'); } catch(e) {}
+                    try { $slider.slick('unslick'); } catch (e) { }
                     $slider.removeClass('slick-initialized');
                 }
                 $('#product-images-modal-progress .fill').css('width', '0%');
@@ -1734,7 +1763,7 @@
             });
 
             // keyboard navigation
-            $(document).on('keydown.productModal', function(e) {
+            $(document).on('keydown.productModal', function (e) {
                 if (!$modal.hasClass('show') && !$modal.is(':visible')) return;
                 if (e.key === 'ArrowLeft') {
                     isRTL ? $slider.slick('slickNext') : $slider.slick('slickPrev');
@@ -1755,7 +1784,7 @@
         if (wasOpen) {
             setTimeout(initSlider, 200);
         } else {
-            $modal.on('shown.bs.modal.imagesModal', function() {
+            $modal.on('shown.bs.modal.imagesModal', function () {
                 $modal.attr('aria-hidden', 'false');
                 setTimeout(initSlider, 150);
             });
@@ -1909,10 +1938,11 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var productData = {{ product| tojson }};
-        console.log('Product variants data:', productData.variants);
-        
-        if (!productData.variants) return;
+        var productData = {{ product| tojson
+    }};
+    console.log('Product variants data:', productData.variants);
+
+    if (!productData.variants) return;
 
     document.querySelectorAll("#product-variants-options li").forEach(function (li) {
         var value = li.getAttribute("value")?.trim();
@@ -1935,6 +1965,8 @@
                     imgEl.src = imgSrc;
                     imgEl.alt = value;
                     imgEl.loading = "lazy";
+                    imgEl.width = 50;
+                    imgEl.height = 50;
                     imgEl.style.width = "100%";
                     imgEl.style.height = "100%";
                     imgEl.style.objectFit = "contain";
